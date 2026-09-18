@@ -2,6 +2,8 @@
 
 Finora is a mobile-first, read-only financial overview for people in Switzerland. This MVP demonstrates the primary journey with realistic mock data: understand a user's financial setup, simulate institution connections, and show accounts, investments, Pillar 3a, data health, and recent transactions in one place.
 
+[Live demo](https://joanmarti.github.io/finora-mvp/) · [Source code](https://github.com/JoanMarti/finora-mvp)
+
 > **Demo only:** every balance, transaction, profile and connection state in this repository is fictional. No bank credentials, consent tokens, or personal financial data are collected.
 
 ## MVP scope

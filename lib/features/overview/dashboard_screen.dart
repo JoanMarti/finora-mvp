@@ -625,21 +625,22 @@ class _TotalBalanceBreakdownCard extends StatelessWidget {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
-                            'TOTAL',
-                            style: TextStyle(
+                          Text(
+                            overview.total.currency,
+                            style: const TextStyle(
                               color: Color(0xFF9BA8B9),
                               fontSize: 9,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 1),
                           Text(
-                            _compactMoney(overview.total),
+                            '${(overview.total.amount / 1000).toStringAsFixed(1)}k',
                             style: const TextStyle(
                               color: finoraInk,
-                              fontSize: 16,
+                              fontSize: 17,
                               fontWeight: FontWeight.w800,
+                              height: 1,
                             ),
                           ),
                         ],

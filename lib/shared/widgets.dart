@@ -53,7 +53,7 @@ class InstitutionBadge extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: Color(institution.colorValue),
-        borderRadius: BorderRadius.circular(size * .3),
+        borderRadius: BorderRadius.circular(size * .28),
       ),
       child: Text(
         institution.shortName,
@@ -83,9 +83,9 @@ class SectionTitle extends StatelessWidget {
               title.toUpperCase(),
               style: const TextStyle(
                 fontSize: 12,
-                letterSpacing: 1.15,
+                letterSpacing: .35,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF65746F),
+                color: finoraInk,
               ),
             ),
           ),
@@ -165,18 +165,28 @@ class TransactionTile extends StatelessWidget {
       'Utilities' => Icons.receipt_long_outlined,
       _ => Icons.shopping_bag_outlined,
     };
+    final accent = switch (transaction.category) {
+      'Income' => finoraGreen,
+      'Transport' => finoraYellow,
+      'Groceries' => finoraAqua,
+      'Utilities' => finoraBlue,
+      _ => finoraPink,
+    };
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       leading: CircleAvatar(
-        backgroundColor: const Color(0xFFF0F4F2),
-        foregroundColor: finoraInk,
+        backgroundColor: accent.withValues(alpha: .13),
+        foregroundColor: accent,
         child: Icon(icon, size: 20),
       ),
       title: Text(
         transaction.merchant,
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
-      subtitle: Text('${transaction.category} · ${transaction.dateLabel}'),
+      subtitle: Text(
+        '${transaction.category} · ${transaction.dateLabel}',
+        style: const TextStyle(color: Color(0xFF8A98AB), fontSize: 12),
+      ),
       trailing: Text(
         formatMoney(transaction.amount, signed: true),
         style: TextStyle(

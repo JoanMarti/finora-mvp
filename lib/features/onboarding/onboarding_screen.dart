@@ -69,7 +69,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         child: LinearProgressIndicator(
                           value: index / (activeSteps.length - 1),
                           minHeight: 6,
-                          backgroundColor: const Color(0xFFE1E8E5),
+                          backgroundColor: const Color(0xFFE3EAF4),
                         ),
                       ),
                     ),
@@ -175,7 +175,7 @@ class _Welcome extends StatelessWidget {
           width: 72,
           height: 72,
           decoration: BoxDecoration(
-            color: finoraGreen,
+            color: finoraPink,
             borderRadius: BorderRadius.circular(22),
           ),
           child: const Icon(
@@ -223,7 +223,7 @@ class _TrustLine extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 12),
     child: Row(
       children: [
-        Icon(icon, color: finoraGreen),
+        Icon(icon, color: finoraBlue),
         const SizedBox(width: 12),
         Text(text, style: const TextStyle(fontWeight: FontWeight.w700)),
       ],
@@ -324,11 +324,11 @@ class _SelectionStep<T> extends StatelessWidget {
               final option = options[index];
               final isSelected = selected.contains(option);
               return Material(
-                color: isSelected ? finoraMint : Colors.white,
+                color: isSelected ? finoraSoftBlue : Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                   side: BorderSide(
-                    color: isSelected ? finoraGreen : const Color(0xFFE1E7E4),
+                    color: isSelected ? finoraBlue : const Color(0xFFE1E7F0),
                     width: isSelected ? 1.5 : 1,
                   ),
                 ),
@@ -356,8 +356,8 @@ class _SelectionStep<T> extends StatelessWidget {
                               ? Icons.check_circle
                               : Icons.circle_outlined,
                           color: isSelected
-                              ? finoraGreen
-                              : const Color(0xFF9AA7A2),
+                              ? finoraPink
+                              : const Color(0xFF9AA8BC),
                         ),
                       ],
                     ),
@@ -421,10 +421,10 @@ class _ReviewStep extends StatelessWidget {
                 (id) => Card(
                   child: ListTile(
                     leading: const CircleAvatar(
-                      backgroundColor: finoraMint,
+                      backgroundColor: finoraSoftBlue,
                       child: Icon(
                         Icons.account_balance_outlined,
-                        color: finoraGreen,
+                        color: finoraBlue,
                       ),
                     ),
                     title: Text(
@@ -445,13 +445,13 @@ class _ReviewStep extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Card(
-                color: finoraMint,
+                color: finoraSoftBlue,
                 child: Padding(
                   padding: EdgeInsets.all(18),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.shield_outlined, color: finoraGreen),
+                      Icon(Icons.shield_outlined, color: finoraBlue),
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(

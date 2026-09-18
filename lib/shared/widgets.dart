@@ -1,0 +1,189 @@
+import 'package:finora/app/theme.dart';
+import 'package:finora/domain/models.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+String formatMoney(Money money, {bool signed = false}) {
+  final formatter = NumberFormat.currency(
+    locale: 'de_CH',
+    symbol: money.currency,
+    decimalDigits: 2,
+  );
+  final value = formatter.format(money.amount.abs()).replaceAll('’', "'");
+  if (!signed || money.amount == 0) return value;
+  return '${money.amount > 0 ? '+' : '−'} $value';
+}
+
+class FinoraPage extends StatelessWidget {
+  const FinoraPage({
+    required this.child,
+    this.padding = const EdgeInsets.fromLTRB(20, 16, 20, 32),
+    super.key,
+  });
+
+  final Widget child;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 560),
+        child: Padding(padding: padding, child: child),
+      ),
+    );
+  }
+}
+
+class InstitutionBadge extends StatelessWidget {
+  const InstitutionBadge({
+    required this.institution,
+    this.size = 46,
+    super.key,
+  });
+  final Institution institution;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Color(institution.colorValue),
+        borderRadius: BorderRadius.circular(size * .3),
+      ),
+      child: Text(
+        institution.shortName,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
+          fontSize: size * .26,
+        ),
+      ),
+    );
+  }
+}
+
+class SectionTitle extends StatelessWidget {
+  const SectionTitle(this.title, {this.action, super.key});
+  final String title;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 26, bottom: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 12,
+                letterSpacing: 1.15,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF65746F),
+              ),
+            ),
+          ),
+          ?action,
+        ],
+      ),
+    );
+  }
+}
+
+class StatusPill extends StatelessWidget {
+  const StatusPill({required this.status, super.key});
+  final ConnectionStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final (label, color, icon) = switch (status) {
+      ConnectionStatus.connected => (
+        'Healthy',
+        finoraGreen,
+        Icons.check_circle,
+      ),
+      ConnectionStatus.stale => (
+        'Needs refresh',
+        const Color(0xFF9A5B00),
+        Icons.schedule,
+      ),
+      ConnectionStatus.actionRequired => (
+        'Action needed',
+        Colors.red.shade700,
+        Icons.error,
+      ),
+      ConnectionStatus.manual => (
+        'Manual',
+        const Color(0xFF5D6670),
+        Icons.edit_note,
+      ),
+    };
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .1),
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 5),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w700,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TransactionTile extends StatelessWidget {
+  const TransactionTile({required this.transaction, super.key});
+  final FinancialTransaction transaction;
+
+  @override
+  Widget build(BuildContext context) {
+    final positive = transaction.amount.amount > 0;
+    final icon = switch (transaction.category) {
+      'Income' => Icons.south_west,
+      'Transport' => Icons.train_outlined,
+      'Groceries' => Icons.shopping_basket_outlined,
+      'Utilities' => Icons.receipt_long_outlined,
+      _ => Icons.shopping_bag_outlined,
+    };
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      leading: CircleAvatar(
+        backgroundColor: const Color(0xFFF0F4F2),
+        foregroundColor: finoraInk,
+        child: Icon(icon, size: 20),
+      ),
+      title: Text(
+        transaction.merchant,
+        style: const TextStyle(fontWeight: FontWeight.w700),
+      ),
+      subtitle: Text('${transaction.category} · ${transaction.dateLabel}'),
+      trailing: Text(
+        formatMoney(transaction.amount, signed: true),
+        style: TextStyle(
+          color: positive ? finoraGreen : finoraInk,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}

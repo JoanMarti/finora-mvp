@@ -64,6 +64,8 @@ void main() {
 
     expect(find.text('TOTAL WEALTH'), findsOneWidget);
     expect(find.text('Wealth evolution'), findsOneWidget);
+    expect(find.text('INSIGHTS FOR YOU'), findsOneWidget);
+    expect(find.text('Total balance breakdown'), findsNothing);
     expect(tester.takeException(), isNull);
 
     await tester.drag(find.byType(ListView), const Offset(0, -1600));

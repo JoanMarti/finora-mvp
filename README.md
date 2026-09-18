@@ -10,7 +10,7 @@ Finora is a mobile-first, read-only wealth overview for people in Switzerland. T
 
 - Adaptive onboarding: welcome, mock account creation, product selection, banks, optional investments and Pillar 3a branches, and review
 - Simulated connection flow with bank hand-off/synchronisation states
-- Wealth dashboard with net-worth evolution, allocation, improvement actions and Swiss investment themes
+- Wealth dashboard with net-worth evolution, a personalized insight carousel, improvement actions and Swiss investment themes
 - Accounts list, institution details and account details
 - Recent transactions across institutions
 - Profile and connection management

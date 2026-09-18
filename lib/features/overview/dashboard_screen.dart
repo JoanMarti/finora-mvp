@@ -54,8 +54,9 @@ class DashboardScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 const _WealthTrajectoryCard(),
                 if (overviewValue != null) ...[
-                  const SizedBox(height: 12),
-                  _TotalBalanceBreakdownCard(overview: overviewValue),
+                  const SizedBox(height: 24),
+                  const SectionTitle('Insights for you'),
+                  _PersonalizedInsightsCarousel(overview: overviewValue),
                   const SizedBox(height: 24),
                   const SectionTitle('Grow your wealth'),
                   _WealthActionsCard(overview: overviewValue),
@@ -547,208 +548,207 @@ class _WealthTrendPainter extends CustomPainter {
       oldDelegate.values != values;
 }
 
-class _TotalBalanceBreakdownCard extends StatelessWidget {
-  const _TotalBalanceBreakdownCard({required this.overview});
+class _PersonalizedInsightsCarousel extends StatefulWidget {
+  const _PersonalizedInsightsCarousel({required this.overview});
 
   final FinancialOverview overview;
 
   @override
-  Widget build(BuildContext context) {
-    final total = overview.total.amount;
-    final cashShare = overview.cash.amount / total;
-    final investmentShare = overview.investments.amount / total;
-    final retirementShare = overview.retirement.amount / total;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total balance breakdown',
-                  style: TextStyle(
-                    color: finoraInk,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Unified across all your institutions',
-                  style: TextStyle(color: Color(0xFF8E9CAF), fontSize: 12),
-                ),
-              ],
-            ),
-            const SizedBox(height: 18),
-            Row(
-              children: [
-                SizedBox(
-                  width: 112,
-                  height: 112,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CustomPaint(
-                        size: const Size.square(112),
-                        painter: _DonutPainter(
-                          segments: [
-                            (cashShare, finoraBlue),
-                            (investmentShare, finoraPink),
-                            (retirementShare, finoraAqua),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            overview.total.currency,
-                            style: const TextStyle(
-                              color: Color(0xFF9BA8B9),
-                              fontSize: 9,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          const SizedBox(height: 1),
-                          Text(
-                            '${(overview.total.amount / 1000).toStringAsFixed(1)}k',
-                            style: const TextStyle(
-                              color: finoraInk,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w800,
-                              height: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 22),
-                Expanded(
-                  child: Column(
-                    children: [
-                      _CategoryLine(
-                        icon: Icons.account_balance_wallet_outlined,
-                        label: 'Cash',
-                        value:
-                            '${_compactMoney(overview.cash)} · ${(cashShare * 100).round()}%',
-                        color: finoraBlue,
-                      ),
-                      const SizedBox(height: 14),
-                      _CategoryLine(
-                        icon: Icons.show_chart_rounded,
-                        label: 'Investments',
-                        value:
-                            '${_compactMoney(overview.investments)} · ${(investmentShare * 100).round()}%',
-                        color: finoraPink,
-                      ),
-                      const SizedBox(height: 14),
-                      _CategoryLine(
-                        icon: Icons.savings_outlined,
-                        label: 'Pillar 3a',
-                        value:
-                            '${_compactMoney(overview.retirement)} · ${(retirementShare * 100).round()}%',
-                        color: finoraAqua,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  State<_PersonalizedInsightsCarousel> createState() =>
+      _PersonalizedInsightsCarouselState();
 }
 
-class _CategoryLine extends StatelessWidget {
-  const _CategoryLine({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+class _PersonalizedInsightsCarouselState
+    extends State<_PersonalizedInsightsCarousel> {
+  late final PageController _controller;
+  var _currentPage = 0;
 
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController(viewportFraction: .93);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final overview = widget.overview;
+    final cashShare = overview.cash.amount / overview.total.amount;
+    final retirementShare = overview.retirement.amount / overview.total.amount;
+    final insights = <_PersonalInsight>[
+      _PersonalInsight(
+        icon: Icons.water_drop_outlined,
+        color: finoraBlue,
+        eyebrow: 'LIQUIDITY',
+        metric:
+            '${_compactMoney(overview.cash)} · ${(cashShare * 100).round()}%',
+        title: 'Cash is your largest allocation',
+        description: 'Set a personal liquidity target before deciding what could support longer-term goals.',
+      ),
+      _PersonalInsight(
+        icon: Icons.trending_up_rounded,
+        color: finoraGreen,
+        eyebrow: 'MOMENTUM',
+        metric: '+${overview.monthlyChange}% this month',
+        title: 'Your wealth is moving upward',
+        description: 'Compare new contributions with market performance before changing your strategy.',
+      ),
+      _PersonalInsight(
+        icon: Icons.savings_outlined,
+        color: finoraAqua,
+        eyebrow: 'RETIREMENT',
+        metric:
+            '${_compactMoney(overview.retirement)} · ${(retirementShare * 100).round()}%',
+        title: 'Make Pillar 3a progress visible',
+        description: 'Keep contributions, fees and equity allocation visible across every 3a provider.',
+      ),
+    ];
+
+    return Column(
       children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: .13),
-            shape: BoxShape.circle,
+        SizedBox(
+          height: 200,
+          child: PageView.builder(
+            controller: _controller,
+            padEnds: false,
+            itemCount: insights.length,
+            onPageChanged: (index) => setState(() => _currentPage = index),
+            itemBuilder: (context, index) => Padding(
+              padding: EdgeInsets.only(
+                right: index == insights.length - 1 ? 0 : 10,
+              ),
+              child: _PersonalInsightCard(insight: insights[index]),
+            ),
           ),
-          child: Icon(icon, size: 17, color: color),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  color: finoraInk,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (var index = 0; index < insights.length; index++)
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                width: index == _currentPage ? 18 : 6,
+                height: 6,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                  color: index == _currentPage
+                      ? finoraPink
+                      : const Color(0xFFD3DBE6),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              Text(
-                value,
-                style: const TextStyle(color: Color(0xFF8E9CAF), fontSize: 11),
-              ),
-            ],
-          ),
+          ],
         ),
       ],
     );
   }
 }
 
-class _DonutPainter extends CustomPainter {
-  const _DonutPainter({required this.segments});
+class _PersonalInsight {
+  const _PersonalInsight({
+    required this.icon,
+    required this.color,
+    required this.eyebrow,
+    required this.metric,
+    required this.title,
+    required this.description,
+  });
 
-  final List<(double, Color)> segments;
+  final IconData icon;
+  final Color color;
+  final String eyebrow;
+  final String metric;
+  final String title;
+  final String description;
+}
+
+class _PersonalInsightCard extends StatelessWidget {
+  const _PersonalInsightCard({required this.insight});
+
+  final _PersonalInsight insight;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final stroke = size.width * .13;
-    const gap = .045;
-    var start = -math.pi / 2;
-    for (final segment in segments) {
-      final sweep = math.pi * 2 * segment.$1 - gap;
-      canvas.drawArc(
-        rect.deflate(stroke / 2),
-        start,
-        sweep,
-        false,
-        Paint()
-          ..color = segment.$2
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = stroke
-          ..strokeCap = StrokeCap.round,
-      );
-      start += math.pi * 2 * segment.$1;
-    }
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [insight.color.withValues(alpha: .13), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: insight.color.withValues(alpha: .2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: insight.color.withValues(alpha: .14),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(insight.icon, color: insight.color, size: 19),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                insight.eyebrow,
+                style: TextStyle(
+                  color: insight.color,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: .5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            insight.metric,
+            style: TextStyle(
+              color: insight.color,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            insight.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: finoraInk,
+              fontSize: 17,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Expanded(
+            child: Text(
+              insight.description,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Color(0xFF6F7E93),
+                fontSize: 12,
+                height: 1.35,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(covariant _DonutPainter oldDelegate) =>
-      oldDelegate.segments != segments;
 }
 
 class _WealthActionsCard extends StatelessWidget {

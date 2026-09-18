@@ -14,6 +14,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final overview = ref.watch(overviewProvider);
+    final overviewValue = overview.value;
     final accounts = ref.watch(accountsProvider).value;
     final institutions = ref.watch(institutionsProvider).value;
     final transactions = ref.watch(transactionsProvider(null)).value;
@@ -51,8 +52,10 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 const _CashFlowCard(),
-                const SizedBox(height: 12),
-                const _SpendingCategoriesCard(),
+                if (overviewValue != null) ...[
+                  const SizedBox(height: 12),
+                  _TotalBalanceBreakdownCard(overview: overviewValue),
+                ],
                 const SizedBox(height: 12),
                 _InsightCard(onTap: () => context.go('/profile')),
                 if (accounts != null && institutions != null) ...[
@@ -564,30 +567,40 @@ class _MiniBarChart extends StatelessWidget {
   }
 }
 
-class _SpendingCategoriesCard extends StatelessWidget {
-  const _SpendingCategoriesCard();
+class _TotalBalanceBreakdownCard extends StatelessWidget {
+  const _TotalBalanceBreakdownCard({required this.overview});
+
+  final FinancialOverview overview;
 
   @override
   Widget build(BuildContext context) {
+    final total = overview.total.amount;
+    final cashShare = overview.cash.amount / total;
+    final investmentShare = overview.investments.amount / total;
+    final retirementShare = overview.retirement.amount / total;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    'Where your money goes',
-                    style: TextStyle(
-                      color: finoraInk,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                    ),
+                Text(
+                  'Total balance breakdown',
+                  style: TextStyle(
+                    color: finoraInk,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
-                Icon(Icons.chevron_right, color: finoraBlue),
+                SizedBox(height: 4),
+                Text(
+                  'Unified across all your institutions',
+                  style: TextStyle(color: Color(0xFF8E9CAF), fontSize: 12),
+                ),
               ],
             ),
             const SizedBox(height: 18),
@@ -601,23 +614,29 @@ class _SpendingCategoriesCard extends StatelessWidget {
                     children: [
                       CustomPaint(
                         size: const Size.square(112),
-                        painter: _DonutPainter(),
+                        painter: _DonutPainter(
+                          segments: [
+                            (cashShare, finoraBlue),
+                            (investmentShare, finoraPink),
+                            (retirementShare, finoraAqua),
+                          ],
+                        ),
                       ),
-                      const Column(
+                      Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'SPENT',
+                          const Text(
+                            'TOTAL',
                             style: TextStyle(
                               color: Color(0xFF9BA8B9),
                               fontSize: 9,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          SizedBox(height: 3),
+                          const SizedBox(height: 3),
                           Text(
-                            'CHF 967',
-                            style: TextStyle(
+                            _compactMoney(overview.total),
+                            style: const TextStyle(
                               color: finoraInk,
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -629,28 +648,31 @@ class _SpendingCategoriesCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 22),
-                const Expanded(
+                Expanded(
                   child: Column(
                     children: [
                       _CategoryLine(
-                        icon: Icons.shopping_basket_outlined,
-                        label: 'Groceries',
-                        value: 'CHF 344',
-                        color: finoraAqua,
+                        icon: Icons.account_balance_wallet_outlined,
+                        label: 'Cash',
+                        value:
+                            '${_compactMoney(overview.cash)} · ${(cashShare * 100).round()}%',
+                        color: finoraBlue,
                       ),
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
                       _CategoryLine(
-                        icon: Icons.train_outlined,
-                        label: 'Transport',
-                        value: 'CHF 242',
-                        color: finoraYellow,
-                      ),
-                      SizedBox(height: 14),
-                      _CategoryLine(
-                        icon: Icons.shopping_bag_outlined,
-                        label: 'Shopping',
-                        value: 'CHF 207',
+                        icon: Icons.show_chart_rounded,
+                        label: 'Investments',
+                        value:
+                            '${_compactMoney(overview.investments)} · ${(investmentShare * 100).round()}%',
                         color: finoraPink,
+                      ),
+                      const SizedBox(height: 14),
+                      _CategoryLine(
+                        icon: Icons.savings_outlined,
+                        label: 'Pillar 3a',
+                        value:
+                            '${_compactMoney(overview.retirement)} · ${(retirementShare * 100).round()}%',
+                        color: finoraAqua,
                       ),
                     ],
                   ),
@@ -716,17 +738,15 @@ class _CategoryLine extends StatelessWidget {
 }
 
 class _DonutPainter extends CustomPainter {
+  const _DonutPainter({required this.segments});
+
+  final List<(double, Color)> segments;
+
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
     final stroke = size.width * .13;
     const gap = .045;
-    final segments = <(double, Color)>[
-      (.36, finoraAqua),
-      (.25, finoraYellow),
-      (.21, finoraPink),
-      (.18, finoraBlue),
-    ];
     var start = -math.pi / 2;
     for (final segment in segments) {
       final sweep = math.pi * 2 * segment.$1 - gap;
@@ -746,7 +766,8 @@ class _DonutPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _DonutPainter oldDelegate) =>
+      oldDelegate.segments != segments;
 }
 
 class _InsightCard extends StatelessWidget {

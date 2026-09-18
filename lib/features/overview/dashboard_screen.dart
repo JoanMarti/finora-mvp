@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:finora/app/theme.dart';
 import 'package:finora/data/mock_financial_repository.dart';
+import 'package:finora/data/mock_market_data_repository.dart';
+import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +17,7 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final overview = ref.watch(overviewProvider);
     final overviewValue = overview.value;
-    final accounts = ref.watch(accountsProvider).value;
-    final institutions = ref.watch(institutionsProvider).value;
-    final transactions = ref.watch(transactionsProvider(null)).value;
+    final marketThemes = ref.watch(swissMarketThemesProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -27,6 +27,7 @@ class DashboardScreen extends ConsumerWidget {
             ref.invalidate(overviewProvider);
             ref.invalidate(accountsProvider);
             ref.invalidate(transactionsProvider);
+            ref.invalidate(swissMarketThemesProvider);
           },
           child: FinoraPage(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
@@ -51,73 +52,33 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const _CashFlowCard(),
+                const _WealthTrajectoryCard(),
                 if (overviewValue != null) ...[
                   const SizedBox(height: 12),
                   _TotalBalanceBreakdownCard(overview: overviewValue),
+                  const SizedBox(height: 24),
+                  const SectionTitle('Grow your wealth'),
+                  _WealthActionsCard(overview: overviewValue),
                 ],
+                const SizedBox(height: 24),
+                const SectionTitle('Explore Swiss opportunities'),
+                marketThemes.when(
+                  loading: () => const Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(28),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                  error: (_, _) => const Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text('Market themes are temporarily unavailable.'),
+                    ),
+                  ),
+                  data: (themes) => _MarketThemesCard(themes: themes),
+                ),
                 const SizedBox(height: 12),
-                _InsightCard(onTap: () => context.go('/profile')),
-                if (accounts != null && institutions != null) ...[
-                  SectionTitle(
-                    'Your institutions',
-                    action: TextButton(
-                      onPressed: () => context.go('/accounts'),
-                      child: const Text('See all'),
-                    ),
-                  ),
-                  Card(
-                    child: Column(
-                      children: [
-                        for (
-                          var index = 0;
-                          index < institutions.length;
-                          index++
-                        )
-                          if (accounts.any(
-                            (item) =>
-                                item.institutionId == institutions[index].id,
-                          )) ...[
-                            _InstitutionRow(
-                              institution: institutions[index],
-                              accounts: accounts
-                                  .where(
-                                    (item) =>
-                                        item.institutionId ==
-                                        institutions[index].id,
-                                  )
-                                  .toList(),
-                            ),
-                            if (index < institutions.length - 1)
-                              const Divider(height: 1, indent: 74),
-                          ],
-                      ],
-                    ),
-                  ),
-                ],
-                if (transactions != null) ...[
-                  SectionTitle(
-                    'Latest movements',
-                    action: TextButton(
-                      onPressed: () => context.go('/activity'),
-                      child: const Text('See all'),
-                    ),
-                  ),
-                  Card(
-                    child: Column(
-                      children: [
-                        for (
-                          var index = 0;
-                          index < transactions.take(3).length;
-                          index++
-                        ) ...[
-                          TransactionTile(transaction: transactions[index]),
-                          if (index < 2) const Divider(height: 1, indent: 72),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
+                const _MarketDataNote(),
               ],
             ),
           ),
@@ -171,7 +132,7 @@ class _FinoraHeader extends StatelessWidget {
               ),
               SizedBox(height: 4),
               Text(
-                'Good morning, Joan',
+                'Your wealth at a glance',
                 style: TextStyle(color: Color(0xFF8492A6), fontSize: 12),
               ),
             ],
@@ -230,7 +191,7 @@ class _BalanceOverview extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'GLOBAL OVERVIEW',
+                        'TOTAL WEALTH',
                         style: TextStyle(
                           color: finoraInk,
                           fontSize: 13,
@@ -240,7 +201,7 @@ class _BalanceOverview extends StatelessWidget {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        '4 institutions · Updated 4 min ago',
+                        'Cash · Investments · Retirement',
                         style: TextStyle(
                           color: Color(0xFF96A3B5),
                           fontSize: 12,
@@ -261,7 +222,7 @@ class _BalanceOverview extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Total balance',
+              'Net worth',
               style: TextStyle(color: Color(0xFF8B99AC), fontSize: 13),
             ),
             const SizedBox(height: 3),
@@ -386,65 +347,109 @@ class _BalancePart extends StatelessWidget {
   }
 }
 
-class _CashFlowCard extends StatelessWidget {
-  const _CashFlowCard();
+class _WealthTrajectoryCard extends StatelessWidget {
+  const _WealthTrajectoryCard();
+
+  static const _values = [
+    109100.0,
+    110450.0,
+    111800.0,
+    113200.0,
+    114050.0,
+    116480.4,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    const income = Money(6850);
-    const spending = Money(967);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Expanded(
-                  child: Text(
-                    'Income & spending',
-                    style: TextStyle(
-                      color: finoraInk,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                    ),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Wealth evolution',
+                        style: TextStyle(
+                          color: finoraInk,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Your unified net worth over time',
+                        style: TextStyle(
+                          color: Color(0xFF8E9CAF),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  'September  ›',
-                  style: TextStyle(
-                    color: finoraBlue,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: finoraSoftBlue,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    '6 months',
+                    style: TextStyle(
+                      color: finoraBlue,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 18),
-            Row(
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _FlowMetric(
-                  label: 'INCOME',
-                  value: formatMoney(income),
-                  color: finoraBlue,
+                Text(
+                  '+ CHF 7.4k',
+                  style: TextStyle(
+                    color: finoraInk,
+                    fontSize: 23,
+                    height: 1,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-                Container(width: 1, height: 46, color: const Color(0xFFE4EAF2)),
-                _FlowMetric(
-                  label: 'SPENDING',
-                  value: formatMoney(spending),
-                  color: finoraPink,
-                ),
-                Container(width: 1, height: 46, color: const Color(0xFFE4EAF2)),
-                const _FlowMetric(
-                  label: 'NET',
-                  value: '+ CHF 5.9k',
-                  color: finoraGreen,
+                SizedBox(width: 8),
+                Text(
+                  '+6.8%',
+                  style: TextStyle(
+                    color: finoraGreen,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            const SizedBox(height: 62, child: _MiniBarChart()),
-            const SizedBox(height: 8),
+            const SizedBox(height: 3),
+            const Text(
+              'Net contributions and market performance',
+              style: TextStyle(color: Color(0xFF8E9CAF), fontSize: 11),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 92,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: const _WealthTrendPainter(values: _values),
+              ),
+            ),
+            const SizedBox(height: 6),
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -474,97 +479,72 @@ const _activeMonthStyle = TextStyle(
   fontWeight: FontWeight.w800,
 );
 
-class _FlowMetric extends StatelessWidget {
-  const _FlowMetric({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+class _WealthTrendPainter extends CustomPainter {
+  const _WealthTrendPainter({required this.values});
 
-  final String label;
-  final String value;
-  final Color color;
+  final List<double> values;
 
   @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            maxLines: 1,
-            style: const TextStyle(
-              color: finoraInk,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+  void paint(Canvas canvas, Size size) {
+    final minValue = values.reduce(math.min);
+    final maxValue = values.reduce(math.max);
+    final range = maxValue - minValue;
+    final chartRect = Rect.fromLTWH(0, 6, size.width, size.height - 12);
 
-class _MiniBarChart extends StatelessWidget {
-  const _MiniBarChart();
+    final gridPaint = Paint()
+      ..color = const Color(0xFFE8EDF4)
+      ..strokeWidth = 1;
+    for (var index = 0; index < 3; index++) {
+      final y = chartRect.top + chartRect.height * index / 2;
+      canvas.drawLine(
+        Offset(chartRect.left, y),
+        Offset(chartRect.right, y),
+        gridPaint,
+      );
+    }
+
+    final points = <Offset>[
+      for (var index = 0; index < values.length; index++)
+        Offset(
+          chartRect.left + chartRect.width * index / (values.length - 1),
+          chartRect.bottom -
+              ((values[index] - minValue) / range) * chartRect.height,
+        ),
+    ];
+    final line = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var index = 1; index < points.length; index++) {
+      line.lineTo(points[index].dx, points[index].dy);
+    }
+
+    final fill = Path.from(line)
+      ..lineTo(points.last.dx, chartRect.bottom)
+      ..lineTo(points.first.dx, chartRect.bottom)
+      ..close();
+    canvas.drawPath(
+      fill,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0x553A86FF), Color(0x003A86FF)],
+        ).createShader(chartRect),
+    );
+    canvas.drawPath(
+      line,
+      Paint()
+        ..color = finoraBlue
+        ..strokeWidth = 3
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+    canvas.drawCircle(points.last, 5, Paint()..color = Colors.white);
+    canvas.drawCircle(points.last, 3.2, Paint()..color = finoraPink);
+  }
 
   @override
-  Widget build(BuildContext context) {
-    const income = [28.0, 42.0, 36.0, 50.0, 46.0, 58.0];
-    const spending = [18.0, 30.0, 24.0, 33.0, 38.0, 25.0];
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        for (var index = 0; index < income.length; index++)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: income[index],
-                      decoration: BoxDecoration(
-                        color: finoraBlue.withValues(alpha: .78),
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(4),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 3),
-                  Expanded(
-                    child: Container(
-                      height: spending[index],
-                      decoration: BoxDecoration(
-                        color: index == income.length - 1
-                            ? finoraPink
-                            : finoraPink.withValues(alpha: .5),
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(4),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
+  bool shouldRepaint(covariant _WealthTrendPainter oldDelegate) =>
+      oldDelegate.values != values;
 }
 
 class _TotalBalanceBreakdownCard extends StatelessWidget {
@@ -771,49 +751,186 @@ class _DonutPainter extends CustomPainter {
       oldDelegate.segments != segments;
 }
 
-class _InsightCard extends StatelessWidget {
-  const _InsightCard({required this.onTap});
+class _WealthActionsCard extends StatelessWidget {
+  const _WealthActionsCard({required this.overview});
+
+  final FinancialOverview overview;
+
+  @override
+  Widget build(BuildContext context) {
+    final cashShare = overview.cash.amount / overview.total.amount;
+    return Card(
+      child: Column(
+        children: [
+          _WealthActionRow(
+            icon: Icons.water_drop_outlined,
+            color: finoraBlue,
+            metric: '${(cashShare * 100).round()}% in cash',
+            title: 'Define your liquidity target',
+            description: 'Separate your emergency reserve from cash available for long-term goals.',
+            onTap: () => context.go('/accounts'),
+          ),
+          const Divider(height: 1, indent: 72),
+          _WealthActionRow(
+            icon: Icons.savings_outlined,
+            color: finoraAqua,
+            metric: _compactMoney(overview.retirement),
+            title: 'Build your Pillar 3a plan',
+            description: 'Track annual contributions, fees and the investment mix behind retirement savings.',
+            onTap: () => context.go('/accounts'),
+          ),
+          const Divider(height: 1, indent: 72),
+          _WealthActionRow(
+            icon: Icons.donut_large_outlined,
+            color: finoraPink,
+            metric: _compactMoney(overview.investments),
+            title: 'Review diversification',
+            description: 'Understand exposure by asset class, region and currency across every portfolio.',
+            onTap: () => context.go('/accounts'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WealthActionRow extends StatelessWidget {
+  const _WealthActionRow({
+    required this.icon,
+    required this.color,
+    required this.metric,
+    required this.title,
+    required this.description,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final Color color;
+  final String metric;
+  final String title;
+  final String description;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFFFFEDF3),
+    return InkWell(
+      onTap: onTap,
       borderRadius: BorderRadius.circular(18),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: const Padding(
-          padding: EdgeInsets.all(17),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 23,
-                backgroundColor: finoraPink,
-                foregroundColor: Colors.white,
-                child: Icon(Icons.notifications_active_outlined),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 12, 16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .12),
+                shape: BoxShape.circle,
               ),
-              SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your ZKB connection needs attention',
-                      style: TextStyle(
-                        color: finoraInk,
-                        fontWeight: FontWeight.w800,
-                      ),
+              child: Icon(icon, color: color, size: 21),
+            ),
+            const SizedBox(width: 13),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    metric,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Refresh access to keep balances up to date',
-                      style: TextStyle(color: Color(0xFF7E8CA0), fontSize: 12),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: finoraInk,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
                     ),
-                  ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      color: Color(0xFF7E8CA0),
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Icon(Icons.chevron_right, color: Color(0xFF9BA8B9)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MarketThemesCard extends StatelessWidget {
+  const _MarketThemesCard({required this.themes});
+
+  final List<MarketTheme> themes;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          for (var index = 0; index < themes.length; index++) ...[
+            _MarketThemeRow(
+              theme: themes[index],
+              onTap: () => _showMarketTheme(context, themes[index]),
+            ),
+            if (index < themes.length - 1) const Divider(height: 1, indent: 72),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _showMarketTheme(BuildContext context, MarketTheme theme) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 4, 24, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                theme.title,
+                style: const TextStyle(
+                  color: finoraInk,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-              Icon(Icons.chevron_right, color: finoraPink),
+              const SizedBox(height: 10),
+              Text(theme.description),
+              const SizedBox(height: 16),
+              const Text(
+                'A future comparison view can combine product costs, risk, holdings and licensed market data. This demo does not recommend or sell a product.',
+                style: TextStyle(color: Color(0xFF7E8CA0), height: 1.4),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Got it'),
+                ),
+              ),
             ],
           ),
         ),
@@ -822,44 +939,126 @@ class _InsightCard extends StatelessWidget {
   }
 }
 
-class _InstitutionRow extends StatelessWidget {
-  const _InstitutionRow({required this.institution, required this.accounts});
+class _MarketThemeRow extends StatelessWidget {
+  const _MarketThemeRow({required this.theme, required this.onTap});
 
-  final Institution institution;
-  final List<FinancialAccount> accounts;
+  final MarketTheme theme;
+  final VoidCallback onTap;
+
+  IconData get icon => switch (theme.type) {
+    MarketThemeType.equities => Icons.show_chart_rounded,
+    MarketThemeType.bonds => Icons.account_balance_outlined,
+    MarketThemeType.retirement => Icons.savings_outlined,
+  };
+
+  Color get color => switch (theme.type) {
+    MarketThemeType.equities => finoraPink,
+    MarketThemeType.bonds => finoraBlue,
+    MarketThemeType.retirement => finoraAqua,
+  };
 
   @override
   Widget build(BuildContext context) {
-    final total = accounts.fold<double>(
-      0,
-      (sum, item) => sum + item.balance.amount,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 12, 16),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .12),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: Icon(icon, color: color, size: 21),
+            ),
+            const SizedBox(width: 13),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          theme.title,
+                          style: const TextStyle(
+                            color: finoraInk,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: .1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          theme.tag,
+                          style: TextStyle(
+                            color: color,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    theme.description,
+                    style: const TextStyle(
+                      color: Color(0xFF7E8CA0),
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: Color(0xFF9BA8B9)),
+          ],
+        ),
+      ),
     );
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-      leading: InstitutionBadge(institution: institution, size: 44),
-      title: Text(
-        institution.name,
-        style: const TextStyle(color: finoraInk, fontWeight: FontWeight.w800),
+  }
+}
+
+class _MarketDataNote extends StatelessWidget {
+  const _MarketDataNote();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: finoraSoftBlue,
+        borderRadius: BorderRadius.circular(16),
       ),
-      subtitle: Text(
-        '${accounts.length} ${accounts.length == 1 ? 'account' : 'accounts'}',
-        style: const TextStyle(color: Color(0xFF95A2B4), fontSize: 12),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            formatMoney(Money(total)),
-            style: const TextStyle(
-              color: finoraInk,
-              fontWeight: FontWeight.w800,
+          Icon(Icons.info_outline, color: finoraBlue, size: 19),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Illustrative content, not investment advice. Live prices and product data are not connected yet; the data layer is ready for a licensed provider.',
+              style: TextStyle(
+                color: Color(0xFF5F7190),
+                fontSize: 11,
+                height: 1.4,
+              ),
             ),
           ),
-          const SizedBox(width: 3),
-          const Icon(Icons.chevron_right, size: 19, color: finoraBlue),
         ],
       ),
-      onTap: () => context.push('/institution/${institution.id}'),
     );
   }
 }

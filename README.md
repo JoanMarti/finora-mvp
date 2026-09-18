@@ -1,6 +1,6 @@
 # Finora MVP
 
-Finora is a mobile-first, read-only financial overview for people in Switzerland. This MVP demonstrates the primary journey with realistic mock data: understand a user's financial setup, simulate institution connections, and show accounts, investments, Pillar 3a, data health, and recent transactions in one place.
+Finora is a mobile-first, read-only wealth overview for people in Switzerland. This MVP demonstrates the primary journey with realistic mock data: understand a user's financial setup, simulate institution connections, view unified net worth and allocation, and then explore each account or transaction in its dedicated detail area.
 
 [Live demo](https://joanmarti.github.io/finora-mvp/) · [Source code](https://github.com/JoanMarti/finora-mvp)
 
@@ -10,7 +10,7 @@ Finora is a mobile-first, read-only financial overview for people in Switzerland
 
 - Adaptive onboarding: welcome, mock account creation, product selection, banks, optional investments and Pillar 3a branches, and review
 - Simulated connection flow with bank hand-off/synchronisation states
-- Aggregated dashboard with cash, investments, retirement, institutions and recent activity
+- Wealth dashboard with net-worth evolution, allocation, improvement actions and Swiss investment themes
 - Accounts list, institution details and account details
 - Recent transactions across institutions
 - Profile and connection management
@@ -29,9 +29,11 @@ lib/
 ├── app/                         # app shell, theme and router
 ├── domain/
 │   ├── models.dart              # normalized financial entities
-│   └── financial_repository.dart# data-source contract
+│   ├── financial_repository.dart# banking data-source contract
+│   └── market_data_repository.dart # market-content contract
 ├── data/
-│   └── mock_financial_repository.dart
+│   ├── mock_financial_repository.dart
+│   └── mock_market_data_repository.dart
 ├── features/
 │   ├── onboarding/              # profile discovery and branching
 │   ├── connections/             # simulated consent/sync journey
@@ -56,6 +58,16 @@ bLink / OpenWealth / manual sources
                 ↓
           Flutter features
 ```
+
+Market and product discovery follows the same boundary through `MarketDataRepository`. The current catalogue is intentionally illustrative. A production provider should run behind a backend-for-frontend so credentials, licenses, entitlements and redistribution rules never reach the Flutter client.
+
+### Market-data integration options
+
+- [SIX Web API](https://www.six-group.com/dam/download/financial-information/display-delivery-capabilities/six-web-api/six-web-api-factsheet-en.pdf) for licensed Swiss and global reference/market data.
+- [Bloomberg Data License](https://professional.bloomberg.com/products/data/data-license/) or Server API for enterprise customers with the required commercial agreement and entitlements.
+- [Swiss National Bank data portal](https://data.snb.ch/en) for official Swiss macroeconomic series such as rates, yields and FX reference data.
+
+The preferred production flow is `provider → backend adapter/cache → normalized MarketDataRepository → Riverpod → UI`. Provider attribution, timestamps and delayed/live status should accompany every market value.
 
 ## Run locally
 
@@ -87,16 +99,19 @@ flutter build web --release
 - **Institution and account are separate:** UBS can own several accounts without duplicating institution metadata or connection health.
 - **Data health is a domain concern:** freshness and consent state remain separate from balances, enabling consistent warnings across dashboard, institution and profile views.
 - **Mock behind an interface:** the journey can be validated before commercial/API onboarding with SIX bLink and OpenWealth is complete.
-- **No charts in V0.1:** hierarchy and comprehension are tested before adding visual density.
+- **Wealth before accounts:** the first tab explains net worth, evolution, allocation and next actions. Institutions and transactions remain in dedicated detail tabs.
+- **Education before recommendations:** Swiss investment themes are exploratory and disclose that they are not personalized investment advice.
+- **Licensed data stays server-side:** Bloomberg or SIX credentials and entitlements belong in a backend adapter, never in the Flutter bundle.
 
 ## Suggested next steps
 
 1. Validate the onboarding, connection comprehension and dashboard hierarchy with 5–8 Swiss multi-bank users.
 2. Confirm product coverage, contracts, consent flows and unit economics with SIX bLink/OpenWealth providers.
-3. Add encrypted session/token handling in a backend-for-frontend; never ship provider secrets in Flutter.
-4. Add real authentication, secure local storage, consent renewal and connection recovery.
-5. Add repository contract tests and golden/accessibility tests before broad beta distribution.
-6. Introduce analytics focused on completion, connection success, freshness and repeat dashboard use.
+3. Select and license a market-data provider; prototype SNB macro data separately from commercial product/pricing data.
+4. Add encrypted session/token handling in a backend-for-frontend; never ship provider secrets in Flutter.
+5. Add real authentication, secure local storage, consent renewal and connection recovery.
+6. Add repository contract tests and golden/accessibility tests before broad beta distribution.
+7. Introduce analytics focused on completion, connection success, freshness and repeat dashboard use.
 
 ## Deployment
 

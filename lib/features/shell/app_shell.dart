@@ -24,9 +24,9 @@ class AppShell extends StatelessWidget {
         onDestinationSelected: (next) => context.go(destinations[next]),
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Overview',
+            icon: Icon(Icons.pie_chart_outline_rounded),
+            selectedIcon: Icon(Icons.pie_chart_rounded),
+            label: 'Wealth',
           ),
           NavigationDestination(
             icon: Icon(Icons.account_balance_outlined),

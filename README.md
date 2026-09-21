@@ -10,7 +10,7 @@ Finora is a mobile-first, read-only wealth overview for people in Switzerland. T
 
 - Adaptive onboarding: welcome, mock account creation, product selection, banks, optional investments and Pillar 3a branches, and review
 - Simulated connection flow with bank hand-off/synchronisation states
-- Wealth dashboard with net-worth evolution, a personalized insight carousel, improvement actions and Swiss investment themes
+- Wealth dashboard with net-worth evolution, goal progress and a personalized ideas carousel
 - Accounts list, institution details and account details
 - Recent transactions across institutions
 - Profile and connection management
@@ -100,6 +100,7 @@ flutter build web --release
 - **Data health is a domain concern:** freshness and consent state remain separate from balances, enabling consistent warnings across dashboard, institution and profile views.
 - **Mock behind an interface:** the journey can be validated before commercial/API onboarding with SIX bLink and OpenWealth is complete.
 - **Wealth before accounts:** the first tab explains net worth, evolution, allocation and next actions. Institutions and transactions remain in dedicated detail tabs.
+- **Plan before products:** the dashboard connects balances to personal targets before introducing educational investment ideas.
 - **Education before recommendations:** Swiss investment themes are exploratory and disclose that they are not personalized investment advice.
 - **Licensed data stays server-side:** Bloomberg or SIX credentials and entitlements belong in a backend adapter, never in the Flutter bundle.
 

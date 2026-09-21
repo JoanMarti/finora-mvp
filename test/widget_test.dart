@@ -64,14 +64,18 @@ void main() {
 
     expect(find.text('TOTAL WEALTH'), findsOneWidget);
     expect(find.text('Wealth evolution'), findsOneWidget);
-    expect(find.text('INSIGHTS FOR YOU'), findsOneWidget);
+    expect(find.text('YOUR WEALTH PLAN'), findsOneWidget);
     expect(find.text('Total balance breakdown'), findsNothing);
     expect(tester.takeException(), isNull);
 
     await tester.drag(find.byType(ListView), const Offset(0, -1600));
     await tester.pumpAndSettle();
 
-    expect(find.text('EXPLORE SWISS OPPORTUNITIES'), findsOneWidget);
+    expect(find.text('IDEAS FOR YOU'), findsOneWidget);
+    expect(
+      find.textContaining('Illustrative targets and ideas'),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 }

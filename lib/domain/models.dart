@@ -92,3 +92,58 @@ class FinancialOverview {
   final Money retirement;
   final double monthlyChange;
 }
+
+class BalanceHistoryPoint {
+  const BalanceHistoryPoint({required this.label, required this.balance});
+  final String label;
+  final double balance;
+}
+
+class CashFlowPoint {
+  const CashFlowPoint({
+    required this.label,
+    required this.income,
+    required this.spending,
+  });
+  final String label;
+  final double income;
+  final double spending;
+}
+
+class RecurringPayment {
+  const RecurringPayment({
+    required this.merchant,
+    required this.category,
+    required this.amount,
+    required this.cadence,
+    required this.nextDueLabel,
+  });
+  final String merchant;
+  final String category;
+  final Money amount;
+  final String cadence;
+  final String nextDueLabel;
+}
+
+class AccountAnalytics {
+  const AccountAnalytics({
+    required this.monthlyIncome,
+    required this.monthlySpending,
+    required this.balanceHistory,
+    required this.cashFlowHistory,
+    required this.recurringPayments,
+  });
+  final Money monthlyIncome;
+  final Money monthlySpending;
+  final List<BalanceHistoryPoint> balanceHistory;
+  final List<CashFlowPoint> cashFlowHistory;
+  final List<RecurringPayment> recurringPayments;
+
+  double get monthlyNet => monthlyIncome.amount - monthlySpending.amount;
+  double get savingsRate =>
+      monthlyIncome.amount == 0 ? 0 : monthlyNet / monthlyIncome.amount;
+  double get recurringTotal => recurringPayments.fold(
+    0,
+    (total, payment) => total + payment.amount.amount.abs(),
+  );
+}

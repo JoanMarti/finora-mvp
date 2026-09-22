@@ -18,6 +18,10 @@ final accountsProvider = FutureProvider(
 final overviewProvider = FutureProvider(
   (ref) => ref.watch(financialRepositoryProvider).getOverview(),
 );
+final accountAnalyticsProvider = FutureProvider.family(
+  (ref, String accountId) =>
+      ref.watch(financialRepositoryProvider).getAccountAnalytics(accountId),
+);
 final transactionsProvider = FutureProvider.family(
   (ref, String? accountId) => ref
       .watch(financialRepositoryProvider)
@@ -145,6 +149,77 @@ class MockFinancialRepository implements FinancialRepository {
 
   @override
   Future<List<FinancialAccount>> getAccounts() async => accounts;
+
+  @override
+  Future<AccountAnalytics> getAccountAnalytics(String accountId) async {
+    if (accountId == 'ubs-personal') {
+      return const AccountAnalytics(
+        monthlyIncome: Money(6850),
+        monthlySpending: Money(4128),
+        balanceHistory: [
+          BalanceHistoryPoint(label: 'APR', balance: 6240),
+          BalanceHistoryPoint(label: 'MAY', balance: 6810),
+          BalanceHistoryPoint(label: 'JUN', balance: 7190),
+          BalanceHistoryPoint(label: 'JUL', balance: 6950),
+          BalanceHistoryPoint(label: 'AUG', balance: 7520),
+          BalanceHistoryPoint(label: 'SEP', balance: 8420.35),
+        ],
+        cashFlowHistory: [
+          CashFlowPoint(label: 'APR', income: 6850, spending: 4360),
+          CashFlowPoint(label: 'MAY', income: 6850, spending: 5120),
+          CashFlowPoint(label: 'JUN', income: 7140, spending: 4690),
+          CashFlowPoint(label: 'JUL', income: 6850, spending: 5320),
+          CashFlowPoint(label: 'AUG', income: 6850, spending: 4480),
+          CashFlowPoint(label: 'SEP', income: 6850, spending: 4128),
+        ],
+        recurringPayments: [
+          RecurringPayment(
+            merchant: 'CSS Insurance',
+            category: 'Health insurance',
+            amount: Money(-348.20),
+            cadence: 'Monthly',
+            nextDueLabel: 'Due 28 Sep',
+          ),
+          RecurringPayment(
+            merchant: 'AXA',
+            category: 'Household insurance',
+            amount: Money(-72.40),
+            cadence: 'Monthly equivalent',
+            nextDueLabel: 'Due 2 Oct',
+          ),
+          RecurringPayment(
+            merchant: 'Swisscom',
+            category: 'Phone & internet',
+            amount: Money(-89.90),
+            cadence: 'Monthly',
+            nextDueLabel: 'Due 4 Oct',
+          ),
+          RecurringPayment(
+            merchant: 'PureGym',
+            category: 'Membership',
+            amount: Money(-54.90),
+            cadence: 'Monthly',
+            nextDueLabel: 'Due 7 Oct',
+          ),
+          RecurringPayment(
+            merchant: 'Netflix',
+            category: 'Streaming',
+            amount: Money(-24.90),
+            cadence: 'Monthly',
+            nextDueLabel: 'Due 11 Oct',
+          ),
+        ],
+      );
+    }
+
+    return const AccountAnalytics(
+      monthlyIncome: Money(0),
+      monthlySpending: Money(0),
+      balanceHistory: [],
+      cashFlowHistory: [],
+      recurringPayments: [],
+    );
+  }
 
   @override
   Future<List<InstitutionConnection>> getConnections() async => const [

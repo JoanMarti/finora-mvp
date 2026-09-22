@@ -1,5 +1,6 @@
 import 'package:finora/app/app.dart';
 import 'package:finora/app/theme.dart';
+import 'package:finora/features/accounts/accounts_screens.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,6 +77,51 @@ void main() {
       find.textContaining('Illustrative targets and ideas'),
       findsOneWidget,
     );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('account detail explains cash flow and improvement signals', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: buildFinoraTheme(),
+          home: const AccountDetailScreen(accountId: 'ubs-personal'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Account insight'), findsOneWidget);
+    expect(find.text('Balance evolution'), findsOneWidget);
+    expect(find.text('Income vs spending'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.scrollUntilVisible(
+      find.text('RECURRING PAYMENTS'),
+      420,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('5 detected'), findsOneWidget);
+    await tester.tap(find.text('See all'));
+    await tester.pumpAndSettle();
+    expect(find.text('Netflix'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('POTENTIAL IMPROVEMENTS'),
+      420,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Review insurance in one place'), findsOneWidget);
+    expect(find.text('See the true cost of your debt'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

@@ -209,6 +209,38 @@ class MockFinancialRepository implements FinancialRepository {
             nextDueLabel: 'Due 11 Oct',
           ),
         ],
+        spendingCategories: [
+          SpendingCategory(
+            label: 'Housing',
+            amount: Money(1450),
+            colorValue: 0xFF2477FF,
+          ),
+          SpendingCategory(
+            label: 'Groceries',
+            amount: Money(740),
+            colorValue: 0xFF2AC7C4,
+          ),
+          SpendingCategory(
+            label: 'Other essentials',
+            amount: Money(672.40),
+            colorValue: 0xFF8A75E8,
+          ),
+          SpendingCategory(
+            label: 'Shopping',
+            amount: Money(465),
+            colorValue: 0xFFFF4F8F,
+          ),
+          SpendingCategory(
+            label: 'Insurance',
+            amount: Money(420.60),
+            colorValue: 0xFF16B979,
+          ),
+          SpendingCategory(
+            label: 'Transport',
+            amount: Money(380),
+            colorValue: 0xFFFFB83E,
+          ),
+        ],
       );
     }
 
@@ -218,6 +250,7 @@ class MockFinancialRepository implements FinancialRepository {
       balanceHistory: [],
       cashFlowHistory: [],
       recurringPayments: [],
+      spendingCategories: [],
     );
   }
 

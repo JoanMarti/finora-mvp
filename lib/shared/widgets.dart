@@ -47,20 +47,33 @@ class InstitutionBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Color(institution.colorValue),
-        borderRadius: BorderRadius.circular(size * .28),
-      ),
-      child: Text(
-        institution.shortName,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w800,
-          fontSize: size * .26,
+    final icon = switch (institution.id) {
+      'ubs' => Icons.key_rounded,
+      'zkb' => Icons.account_balance_rounded,
+      'swissquote' => Icons.show_chart_rounded,
+      'frankly' => Icons.savings_outlined,
+      _ => Icons.account_balance_wallet_outlined,
+    };
+    return Semantics(
+      label: '${institution.name} institution logo',
+      image: true,
+      child: ExcludeSemantics(
+        child: Container(
+          width: size,
+          height: size,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Color(institution.colorValue),
+            borderRadius: BorderRadius.circular(size * .28),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x1A17366B),
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Icon(icon, color: Colors.white, size: size * .48),
         ),
       ),
     );

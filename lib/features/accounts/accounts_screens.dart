@@ -8,14 +8,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class AccountsScreen extends ConsumerWidget {
+enum _AccountFilter { all, cash, investing }
+
+enum _AccountAction { viewDetails, openBank, refresh, disconnect }
+
+class AccountsScreen extends ConsumerStatefulWidget {
   const AccountsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AccountsScreen> createState() => _AccountsScreenState();
+}
+
+class _AccountsScreenState extends ConsumerState<AccountsScreen> {
+  _AccountFilter _filter = _AccountFilter.all;
+  final Set<String> _disconnectedInstitutionIds = {};
+
+  @override
+  Widget build(BuildContext context) {
     final accounts = ref.watch(accountsProvider);
     final institutions =
         ref.watch(institutionsProvider).value ?? const <Institution>[];
+    final connections =
+        ref.watch(connectionsProvider).value ?? const <InstitutionConnection>[];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -29,70 +43,269 @@ class AccountsScreen extends ConsumerWidget {
             error: (_, _) => const Center(
               child: Text('Accounts are temporarily unavailable.'),
             ),
-            data: (items) => ListView(
-              children: [
-                Text(
-                  'Everything you own',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${items.length} accounts · CHF is your display currency',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                for (final institution in institutions) ...[
-                  if (items.any((item) => item.institutionId == institution.id))
-                    SectionTitle(institution.name),
-                  for (final account in items.where(
-                    (item) => item.institutionId == institution.id,
-                  ))
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Card(
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
+            data: (items) {
+              final connectedItems = items
+                  .where(
+                    (item) => !_disconnectedInstitutionIds.contains(
+                      item.institutionId,
+                    ),
+                  )
+                  .toList();
+              final filtered = connectedItems.where(_matchesFilter).toList();
+              final total = connectedItems.fold<double>(
+                0,
+                (sum, account) => sum + account.balance.amount,
+              );
+              final cash = connectedItems
+                  .where(
+                    (account) =>
+                        account.type == FinancialProductType.currentAccount ||
+                        account.type == FinancialProductType.savings,
+                  )
+                  .fold<double>(
+                    0,
+                    (sum, account) => sum + account.balance.amount,
+                  );
+              return ListView(
+                children: [
+                  Text(
+                    'Your accounts, clearly organised',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Compare balances, check data health and manage each connection.',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 20),
+                  _AccountsSummaryCard(
+                    total: total,
+                    cash: cash,
+                    accountCount: connectedItems.length,
+                  ),
+                  const SizedBox(height: 18),
+                  Semantics(
+                    label: 'Filter accounts by product type',
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _AccountFilterChip(
+                            label: 'All',
+                            icon: Icons.grid_view_rounded,
+                            selected: _filter == _AccountFilter.all,
+                            onSelected: () =>
+                                setState(() => _filter = _AccountFilter.all),
                           ),
-                          leading: InstitutionBadge(institution: institution),
-                          title: Text(
-                            account.name,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          const SizedBox(width: 8),
+                          _AccountFilterChip(
+                            label: 'Cash',
+                            icon: Icons.account_balance_wallet_outlined,
+                            selected: _filter == _AccountFilter.cash,
+                            onSelected: () =>
+                                setState(() => _filter = _AccountFilter.cash),
                           ),
-                          subtitle: Text(
-                            '${account.type.label} · ${account.maskedIdentifier}',
+                          const SizedBox(width: 8),
+                          _AccountFilterChip(
+                            label: 'Investing',
+                            icon: Icons.trending_up,
+                            selected: _filter == _AccountFilter.investing,
+                            onSelected: () => setState(
+                              () => _filter = _AccountFilter.investing,
+                            ),
                           ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                formatMoney(account.balance),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              Text(
-                                '${account.change >= 0 ? '+' : '−'} CHF ${account.change.abs().toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  color: account.change >= 0
-                                      ? finoraGreen
-                                      : Colors.red.shade700,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () => context.push('/account/${account.id}'),
-                        ),
+                        ],
                       ),
                     ),
+                  ),
+                  const SectionTitle('Connected institutions'),
+                  if (filtered.isEmpty)
+                    const _EmptyAccountsState()
+                  else
+                    for (final institution in institutions)
+                      if (filtered.any(
+                        (item) => item.institutionId == institution.id,
+                      ))
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 14),
+                          child: _InstitutionAccountsGroup(
+                            institution: institution,
+                            connection: connections
+                                .where(
+                                  (item) =>
+                                      item.institutionId == institution.id,
+                                )
+                                .firstOrNull,
+                            accounts: filtered
+                                .where(
+                                  (item) =>
+                                      item.institutionId == institution.id,
+                                )
+                                .toList(),
+                            onInstitutionTap: () =>
+                                context.push('/institution/${institution.id}'),
+                            onAccountTap: (account) =>
+                                context.push('/account/${account.id}'),
+                            onAction: (action, account) => _handleAccountAction(
+                              action,
+                              account,
+                              institution,
+                            ),
+                          ),
+                        ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: () => context.push('/connect'),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add an institution'),
+                  ),
                 ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool _matchesFilter(FinancialAccount account) => switch (_filter) {
+    _AccountFilter.all => true,
+    _AccountFilter.cash =>
+      account.type == FinancialProductType.currentAccount ||
+          account.type == FinancialProductType.savings,
+    _AccountFilter.investing =>
+      account.type == FinancialProductType.investments ||
+          account.type == FinancialProductType.pillar3a,
+  };
+
+  Future<void> _handleAccountAction(
+    _AccountAction action,
+    FinancialAccount account,
+    Institution institution,
+  ) async {
+    switch (action) {
+      case _AccountAction.viewDetails:
+        context.push('/account/${account.id}');
+      case _AccountAction.openBank:
+        _showMessage(
+          'A production version would securely open ${institution.name}.',
+        );
+      case _AccountAction.refresh:
+        ref.invalidate(accountsProvider);
+        _showMessage('${account.name} is up to date.');
+      case _AccountAction.disconnect:
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: Text('Disconnect ${institution.name}?'),
+            content: Text(
+              'All ${institution.name} accounts will disappear from Finora. Your accounts at the bank are not affected.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red.shade700,
+                ),
+                child: const Text('Disconnect'),
+              ),
+            ],
+          ),
+        );
+        if (confirmed == true && mounted) {
+          setState(() => _disconnectedInstitutionIds.add(institution.id));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${institution.name} disconnected from this demo.'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () => setState(
+                  () => _disconnectedInstitutionIds.remove(institution.id),
+                ),
+              ),
+            ),
+          );
+        }
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _AccountsSummaryCard extends StatelessWidget {
+  const _AccountsSummaryCard({
+    required this.total,
+    required this.cash,
+    required this.accountCount,
+  });
+  final double total;
+  final double cash;
+  final int accountCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label:
+          'Portfolio total ${formatMoney(Money(total))}. Available cash ${formatMoney(Money(cash))}. $accountCount connected accounts.',
+      child: ExcludeSemantics(
+        child: Card(
+          color: finoraInk,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'PORTFOLIO TOTAL',
+                  style: TextStyle(
+                    color: Color(0xFFB9C8DE),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: .4,
+                  ),
+                ),
+                const SizedBox(height: 7),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    formatMoney(Money(total)),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -.6,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 18),
-                OutlinedButton.icon(
-                  onPressed: () => context.push('/connect'),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add an institution'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SummaryMetric(
+                        label: 'Available cash',
+                        value: formatMoney(Money(cash)),
+                      ),
+                    ),
+                    Container(
+                      height: 36,
+                      width: 1,
+                      color: const Color(0xFF3A5685),
+                    ),
+                    Expanded(
+                      child: _SummaryMetric(
+                        label: 'Connected',
+                        value: '$accountCount accounts',
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -101,6 +314,377 @@ class AccountsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _SummaryMetric extends StatelessWidget {
+  const _SummaryMetric({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: Color(0xFFAABBB5), fontSize: 11),
+        ),
+        const SizedBox(height: 4),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _AccountFilterChip extends StatelessWidget {
+  const _AccountFilterChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onSelected,
+  });
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) => ChoiceChip(
+    avatar: Icon(icon, size: 17),
+    label: Text(label),
+    selected: selected,
+    onSelected: (_) => onSelected(),
+    showCheckmark: false,
+    side: BorderSide(color: selected ? finoraBlue : const Color(0xFFDDE5F0)),
+    selectedColor: finoraSoftBlue,
+    labelStyle: TextStyle(
+      color: selected ? finoraBlue : finoraInk,
+      fontWeight: FontWeight.w700,
+    ),
+  );
+}
+
+class _InstitutionAccountsGroup extends StatelessWidget {
+  const _InstitutionAccountsGroup({
+    required this.institution,
+    required this.connection,
+    required this.accounts,
+    required this.onInstitutionTap,
+    required this.onAccountTap,
+    required this.onAction,
+  });
+  final Institution institution;
+  final InstitutionConnection? connection;
+  final List<FinancialAccount> accounts;
+  final VoidCallback onInstitutionTap;
+  final ValueChanged<FinancialAccount> onAccountTap;
+  final void Function(_AccountAction, FinancialAccount) onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final institutionTotal = accounts.fold<double>(
+      0,
+      (sum, account) => sum + account.balance.amount,
+    );
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          InkWell(
+            onTap: onInstitutionTap,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 10, 14),
+              child: Row(
+                children: [
+                  InstitutionBadge(institution: institution, size: 52),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          institution.name,
+                          style: const TextStyle(
+                            color: finoraInk,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          connection?.lastSyncLabel ?? 'Connection unavailable',
+                          style: const TextStyle(
+                            color: Color(0xFF7D8B9E),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _CompactConnectionStatus(
+                    status:
+                        connection?.status ?? ConnectionStatus.actionRequired,
+                  ),
+                  IconButton(
+                    tooltip: 'Open ${institution.name} details',
+                    onPressed: onInstitutionTap,
+                    icon: const Icon(Icons.chevron_right),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            color: const Color(0xFFF7F9FC),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+            child: Text(
+              '${accounts.length} ${accounts.length == 1 ? 'account' : 'accounts'} · ${formatMoney(Money(institutionTotal))}',
+              style: const TextStyle(
+                color: Color(0xFF63718A),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          for (var index = 0; index < accounts.length; index++) ...[
+            _AccessibleAccountRow(
+              account: accounts[index],
+              institution: institution,
+              onTap: () => onAccountTap(accounts[index]),
+              onAction: (action) => onAction(action, accounts[index]),
+            ),
+            if (index != accounts.length - 1) const Divider(height: 1),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactConnectionStatus extends StatelessWidget {
+  const _CompactConnectionStatus({required this.status});
+  final ConnectionStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final (label, color) = switch (status) {
+      ConnectionStatus.connected => ('Synced', finoraGreen),
+      ConnectionStatus.stale => ('Stale', finoraYellow),
+      ConnectionStatus.actionRequired => ('Action', Colors.red.shade700),
+      ConnectionStatus.manual => ('Manual', const Color(0xFF6B7280)),
+    };
+    return Tooltip(
+      message: label,
+      child: Semantics(
+        label: 'Connection status: $label',
+        child: Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+      ),
+    );
+  }
+}
+
+class _AccessibleAccountRow extends StatelessWidget {
+  const _AccessibleAccountRow({
+    required this.account,
+    required this.institution,
+    required this.onTap,
+    required this.onAction,
+  });
+  final FinancialAccount account;
+  final Institution institution;
+  final VoidCallback onTap;
+  final ValueChanged<_AccountAction> onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final positive = account.change >= 0;
+    final changeLabel =
+        '${positive ? 'up' : 'down'} ${formatMoney(Money(account.change.abs()))}';
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Semantics(
+            button: true,
+            label:
+                '${account.name}, ${account.type.label}, ${formatMoney(account.balance)}, $changeLabel this month',
+            child: ExcludeSemantics(
+              child: InkWell(
+                onTap: onTap,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 4, 14),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: Color(institution.colorValue)
+                              .withValues(alpha: .08),
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        child: Icon(
+                          _productIcon(account.type),
+                          color: Color(institution.colorValue),
+                          size: 21,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              account.name,
+                              style: const TextStyle(
+                                color: finoraInk,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              '${account.type.label} · ${account.maskedIdentifier}',
+                              style: const TextStyle(
+                                color: Color(0xFF7D8B9E),
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(height: 9),
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: [
+                                Text(
+                                  formatMoney(account.balance),
+                                  style: const TextStyle(
+                                    color: finoraInk,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                Text(
+                                  '${positive ? '+' : '−'} CHF ${account.change.abs().toStringAsFixed(0)}',
+                                  style: TextStyle(
+                                    color: positive
+                                        ? finoraGreen
+                                        : Colors.red.shade700,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 4),
+          child: PopupMenuButton<_AccountAction>(
+            tooltip: 'More actions for ${account.name}',
+            icon: const Icon(Icons.more_vert),
+            onSelected: onAction,
+            itemBuilder: (_) => _accountActionItems(institution.name),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+List<PopupMenuEntry<_AccountAction>> _accountActionItems(
+  String institutionName,
+) => [
+  const PopupMenuItem(
+    value: _AccountAction.viewDetails,
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(Icons.analytics_outlined),
+      title: Text('View account insights'),
+    ),
+  ),
+  PopupMenuItem(
+    value: _AccountAction.openBank,
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: const Icon(Icons.open_in_new),
+      title: Text('Open $institutionName'),
+    ),
+  ),
+  const PopupMenuItem(
+    value: _AccountAction.refresh,
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(Icons.sync),
+      title: Text('Refresh account'),
+    ),
+  ),
+  PopupMenuItem(
+    value: _AccountAction.disconnect,
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(Icons.link_off, color: Colors.red.shade700),
+      title: Text(
+        'Disconnect institution',
+        style: TextStyle(color: Colors.red.shade700),
+      ),
+    ),
+  ),
+];
+
+IconData _productIcon(FinancialProductType type) => switch (type) {
+  FinancialProductType.currentAccount => Icons.credit_card_outlined,
+  FinancialProductType.savings => Icons.savings_outlined,
+  FinancialProductType.investments => Icons.candlestick_chart_outlined,
+  FinancialProductType.pillar3a => Icons.nature_people_outlined,
+  FinancialProductType.creditCard => Icons.payment_outlined,
+  FinancialProductType.mortgage => Icons.home_work_outlined,
+};
+
+class _EmptyAccountsState extends StatelessWidget {
+  const _EmptyAccountsState();
+
+  @override
+  Widget build(BuildContext context) => const Card(
+    child: Padding(
+      padding: EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Icon(Icons.filter_alt_off_outlined, color: Color(0xFF7D8B9E)),
+          SizedBox(height: 10),
+          Text(
+            'No accounts match this filter.',
+            style: TextStyle(color: finoraInk, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class InstitutionDetailScreen extends ConsumerWidget {
@@ -250,6 +834,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   bool _showAllRecurring = false;
   bool _recurringMonitoring = true;
   bool _balanceAlerts = true;
+  int _selectedMonths = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -283,12 +868,28 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
       body: FinoraPage(
         child: ListView(
           children: [
-            _AccountBalanceCard(account: account, institution: institution),
+            _AccountBalanceCard(
+              account: account,
+              institution: institution,
+              onAction: (action) =>
+                  _handleDetailAction(action, account, institution),
+            ),
             if (analytics.balanceHistory.isNotEmpty) ...[
               const SectionTitle('Account health'),
-              _BalanceEvolutionCard(analytics: analytics),
+              _PeriodSelector(
+                selectedMonths: _selectedMonths,
+                onSelected: (months) =>
+                    setState(() => _selectedMonths = months),
+              ),
+              const SizedBox(height: 12),
+              _BalanceEvolutionCard(
+                analytics: analytics,
+                months: _selectedMonths,
+              ),
               const SectionTitle('Cash flow'),
-              _CashFlowCard(analytics: analytics),
+              _CashFlowCard(analytics: analytics, months: _selectedMonths),
+              const SectionTitle('Spending'),
+              _SpendingCategoriesCard(analytics: analytics),
               SectionTitle(
                 'Recurring payments',
                 action: TextButton(
@@ -373,7 +974,13 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 ),
               ),
             ],
-            const SectionTitle('Recent transactions'),
+            SectionTitle(
+              'Recent transactions',
+              action: TextButton(
+                onPressed: () => context.push('/activity'),
+                child: const Text('View all'),
+              ),
+            ),
             Card(
               child: transactions.isEmpty
                   ? const Padding(
@@ -421,13 +1028,42 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
+
+  void _handleDetailAction(
+    _AccountAction action,
+    FinancialAccount account,
+    Institution institution,
+  ) {
+    switch (action) {
+      case _AccountAction.viewDetails:
+        break;
+      case _AccountAction.openBank:
+        _showServiceMessage(
+          'A production version would securely open ${institution.name}.',
+        );
+      case _AccountAction.refresh:
+        ref.invalidate(accountAnalyticsProvider(account.id));
+        ref.invalidate(transactionsProvider(account.id));
+        _showServiceMessage('${account.name} is up to date.');
+      case _AccountAction.disconnect:
+        context.go('/accounts');
+        _showServiceMessage(
+          'Use the institution menu to review and confirm disconnection.',
+        );
+    }
+  }
 }
 
 class _AccountBalanceCard extends StatelessWidget {
-  const _AccountBalanceCard({required this.account, required this.institution});
+  const _AccountBalanceCard({
+    required this.account,
+    required this.institution,
+    required this.onAction,
+  });
 
   final FinancialAccount account;
   final Institution institution;
+  final ValueChanged<_AccountAction> onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -463,7 +1099,12 @@ class _AccountBalanceCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.more_horiz, color: Colors.white70),
+                PopupMenuButton<_AccountAction>(
+                  tooltip: 'More actions for ${account.name}',
+                  icon: const Icon(Icons.more_vert, color: Colors.white70),
+                  onSelected: onAction,
+                  itemBuilder: (_) => _accountActionItems(institution.name),
+                ),
               ],
             ),
             const SizedBox(height: 26),
@@ -522,13 +1163,56 @@ class _AccountBalanceCard extends StatelessWidget {
   }
 }
 
-class _BalanceEvolutionCard extends StatelessWidget {
-  const _BalanceEvolutionCard({required this.analytics});
-  final AccountAnalytics analytics;
+class _PeriodSelector extends StatelessWidget {
+  const _PeriodSelector({
+    required this.selectedMonths,
+    required this.onSelected,
+  });
+  final int selectedMonths;
+  final ValueChanged<int> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final points = analytics.balanceHistory;
+    return Semantics(
+      label: 'Select account analysis period',
+      child: SizedBox(
+        width: double.infinity,
+        child: SegmentedButton<int>(
+          segments: const [
+            ButtonSegment(value: 1, label: Text('1 month')),
+            ButtonSegment(value: 3, label: Text('3 months')),
+            ButtonSegment(value: 6, label: Text('6 months')),
+          ],
+          selected: {selectedMonths},
+          showSelectedIcon: false,
+          onSelectionChanged: (selection) => onSelected(selection.first),
+          style: ButtonStyle(
+            visualDensity: VisualDensity.comfortable,
+            textStyle: WidgetStateProperty.all(
+              const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BalanceEvolutionCard extends StatelessWidget {
+  const _BalanceEvolutionCard({required this.analytics, required this.months});
+  final AccountAnalytics analytics;
+  final int months;
+
+  @override
+  Widget build(BuildContext context) {
+    final requestedPoints = months == 1 ? 2 : months;
+    final pointCount = math.min(
+      requestedPoints,
+      analytics.balanceHistory.length,
+    );
+    final points = analytics.balanceHistory.sublist(
+      analytics.balanceHistory.length - pointCount,
+    );
     final change = points.last.balance - points.first.balance;
     return Card(
       child: Padding(
@@ -552,7 +1236,7 @@ class _BalanceEvolutionCard extends StatelessWidget {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        'Closing balance · last 6 months',
+                        'Closing balance for the selected period',
                         style: TextStyle(color: Color(0xFF8A98AB)),
                       ),
                     ],
@@ -565,11 +1249,17 @@ class _BalanceEvolutionCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 22),
-            SizedBox(
-              height: 128,
-              width: double.infinity,
-              child: CustomPaint(
-                painter: _BalanceHistoryPainter(points: points),
+            Semantics(
+              label:
+                  'Balance increased by CHF ${change.toStringAsFixed(0)} over $months months, ending at CHF ${points.last.balance.toStringAsFixed(2)}.',
+              child: ExcludeSemantics(
+                child: SizedBox(
+                  height: 128,
+                  width: double.infinity,
+                  child: CustomPaint(
+                    painter: _BalanceHistoryPainter(points: points),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -597,12 +1287,17 @@ class _BalanceEvolutionCard extends StatelessWidget {
 }
 
 class _CashFlowCard extends StatelessWidget {
-  const _CashFlowCard({required this.analytics});
+  const _CashFlowCard({required this.analytics, required this.months});
   final AccountAnalytics analytics;
+  final int months;
 
   @override
   Widget build(BuildContext context) {
     final savingsRate = (analytics.savingsRate * 100).round();
+    final pointCount = math.min(months, analytics.cashFlowHistory.length);
+    final points = analytics.cashFlowHistory.sublist(
+      analytics.cashFlowHistory.length - pointCount,
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(18),
@@ -645,18 +1340,22 @@ class _CashFlowCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            SizedBox(
-              height: 112,
-              width: double.infinity,
-              child: CustomPaint(
-                painter: _CashFlowPainter(points: analytics.cashFlowHistory),
+            Semantics(
+              label:
+                  'Income and spending comparison for $months months. Current income CHF ${analytics.monthlyIncome.amount.toStringAsFixed(0)}, spending CHF ${analytics.monthlySpending.amount.toStringAsFixed(0)}.',
+              child: ExcludeSemantics(
+                child: SizedBox(
+                  height: 112,
+                  width: double.infinity,
+                  child: CustomPaint(painter: _CashFlowPainter(points: points)),
+                ),
               ),
             ),
             const SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                for (final point in analytics.cashFlowHistory)
+                for (final point in points)
                   Text(
                     point.label,
                     style: const TextStyle(
@@ -673,6 +1372,129 @@ class _CashFlowCard extends StatelessWidget {
               style: const TextStyle(
                 color: finoraInk,
                 fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SpendingCategoriesCard extends StatelessWidget {
+  const _SpendingCategoriesCard({required this.analytics});
+  final AccountAnalytics analytics;
+
+  @override
+  Widget build(BuildContext context) {
+    final total = analytics.spendingCategories.fold<double>(
+      0,
+      (sum, category) => sum + category.amount.amount,
+    );
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Where your money went',
+              style: TextStyle(
+                color: finoraInk,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${formatMoney(Money(total))} categorised this month',
+              style: const TextStyle(color: Color(0xFF8A98AB)),
+            ),
+            const SizedBox(height: 20),
+            for (
+              var index = 0;
+              index < analytics.spendingCategories.length;
+              index++
+            ) ...[
+              _SpendingCategoryRow(
+                category: analytics.spendingCategories[index],
+                total: total,
+              ),
+              if (index != analytics.spendingCategories.length - 1)
+                const SizedBox(height: 15),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SpendingCategoryRow extends StatelessWidget {
+  const _SpendingCategoryRow({required this.category, required this.total});
+  final SpendingCategory category;
+  final double total;
+
+  @override
+  Widget build(BuildContext context) {
+    final share = total == 0 ? 0.0 : category.amount.amount / total;
+    final percent = (share * 100).round();
+    final color = Color(category.colorValue);
+    return Semantics(
+      label:
+          '${category.label}, ${formatMoney(category.amount)}, $percent percent of spending',
+      child: ExcludeSemantics(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(width: 9),
+                Expanded(
+                  child: Text(
+                    category.label,
+                    style: const TextStyle(
+                      color: finoraInk,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Text(
+                  formatMoney(category.amount),
+                  style: const TextStyle(
+                    color: finoraInk,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(width: 7),
+                SizedBox(
+                  width: 34,
+                  child: Text(
+                    '$percent%',
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      color: Color(0xFF7D8B9E),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 7),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(99),
+              child: LinearProgressIndicator(
+                value: share,
+                minHeight: 7,
+                backgroundColor: color.withValues(alpha: .1),
+                valueColor: AlwaysStoppedAnimation(color),
               ),
             ),
           ],

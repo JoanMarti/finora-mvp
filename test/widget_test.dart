@@ -100,8 +100,27 @@ void main() {
 
     expect(find.text('Account insight'), findsOneWidget);
     expect(find.text('Balance evolution'), findsOneWidget);
-    expect(find.text('Income vs spending'), findsOneWidget);
+    expect(find.text('6 months'), findsOneWidget);
+    await tester.tap(find.text('3 months'));
+    await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
+
+    await tester.scrollUntilVisible(
+      find.text('CASH FLOW'),
+      420,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Income vs spending'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Where your money went'),
+      420,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Where your money went'), findsOneWidget);
+    expect(find.text('Housing'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('RECURRING PAYMENTS'),
@@ -122,6 +141,50 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Review insurance in one place'), findsOneWidget);
     expect(find.text('See the true cost of your debt'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('accounts screen groups institutions and exposes safe actions', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: buildFinoraTheme(),
+          home: const AccountsScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Your accounts, clearly organised'), findsOneWidget);
+    expect(find.text('PORTFOLIO TOTAL'), findsOneWidget);
+    expect(find.text('UBS'), findsOneWidget);
+    expect(find.text('All'), findsOneWidget);
+    expect(find.text('Cash'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -100));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('More actions for Personal account'));
+    await tester.pumpAndSettle();
+    expect(find.text('Open UBS'), findsOneWidget);
+    expect(find.text('Disconnect institution'), findsOneWidget);
+
+    await tester.tap(find.text('Disconnect institution'));
+    await tester.pumpAndSettle();
+    expect(find.text('Disconnect UBS?'), findsOneWidget);
+    expect(
+      find.textContaining('Your accounts at the bank are not affected'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
 }

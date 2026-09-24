@@ -125,6 +125,17 @@ class RecurringPayment {
   final String nextDueLabel;
 }
 
+class SpendingCategory {
+  const SpendingCategory({
+    required this.label,
+    required this.amount,
+    required this.colorValue,
+  });
+  final String label;
+  final Money amount;
+  final int colorValue;
+}
+
 class AccountAnalytics {
   const AccountAnalytics({
     required this.monthlyIncome,
@@ -132,12 +143,14 @@ class AccountAnalytics {
     required this.balanceHistory,
     required this.cashFlowHistory,
     required this.recurringPayments,
+    required this.spendingCategories,
   });
   final Money monthlyIncome;
   final Money monthlySpending;
   final List<BalanceHistoryPoint> balanceHistory;
   final List<CashFlowPoint> cashFlowHistory;
   final List<RecurringPayment> recurringPayments;
+  final List<SpendingCategory> spendingCategories;
 
   double get monthlyNet => monthlyIncome.amount - monthlySpending.amount;
   double get savingsRate =>

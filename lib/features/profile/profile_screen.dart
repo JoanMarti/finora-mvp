@@ -53,7 +53,7 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         Text(
                           'joan@example.com',
-                          style: TextStyle(color: Color(0xFF66756F)),
+                          style: TextStyle(color: finoraMutedInk),
                         ),
                       ],
                     ),

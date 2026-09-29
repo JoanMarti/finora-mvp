@@ -120,7 +120,7 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
                                   Text(
                                     _statusLabel(status),
                                     style: const TextStyle(
-                                      color: Color(0xFF66756F),
+                                      color: finoraMutedInk,
                                     ),
                                   ),
                                 ],
@@ -156,13 +156,13 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
                     const Icon(
                       Icons.lock_outline,
                       size: 18,
-                      color: Color(0xFF6B7974),
+                      color: finoraSlate,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         '$connected of ${statuses.length} ready · read-only access',
-                        style: const TextStyle(color: Color(0xFF6B7974)),
+                        style: const TextStyle(color: finoraMutedInk),
                       ),
                     ),
                   ],

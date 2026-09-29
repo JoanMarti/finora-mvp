@@ -67,7 +67,7 @@ class InstitutionBadge extends StatelessWidget {
             borderRadius: BorderRadius.circular(size * .28),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x1A17366B),
+                color: Color(0x1A272829),
                 blurRadius: 10,
                 offset: Offset(0, 4),
               ),
@@ -123,17 +123,17 @@ class StatusPill extends StatelessWidget {
       ),
       ConnectionStatus.stale => (
         'Needs refresh',
-        const Color(0xFF9A5B00),
+        finoraWarning,
         Icons.schedule,
       ),
       ConnectionStatus.actionRequired => (
         'Action needed',
-        Colors.red.shade700,
+        finoraDanger,
         Icons.error,
       ),
       ConnectionStatus.manual => (
         'Manual',
-        const Color(0xFF5D6670),
+        finoraSlate,
         Icons.edit_note,
       ),
     };
@@ -180,10 +180,10 @@ class TransactionTile extends StatelessWidget {
     };
     final accent = switch (transaction.category) {
       'Income' => finoraGreen,
-      'Transport' => finoraYellow,
-      'Groceries' => finoraAqua,
+      'Transport' => finoraSlate,
+      'Groceries' => finoraBlue,
       'Utilities' => finoraBlue,
-      _ => finoraPink,
+      _ => finoraSilver,
     };
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -198,7 +198,7 @@ class TransactionTile extends StatelessWidget {
       ),
       subtitle: Text(
         '${transaction.category} · ${transaction.dateLabel}',
-        style: const TextStyle(color: Color(0xFF8A98AB), fontSize: 12),
+        style: const TextStyle(color: finoraMutedInk, fontSize: 12),
       ),
       trailing: Text(
         formatMoney(transaction.amount, signed: true),

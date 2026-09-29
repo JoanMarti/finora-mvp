@@ -213,32 +213,32 @@ class MockFinancialRepository implements FinancialRepository {
           SpendingCategory(
             label: 'Housing',
             amount: Money(1450),
-            colorValue: 0xFF2477FF,
+            colorValue: 0xFF3C94FF,
           ),
           SpendingCategory(
             label: 'Groceries',
             amount: Money(740),
-            colorValue: 0xFF2AC7C4,
+            colorValue: 0xFF272829,
           ),
           SpendingCategory(
             label: 'Other essentials',
             amount: Money(672.40),
-            colorValue: 0xFF8A75E8,
+            colorValue: 0xFF7C8182,
           ),
           SpendingCategory(
             label: 'Shopping',
             amount: Money(465),
-            colorValue: 0xFFFF4F8F,
+            colorValue: 0xFF78B6FF,
           ),
           SpendingCategory(
             label: 'Insurance',
             amount: Money(420.60),
-            colorValue: 0xFF16B979,
+            colorValue: 0xFFA2AAAC,
           ),
           SpendingCategory(
             label: 'Transport',
             amount: Money(380),
-            colorValue: 0xFFFFB83E,
+            colorValue: 0xFFC2CACC,
           ),
         ],
       );

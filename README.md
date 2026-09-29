@@ -105,6 +105,7 @@ flutter build web --release
 - **Insight before cross-sell:** optional insurance or debt services are shown only after an explainable account signal, remain visually separate from core analytics, and require explicit consent to continue.
 - **Monitoring creates repeat value:** recurring-bill changes and low-balance forecasts provide an ongoing reason to return without encouraging unnecessary financial products.
 - **Accessible account management:** institution and account rows expose descriptive semantics, visible sync states, 48 px actions and a confirmation step before disconnecting a data source.
+- **Accessible palette system:** the supplied white, silver, slate, ink and blue palette is centralized in the app theme. Darker derived text tokens preserve readable contrast, while green, amber and red are reserved for financial and connection states.
 - **Education before recommendations:** Swiss investment themes are exploratory and disclose that they are not personalized investment advice.
 - **Licensed data stays server-side:** Bloomberg or SIX credentials and entitlements belong in a backend adapter, never in the Flutter bundle.
 

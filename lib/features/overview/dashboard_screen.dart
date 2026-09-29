@@ -78,11 +78,11 @@ class _FinoraHeader extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: finoraPink,
+            color: finoraBlue,
             borderRadius: BorderRadius.circular(13),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x33FF4F8F),
+                color: Color(0x333C94FF),
                 blurRadius: 14,
                 offset: Offset(0, 5),
               ),
@@ -102,7 +102,7 @@ class _FinoraHeader extends StatelessWidget {
               Text(
                 'finora',
                 style: TextStyle(
-                  color: finoraPink,
+                  color: finoraBlue,
                   fontSize: 23,
                   height: 1,
                   fontWeight: FontWeight.w800,
@@ -112,7 +112,7 @@ class _FinoraHeader extends StatelessWidget {
               SizedBox(height: 4),
               Text(
                 'Your wealth at a glance',
-                style: TextStyle(color: Color(0xFF8492A6), fontSize: 12),
+                style: TextStyle(color: finoraMutedInk, fontSize: 12),
               ),
             ],
           ),
@@ -131,7 +131,7 @@ class _FinoraHeader extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: const BoxDecoration(
-                  color: finoraPink,
+                  color: finoraBlue,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -182,7 +182,7 @@ class _BalanceOverview extends StatelessWidget {
                       Text(
                         'Cash · Investments · Retirement',
                         style: TextStyle(
-                          color: Color(0xFF96A3B5),
+                          color: finoraMutedInk,
                           fontSize: 12,
                         ),
                       ),
@@ -202,7 +202,7 @@ class _BalanceOverview extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               'Net worth',
-              style: TextStyle(color: Color(0xFF8B99AC), fontSize: 13),
+              style: TextStyle(color: finoraMutedInk, fontSize: 13),
             ),
             const SizedBox(height: 3),
             Row(
@@ -251,12 +251,12 @@ class _BalanceOverview extends StatelessWidget {
                   money: overview.cash,
                 ),
                 _BalancePart(
-                  color: finoraPink,
+                  color: finoraInk,
                   label: 'Investments',
                   money: overview.investments,
                 ),
                 _BalancePart(
-                  color: finoraAqua,
+                  color: finoraSlate,
                   label: 'Pillar 3a',
                   money: overview.retirement,
                 ),
@@ -304,7 +304,7 @@ class _BalancePart extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: Color(0xFF93A0B1),
+                    color: finoraMutedInk,
                     fontSize: 11,
                   ),
                 ),
@@ -364,7 +364,7 @@ class _WealthTrajectoryCard extends StatelessWidget {
                       Text(
                         'Your unified net worth over time',
                         style: TextStyle(
-                          color: Color(0xFF8E9CAF),
+                          color: finoraMutedInk,
                           fontSize: 12,
                         ),
                       ),
@@ -383,7 +383,7 @@ class _WealthTrajectoryCard extends StatelessWidget {
                   child: const Text(
                     '6 months',
                     style: TextStyle(
-                      color: finoraBlue,
+                      color: finoraBlueText,
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                     ),
@@ -418,7 +418,7 @@ class _WealthTrajectoryCard extends StatelessWidget {
             const SizedBox(height: 3),
             const Text(
               'Net contributions and market performance',
-              style: TextStyle(color: Color(0xFF8E9CAF), fontSize: 11),
+              style: TextStyle(color: finoraMutedInk, fontSize: 11),
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -448,12 +448,12 @@ class _WealthTrajectoryCard extends StatelessWidget {
 }
 
 const _monthStyle = TextStyle(
-  color: Color(0xFF9BA8B9),
+  color: finoraMutedInk,
   fontSize: 10,
   fontWeight: FontWeight.w700,
 );
 const _activeMonthStyle = TextStyle(
-  color: finoraPink,
+  color: finoraBlueText,
   fontSize: 10,
   fontWeight: FontWeight.w800,
 );
@@ -471,7 +471,7 @@ class _WealthTrendPainter extends CustomPainter {
     final chartRect = Rect.fromLTWH(0, 6, size.width, size.height - 12);
 
     final gridPaint = Paint()
-      ..color = const Color(0xFFE8EDF4)
+      ..color = finoraBorder
       ..strokeWidth = 1;
     for (var index = 0; index < 3; index++) {
       final y = chartRect.top + chartRect.height * index / 2;
@@ -505,7 +505,7 @@ class _WealthTrendPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0x553A86FF), Color(0x003A86FF)],
+          colors: [Color(0x553C94FF), Color(0x003C94FF)],
         ).createShader(chartRect),
     );
     canvas.drawPath(
@@ -518,7 +518,7 @@ class _WealthTrendPainter extends CustomPainter {
         ..strokeJoin = StrokeJoin.round,
     );
     canvas.drawCircle(points.last, 5, Paint()..color = Colors.white);
-    canvas.drawCircle(points.last, 3.2, Paint()..color = finoraPink);
+    canvas.drawCircle(points.last, 3.2, Paint()..color = finoraBlue);
   }
 
   @override
@@ -559,7 +559,7 @@ class _WealthPlanCard extends StatelessWidget {
                       Text(
                         'Progress against your personal targets',
                         style: TextStyle(
-                          color: Color(0xFF8E9CAF),
+                          color: finoraMutedInk,
                           fontSize: 12,
                         ),
                       ),
@@ -605,20 +605,20 @@ class _WealthPlanCard extends StatelessWidget {
               label: 'Long-term allocation',
               value: '${(investedShare * 100).round()}% of 45% target',
               progress: (investedShare / .45).clamp(0, 1),
-              color: finoraPink,
+              color: finoraInk,
             ),
             const SizedBox(height: 17),
             const _PlanProgressRow(
               label: 'Pillar 3a yearly plan',
               value: '72% funded',
               progress: .72,
-              color: finoraAqua,
+              color: finoraSlate,
             ),
             const SizedBox(height: 18),
             const Text(
               'Targets are illustrative in this MVP and can be personalized in the next step.',
               style: TextStyle(
-                color: Color(0xFF8E9CAF),
+                color: finoraMutedInk,
                 fontSize: 10,
                 height: 1.35,
               ),
@@ -662,7 +662,7 @@ class _PlanProgressRow extends StatelessWidget {
             Text(
               value,
               style: const TextStyle(
-                color: Color(0xFF6F7E93),
+                color: finoraMutedInk,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
               ),
@@ -736,7 +736,7 @@ class _PersonalizedInsightsCarouselState
       ),
       _PersonalInsight(
         icon: Icons.savings_outlined,
-        color: finoraAqua,
+        color: finoraSlate,
         eyebrow: 'RETIREMENT',
         metric:
             '${_compactMoney(overview.retirement)} · ${(retirementShare * 100).round()}%',
@@ -745,7 +745,7 @@ class _PersonalizedInsightsCarouselState
       ),
       _PersonalInsight(
         icon: Icons.account_balance_outlined,
-        color: finoraYellow,
+        color: finoraSilver,
         eyebrow: 'LEARN',
         metric: 'Because cash represents ${(cashShare * 100).round()}%',
         title: 'Understand CHF bond funds',
@@ -753,7 +753,7 @@ class _PersonalizedInsightsCarouselState
       ),
       const _PersonalInsight(
         icon: Icons.show_chart_rounded,
-        color: finoraPink,
+        color: finoraBlue,
         eyebrow: 'EXPLORE',
         metric: 'Long-term allocation idea',
         title: 'Compare broad Swiss equity ETFs',
@@ -790,8 +790,8 @@ class _PersonalizedInsightsCarouselState
                 margin: const EdgeInsets.symmetric(horizontal: 3),
                 decoration: BoxDecoration(
                   color: index == _currentPage
-                      ? finoraPink
-                      : const Color(0xFFD3DBE6),
+                      ? finoraBlue
+                      : finoraSilver,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -827,6 +827,7 @@ class _PersonalInsightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = finoraAccessibleAccent(insight.color);
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -850,13 +851,13 @@ class _PersonalInsightCard extends StatelessWidget {
                   color: insight.color.withValues(alpha: .14),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(insight.icon, color: insight.color, size: 19),
+                child: Icon(insight.icon, color: textColor, size: 19),
               ),
               const SizedBox(width: 10),
               Text(
                 insight.eyebrow,
                 style: TextStyle(
-                  color: insight.color,
+                  color: textColor,
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   letterSpacing: .5,
@@ -868,7 +869,7 @@ class _PersonalInsightCard extends StatelessWidget {
           Text(
             insight.metric,
             style: TextStyle(
-              color: insight.color,
+              color: textColor,
               fontSize: 12,
               fontWeight: FontWeight.w800,
             ),
@@ -891,7 +892,7 @@ class _PersonalInsightCard extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                color: Color(0xFF6F7E93),
+                color: finoraMutedInk,
                 fontSize: 12,
                 height: 1.35,
               ),
@@ -923,7 +924,7 @@ class _MarketDataNote extends StatelessWidget {
             child: Text(
               'Illustrative targets and ideas, not investment advice. Live prices and product data are not connected yet.',
               style: TextStyle(
-                color: Color(0xFF5F7190),
+                color: finoraMutedInk,
                 fontSize: 11,
                 height: 1.4,
               ),

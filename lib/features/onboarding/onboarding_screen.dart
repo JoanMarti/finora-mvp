@@ -69,7 +69,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         child: LinearProgressIndicator(
                           value: index / (activeSteps.length - 1),
                           minHeight: 6,
-                          backgroundColor: const Color(0xFFE3EAF4),
+                          backgroundColor: finoraBorder,
                         ),
                       ),
                     ),
@@ -175,7 +175,7 @@ class _Welcome extends StatelessWidget {
           width: 72,
           height: 72,
           decoration: BoxDecoration(
-            color: finoraPink,
+            color: finoraBlue,
             borderRadius: BorderRadius.circular(22),
           ),
           child: const Icon(
@@ -206,7 +206,7 @@ class _Welcome extends StatelessWidget {
         const Center(
           child: Text(
             'Private demo · no real bank data',
-            style: TextStyle(color: Color(0xFF71807B)),
+            style: TextStyle(color: finoraMutedInk),
           ),
         ),
       ],
@@ -328,7 +328,7 @@ class _SelectionStep<T> extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                   side: BorderSide(
-                    color: isSelected ? finoraBlue : const Color(0xFFE1E7F0),
+                    color: isSelected ? finoraBlue : finoraBorder,
                     width: isSelected ? 1.5 : 1,
                   ),
                 ),
@@ -356,8 +356,8 @@ class _SelectionStep<T> extends StatelessWidget {
                               ? Icons.check_circle
                               : Icons.circle_outlined,
                           color: isSelected
-                              ? finoraPink
-                              : const Color(0xFF9AA8BC),
+                              ? finoraBlue
+                              : finoraSlate,
                         ),
                       ],
                     ),

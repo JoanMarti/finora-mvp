@@ -209,7 +209,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
               FilledButton(
                 onPressed: () => Navigator.pop(dialogContext, true),
                 style: FilledButton.styleFrom(
-                  backgroundColor: Colors.red.shade700,
+                  backgroundColor: finoraDanger,
                 ),
                 child: const Text('Disconnect'),
               ),
@@ -265,7 +265,7 @@ class _AccountsSummaryCard extends StatelessWidget {
                 const Text(
                   'PORTFOLIO TOTAL',
                   style: TextStyle(
-                    color: Color(0xFFB9C8DE),
+                    color: finoraSilver,
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                     letterSpacing: .4,
@@ -297,7 +297,7 @@ class _AccountsSummaryCard extends StatelessWidget {
                     Container(
                       height: 36,
                       width: 1,
-                      color: const Color(0xFF3A5685),
+                      color: finoraSlate,
                     ),
                     Expanded(
                       child: _SummaryMetric(
@@ -329,7 +329,7 @@ class _SummaryMetric extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Color(0xFFAABBB5), fontSize: 11),
+          style: const TextStyle(color: finoraSilver, fontSize: 11),
         ),
         const SizedBox(height: 4),
         FittedBox(
@@ -367,10 +367,10 @@ class _AccountFilterChip extends StatelessWidget {
     selected: selected,
     onSelected: (_) => onSelected(),
     showCheckmark: false,
-    side: BorderSide(color: selected ? finoraBlue : const Color(0xFFDDE5F0)),
+    side: BorderSide(color: selected ? finoraBlue : finoraBorder),
     selectedColor: finoraSoftBlue,
     labelStyle: TextStyle(
-      color: selected ? finoraBlue : finoraInk,
+      color: selected ? finoraBlueText : finoraInk,
       fontWeight: FontWeight.w700,
     ),
   );
@@ -426,7 +426,7 @@ class _InstitutionAccountsGroup extends StatelessWidget {
                         Text(
                           connection?.lastSyncLabel ?? 'Connection unavailable',
                           style: const TextStyle(
-                            color: Color(0xFF7D8B9E),
+                            color: finoraMutedInk,
                             fontSize: 12,
                           ),
                         ),
@@ -448,12 +448,12 @@ class _InstitutionAccountsGroup extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            color: const Color(0xFFF7F9FC),
+            color: finoraCanvas,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
             child: Text(
               '${accounts.length} ${accounts.length == 1 ? 'account' : 'accounts'} · ${formatMoney(Money(institutionTotal))}',
               style: const TextStyle(
-                color: Color(0xFF63718A),
+                color: finoraMutedInk,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -482,9 +482,9 @@ class _CompactConnectionStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
       ConnectionStatus.connected => ('Synced', finoraGreen),
-      ConnectionStatus.stale => ('Stale', finoraYellow),
-      ConnectionStatus.actionRequired => ('Action', Colors.red.shade700),
-      ConnectionStatus.manual => ('Manual', const Color(0xFF6B7280)),
+      ConnectionStatus.stale => ('Stale', finoraWarning),
+      ConnectionStatus.actionRequired => ('Action', finoraDanger),
+      ConnectionStatus.manual => ('Manual', finoraSlate),
     };
     return Tooltip(
       message: label,
@@ -563,7 +563,7 @@ class _AccessibleAccountRow extends StatelessWidget {
                             Text(
                               '${account.type.label} · ${account.maskedIdentifier}',
                               style: const TextStyle(
-                                color: Color(0xFF7D8B9E),
+                                color: finoraMutedInk,
                                 fontSize: 12,
                               ),
                             ),
@@ -586,7 +586,7 @@ class _AccessibleAccountRow extends StatelessWidget {
                                   style: TextStyle(
                                     color: positive
                                         ? finoraGreen
-                                        : Colors.red.shade700,
+                                        : finoraDanger,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -648,10 +648,10 @@ List<PopupMenuEntry<_AccountAction>> _accountActionItems(
     value: _AccountAction.disconnect,
     child: ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(Icons.link_off, color: Colors.red.shade700),
+      leading: Icon(Icons.link_off, color: finoraDanger),
       title: Text(
         'Disconnect institution',
-        style: TextStyle(color: Colors.red.shade700),
+        style: const TextStyle(color: finoraDanger),
       ),
     ),
   ),
@@ -675,7 +675,7 @@ class _EmptyAccountsState extends StatelessWidget {
       padding: EdgeInsets.all(24),
       child: Column(
         children: [
-          Icon(Icons.filter_alt_off_outlined, color: Color(0xFF7D8B9E)),
+          Icon(Icons.filter_alt_off_outlined, color: finoraSlate),
           SizedBox(height: 10),
           Text(
             'No accounts match this filter.',
@@ -746,7 +746,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
             if (connection != null)
               Card(
                 color: connection.status == ConnectionStatus.stale
-                    ? const Color(0xFFFFF4DD)
+                    ? const Color(0xFFFFF5DF)
                     : finoraMint,
                 child: Padding(
                   padding: const EdgeInsets.all(18),
@@ -758,7 +758,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
                         connection.lastSyncLabel,
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF66756F),
+                          color: finoraMutedInk,
                         ),
                       ),
                     ],
@@ -905,7 +905,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               const SectionTitle('Potential improvements'),
               _OpportunityCard(
                 icon: Icons.health_and_safety_outlined,
-                accent: finoraAqua,
+                accent: finoraSlate,
                 eyebrow: 'COVERAGE CHECK · PARTNER OPTION',
                 title: 'Review insurance in one place',
                 description: 'Two insurance payments were detected. A guided comparison could reveal duplicated cover or a better deductible setup.',
@@ -918,7 +918,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               const SizedBox(height: 12),
               _OpportunityCard(
                 icon: Icons.account_balance_outlined,
-                accent: finoraPink,
+                accent: finoraBlue,
                 eyebrow: 'DEBT VIEW · OPTIONAL',
                 title: 'See the true cost of your debt',
                 description: 'No cards or loans are connected yet. Add them to compare rates and see whether consolidation deserves a closer look.',
@@ -947,7 +947,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                     SwitchListTile(
                       secondary: const Icon(
                         Icons.notifications_active_outlined,
-                        color: finoraPink,
+                        color: finoraBlue,
                       ),
                       title: const Text(
                         'Low balance forecast',
@@ -1008,7 +1008,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                       child: Text(
                         'Insights use mock transaction patterns and are not financial advice. Finora never applies for or switches a product without explicit consent.',
                         style: TextStyle(
-                          color: Color(0xFF63718A),
+                          color: finoraMutedInk,
                           fontSize: 12,
                           height: 1.35,
                         ),
@@ -1092,7 +1092,7 @@ class _AccountBalanceCard extends StatelessWidget {
                       const Text(
                         'Updated 4 min ago',
                         style: TextStyle(
-                          color: Color(0xFFAABBB5),
+                          color: finoraSilver,
                           fontSize: 12,
                         ),
                       ),
@@ -1110,7 +1110,7 @@ class _AccountBalanceCard extends StatelessWidget {
             const SizedBox(height: 26),
             Text(
               account.name,
-              style: const TextStyle(color: Color(0xFFAABBB5)),
+              style: const TextStyle(color: finoraSilver),
             ),
             const SizedBox(height: 5),
             Text(
@@ -1128,7 +1128,7 @@ class _AccountBalanceCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     account.maskedIdentifier,
-                    style: const TextStyle(color: Color(0xFFAABBB5)),
+                    style: const TextStyle(color: finoraSilver),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -1145,7 +1145,7 @@ class _AccountBalanceCard extends StatelessWidget {
                         child: Text(
                           '+ CHF 900 in Sep',
                           style: TextStyle(
-                            color: Color(0xFF7DE2B9),
+                            color: Color(0xFF8ED8B9),
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                           ),
@@ -1237,7 +1237,7 @@ class _BalanceEvolutionCard extends StatelessWidget {
                       SizedBox(height: 3),
                       Text(
                         'Closing balance for the selected period',
-                        style: TextStyle(color: Color(0xFF8A98AB)),
+                        style: TextStyle(color: finoraMutedInk),
                       ),
                     ],
                   ),
@@ -1271,8 +1271,8 @@ class _BalanceEvolutionCard extends StatelessWidget {
                     point.label,
                     style: TextStyle(
                       color: point == points.last
-                          ? finoraPink
-                          : const Color(0xFF9AA8BC),
+                          ? finoraBlueText
+                          : finoraMutedInk,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
@@ -1334,7 +1334,7 @@ class _CashFlowCard extends StatelessWidget {
                   child: _CashFlowMetric(
                     label: 'SPENDING',
                     value: formatMoney(analytics.monthlySpending),
-                    color: finoraPink,
+                    color: finoraBlue,
                   ),
                 ),
               ],
@@ -1359,7 +1359,7 @@ class _CashFlowCard extends StatelessWidget {
                   Text(
                     point.label,
                     style: const TextStyle(
-                      color: Color(0xFF9AA8BC),
+                      color: finoraMutedInk,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
@@ -1408,7 +1408,7 @@ class _SpendingCategoriesCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               '${formatMoney(Money(total))} categorised this month',
-              style: const TextStyle(color: Color(0xFF8A98AB)),
+              style: const TextStyle(color: finoraMutedInk),
             ),
             const SizedBox(height: 20),
             for (
@@ -1480,7 +1480,7 @@ class _SpendingCategoryRow extends StatelessWidget {
                     '$percent%',
                     textAlign: TextAlign.end,
                     style: const TextStyle(
-                      color: Color(0xFF7D8B9E),
+                      color: finoraMutedInk,
                       fontSize: 12,
                     ),
                   ),
@@ -1516,6 +1516,7 @@ class _CashFlowMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = finoraAccessibleAccent(color);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color.withValues(alpha: .08),
@@ -1529,7 +1530,7 @@ class _CashFlowMetric extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: color,
+                color: textColor,
                 fontSize: 10,
                 fontWeight: FontWeight.w800,
               ),
@@ -1585,7 +1586,7 @@ class _RecurringPaymentsCard extends StatelessWidget {
                 Text(
                   'CHF ${analytics.recurringTotal.toStringAsFixed(2)} / month',
                   style: const TextStyle(
-                    color: finoraPink,
+                    color: finoraBlueText,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -1629,7 +1630,7 @@ class _RecurringPaymentTile extends StatelessWidget {
       ),
       subtitle: Text(
         '${payment.category} · ${payment.nextDueLabel}',
-        style: const TextStyle(color: Color(0xFF8A98AB), fontSize: 12),
+        style: const TextStyle(color: finoraMutedInk, fontSize: 12),
       ),
       trailing: Text(
         'CHF ${payment.amount.amount.abs().toStringAsFixed(2)}',
@@ -1661,6 +1662,7 @@ class _OpportunityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textAccent = finoraAccessibleAccent(accent);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(18),
@@ -1683,7 +1685,7 @@ class _OpportunityCard extends StatelessWidget {
                       Text(
                         eyebrow,
                         style: TextStyle(
-                          color: accent,
+                          color: textAccent,
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           letterSpacing: .25,
@@ -1706,7 +1708,7 @@ class _OpportunityCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               description,
-              style: const TextStyle(color: Color(0xFF63718A), height: 1.35),
+              style: const TextStyle(color: finoraMutedInk, height: 1.35),
             ),
             const SizedBox(height: 12),
             DecoratedBox(
@@ -1722,7 +1724,7 @@ class _OpportunityCard extends StatelessWidget {
                 child: Text(
                   value,
                   style: TextStyle(
-                    color: accent,
+                    color: textAccent,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1752,6 +1754,7 @@ class _ValuePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = finoraAccessibleAccent(color);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color.withValues(alpha: .1),
@@ -1762,7 +1765,7 @@ class _ValuePill extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: color,
+            color: textColor,
             fontSize: 11,
             fontWeight: FontWeight.w800,
           ),
@@ -1788,7 +1791,7 @@ class _BalanceHistoryPainter extends CustomPainter {
     final graphHeight = size.height - topPadding - bottomPadding;
 
     final gridPaint = Paint()
-      ..color = const Color(0xFFE8EDF4)
+      ..color = finoraBorder
       ..strokeWidth = 1;
     for (var index = 0; index < 3; index++) {
       final y = topPadding + graphHeight * index / 2;
@@ -1835,7 +1838,7 @@ class _BalanceHistoryPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round,
     );
-    canvas.drawCircle(offsets.last, 5, Paint()..color = finoraPink);
+    canvas.drawCircle(offsets.last, 5, Paint()..color = finoraBlue);
     canvas.drawCircle(offsets.last, 3, Paint()..color = Colors.white);
   }
 
@@ -1857,7 +1860,7 @@ class _CashFlowPainter extends CustomPainter {
     final groupWidth = size.width / points.length;
     final barWidth = math.min(11.0, groupWidth * .22);
     final baseline = size.height;
-    final background = Paint()..color = const Color(0xFFF0F3F8);
+    final background = Paint()..color = finoraCanvas;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromLTWH(0, 0, size.width, size.height),
@@ -1893,7 +1896,7 @@ class _CashFlowPainter extends CustomPainter {
           ),
           const Radius.circular(4),
         ),
-        Paint()..color = finoraPink,
+        Paint()..color = finoraBlue,
       );
     }
   }

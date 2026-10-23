@@ -160,12 +160,9 @@ void main() {
     await tester.pumpWidget(_screen(const GoalsScreen()));
     await tester.pumpAndSettle();
 
-    final texts = find
-        .byType(Text)
-        .evaluate()
-        .map((element) => (element.widget as Text).data)
-        .join(' | ');
-    expect(find.text('Flat deposit'), findsOneWidget, reason: texts);
+    final list = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(find.text('Flat deposit'), 200, scrollable: list);
+    expect(find.text('Flat deposit'), findsOneWidget);
     expect(find.textContaining('CHF 575.00 a month'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Add a goal'));
@@ -186,6 +183,7 @@ void main() {
     await tester.tap(save);
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Car'), 200, scrollable: list);
     expect(find.text('Car'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

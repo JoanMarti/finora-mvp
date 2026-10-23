@@ -1,8 +1,10 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +40,8 @@ class RetirementScreen extends ConsumerWidget {
               _ProjectionSummary(projection: data, profile: profile),
               SectionTitle(l10n.threePillarsSection),
               _PillarBreakdown(projection: data),
+              SectionTitle(l10n.scenariosSection),
+              const _Scenarios(),
               SectionTitle(l10n.assumptionsSection),
               _Assumptions(profile: profile),
               const SizedBox(height: 16),
@@ -284,6 +288,108 @@ class _PillarBreakdown extends StatelessWidget {
                   ],
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Cautious / base / favourable projections side by side (Finora Plus).
+class _Scenarios extends ConsumerWidget {
+  const _Scenarios();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    if (!ref.watch(isPlusProvider)) {
+      return PlusLockedCard(
+        title: l10n.scenariosLockedTitle,
+        body: l10n.scenariosLockedBody,
+      );
+    }
+    final scenarios = ref.watch(retirementScenariosProvider).value;
+    if (scenarios == null) return const SizedBox.shrink();
+    final rows = [
+      for (final scenario in RetirementScenario.values)
+        (
+          scenario,
+          switch (scenario) {
+            RetirementScenario.cautious => l10n.scenarioCautious,
+            RetirementScenario.base => l10n.scenarioBase,
+            RetirementScenario.favourable => l10n.scenarioFavourable,
+          },
+          switch (scenario) {
+            RetirementScenario.cautious => l10n.scenarioCautiousDetail,
+            RetirementScenario.base => l10n.scenarioBaseDetail,
+            RetirementScenario.favourable => l10n.scenarioFavourableDetail,
+          },
+          scenarios[scenario]!,
+        ),
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        child: Column(
+          children: [
+            for (var index = 0; index < rows.length; index++) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            rows[index].$2,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: rows[index].$1 == RetirementScenario.base
+                                  ? finoraBlueText
+                                  : finoraInk,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            rows[index].$3,
+                            style: const TextStyle(
+                              color: finoraMutedInk,
+                              fontSize: 12,
+                              height: 1.35,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          l10n.perMonth(formatMoney(rows[index].$4.totalMonthly)),
+                          style: const TextStyle(fontWeight: FontWeight.w800),
+                        ),
+                        Text(
+                          l10n.scenarioCoverage(
+                            (rows[index].$4.coverage * 100).round(),
+                          ),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: rows[index].$4.onTrack
+                                ? finoraGreen
+                                : finoraWarning,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              if (index != rows.length - 1) const Divider(height: 1),
+            ],
           ],
         ),
       ),

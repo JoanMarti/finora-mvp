@@ -2,6 +2,7 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/trust.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -119,17 +120,17 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref
-            .read(offerTrackerProvider.notifier)
-            .track(widget.opportunity.kind, OfferEventType.viewed);
+            .read(sessionProvider.notifier)
+            .recordOfferEvent(widget.opportunity, OfferEventType.viewed);
       }
     });
   }
 
   Future<void> _continue() async {
     final opportunity = widget.opportunity;
-    ref
-        .read(offerTrackerProvider.notifier)
-        .track(opportunity.kind, OfferEventType.partnerClicked);
+    final session = ref.read(sessionProvider.notifier);
+    session.recordOfferEvent(opportunity, OfferEventType.partnerClicked);
+    if (opportunity.isSponsored) session.recordPartnerConsent(opportunity.kind);
     if (!opportunity.isSponsored) {
       final router = GoRouter.of(context);
       Navigator.pop(context);
@@ -155,10 +156,9 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
 
   void _dismiss() {
     final opportunity = widget.opportunity;
-    ref
-        .read(offerTrackerProvider.notifier)
-        .track(opportunity.kind, OfferEventType.dismissed);
-    ref.read(sessionProvider.notifier).dismissOpportunity(opportunity.id);
+    ref.read(sessionProvider.notifier)
+      ..recordOfferEvent(opportunity, OfferEventType.dismissed)
+      ..dismissOpportunity(opportunity.id);
     Navigator.pop(context);
   }
 

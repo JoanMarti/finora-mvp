@@ -803,7 +803,7 @@
   "aboutDemoBody": "All balances and transactions are fictional. No credentials, consent tokens or personal financial data are stored.",
   "restartOnboarding": "Restart onboarding",
   "privacyReadOnly": "Read-only: Finora can never pay, transfer or trade.",
-  "privacyDeviceOnly": "This demo stores only your onboarding choices on this device.",
+  "privacyDeviceOnly": "This demo keeps your settings, goals and consent history only on this device.",
   "privacyNoCredentials": "No bank credentials or consent tokens are collected.",
   "restartOnboardingTitle": "Restart onboarding?",
   "restartOnboardingBody": "Your demo profile and connections on this device will be cleared.",
@@ -1246,5 +1246,145 @@
       }
     }
   },
-  "offerBankFeesAction": "Compare bank accounts"
+  "offerBankFeesAction": "Compare bank accounts",
+  "planSection": "Your plan",
+  "planFree": "Free",
+  "plusTitle": "Finora Plus",
+  "plusBadge": "Plus",
+  "plusHeadline": "Plan further ahead with Finora Plus",
+  "plusSubtitle": "Deeper retirement planning and tax exports, on top of everything that is already free.",
+  "plusPricePerYear": "{price} a year",
+  "@plusPricePerYear": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "plusIncludedSection": "What Plus adds",
+  "plusFeatureScenariosTitle": "Retirement scenarios",
+  "plusFeatureScenariosBody": "Compare cautious, base and favourable assumptions for your pension.",
+  "plusFeatureTaxTitle": "Tax export",
+  "plusFeatureTaxBody": "Copy your year-end figures as CSV for your tax software or adviser.",
+  "plusFeatureHouseholdTitle": "Shared household",
+  "plusFeatureHouseholdBody": "One view of your and your partner’s finances.",
+  "plusFeatureHistoryTitle": "24 months of history",
+  "plusFeatureHistoryBody": "Longer trends for wealth and spending.",
+  "comingSoon": "Soon",
+  "plusFreeForever": "Your overview, spending analysis, goals, alerts and savings ideas stay free.",
+  "plusNoOfferInfluence": "Plus never changes which offers you see or their order.",
+  "plusCancelAnytime": "Cancel at any time; your data stays where it is.",
+  "plusStart": "Start Plus · {price} a year",
+  "@plusStart": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "plusDemoNote": "Demo: no payment is taken.",
+  "plusConfirmTitle": "Start Finora Plus?",
+  "plusConfirmBody": "This is a demo, so no payment is taken. In the store version you would confirm the subscription with Apple or Google.",
+  "plusConfirmAction": "Start Plus",
+  "plusWelcome": "Welcome to Finora Plus.",
+  "plusActive": "Finora Plus is active",
+  "plusActiveSince": "Since {date}",
+  "@plusActiveSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "plusManage": "Manage your subscription",
+  "plusTeaser": "Retirement scenarios and tax export",
+  "plusCancel": "Cancel Plus",
+  "plusCancelTitle": "Cancel Finora Plus?",
+  "plusCancelBody": "Scenarios and the tax export will be locked again. Everything else stays as it is.",
+  "plusKeep": "Keep Plus",
+  "plusUnlock": "Unlock with Plus",
+  "copyAsCsvPlus": "Copy as CSV · Plus",
+  "scenariosSection": "Scenarios",
+  "scenariosLockedTitle": "Compare retirement scenarios",
+  "scenariosLockedBody": "See how a lower conversion rate or higher returns would change your income in retirement.",
+  "scenarioCautious": "Cautious",
+  "scenarioBase": "Your assumptions",
+  "scenarioFavourable": "Favourable",
+  "scenarioCautiousDetail": "Pension fund converts at 5.0 %; 3a returns 1.5 points lower",
+  "scenarioBaseDetail": "Legal minimum rates and your 3a return",
+  "scenarioFavourableDetail": "Pension fund interest of 2 %; 3a returns 2 points higher",
+  "scenarioCoverage": "{percent}% of target",
+  "@scenarioCoverage": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyHowSection": "How Finora handles your data",
+  "privacyPartnersOnlyWithConsent": "Partners receive data only for one offer at a time, and only after you tick the box for it.",
+  "privacyConsentsSection": "Your choices",
+  "consentHistorySection": "Consent history",
+  "consentHistoryEmpty": "You have not answered any consent question yet.",
+  "consentPurposeAnalysis": "Analyse my data for savings offers",
+  "consentPurposePartner": "Share data with the partner: {offer}",
+  "@consentPurposePartner": {
+    "placeholders": {
+      "offer": {
+        "type": "String"
+      }
+    }
+  },
+  "consentGranted": "Given",
+  "consentWithdrawn": "Not given",
+  "consentRecordDetail": "{status} · {date} · text version {version}",
+  "@consentRecordDetail": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "withdrawAllConsents": "Withdraw all offer consents",
+  "withdrawAllTitle": "Withdraw all offer consents?",
+  "withdrawAllBody": "Finora stops analysing your data for offers and deletes your hidden offers and offer statistics from this device. The withdrawal is kept in your consent history.",
+  "withdrawAction": "Withdraw",
+  "consentsWithdrawn": "Your offer consents were withdrawn.",
+  "partnerDataNote": "Partners keep what you already shared with them under their own privacy policy. Ask them directly to delete it.",
+  "pilotMetricsTitle": "Pilot metrics",
+  "pilotMetricsTileBody": "Offer funnel measured on this device",
+  "pilotMetricsIntro": "The business-plan funnel as this device measures it. In the pilot, the same counts are sent to the analytics backend.",
+  "pilotMetricsPrivacy": "Only counts per offer type and the estimated saving ranges are kept: no names, amounts per person or timestamps.",
+  "kpiConsent": "Offer consent",
+  "kpiConsentGiven": "Given",
+  "kpiConsentDeclined": "Declined",
+  "kpiConsentNotAsked": "Not asked",
+  "kpiOffersOpened": "Offers opened",
+  "kpiClickRate": "Click to partner",
+  "kpiDismissRate": "Dismissed",
+  "kpiSavingPursued": "Saving pursued a year",
+  "kpiPlan": "Plan",
+  "kpiByOfferSection": "By offer",
+  "kpiEmpty": "No offer has been opened yet.",
+  "kpiOfferColumn": "Offer",
+  "kpiViewsShort": "Views",
+  "kpiClicksShort": "Clicks",
+  "kpiDismissedShort": "Hidden",
+  "moneyRange": "{low} – {high}",
+  "@moneyRange": {
+    "placeholders": {
+      "low": {
+        "type": "String"
+      },
+      "high": {
+        "type": "String"
+      }
+    }
+  }
 }

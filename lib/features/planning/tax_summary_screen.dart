@@ -1,4 +1,5 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
@@ -7,6 +8,7 @@ import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// Year-end figures prepared the way a Swiss tax return asks for them.
@@ -93,7 +95,10 @@ class _TaxSummaryScreenState extends ConsumerState<TaxSummaryScreen> {
               data: (data) => _TaxSummaryBody(
                 summary: data,
                 institutionName: institutionName,
-                onCopy: () => _copyCsv(data, institutionName),
+                exportLocked: !ref.watch(isPlusProvider),
+                onCopy: ref.watch(isPlusProvider)
+                    ? () => _copyCsv(data, institutionName)
+                    : () => context.push('/plus'),
               ),
             ),
           ],
@@ -112,11 +117,15 @@ class _TaxSummaryBody extends StatelessWidget {
     required this.summary,
     required this.institutionName,
     required this.onCopy,
+    required this.exportLocked,
   });
 
   final TaxYearSummary summary;
   final String Function(String) institutionName;
   final VoidCallback onCopy;
+
+  /// The CSV export is a Finora Plus feature; the summary itself is free.
+  final bool exportLocked;
 
   @override
   Widget build(BuildContext context) {
@@ -211,8 +220,10 @@ class _TaxSummaryBody extends StatelessWidget {
         const SizedBox(height: 16),
         OutlinedButton.icon(
           onPressed: onCopy,
-          icon: const Icon(Icons.copy_all_outlined),
-          label: Text(l10n.copyAsCsv),
+          icon: Icon(
+            exportLocked ? Icons.lock_outline : Icons.copy_all_outlined,
+          ),
+          label: Text(exportLocked ? l10n.copyAsCsvPlus : l10n.copyAsCsv),
         ),
         const SizedBox(height: 16),
         Text(

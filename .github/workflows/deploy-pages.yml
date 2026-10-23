@@ -25,8 +25,20 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+      - name: Analyze
+        id: analyze
+        # Re-emit analyzer findings as annotations so they show on the PR.
+        run: |
+          status=0
+          flutter analyze --no-pub > analyze.txt 2>&1 || status=$?
+          cat analyze.txt
+          grep -E '^ *(error|warning|info) • ' analyze.txt \
+            | sed -E 's/^ *(error|warning|info) • (.*) • ([^ ]+):([0-9]+):([0-9]+) • (.*)$/::\1 file=\3,line=\4,col=\5::\2 [\6]/' \
+            | sed 's/^::info /::notice /' || true
+          exit $status
+      - name: Test
+        if: ${{ !cancelled() }}
+        run: flutter test --no-pub --reporter github
       - run: flutter build web --release --base-href /finora-mvp/
       - if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5

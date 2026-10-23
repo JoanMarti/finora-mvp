@@ -16,6 +16,6 @@ class MarketTheme {
   final String tag;
 }
 
-abstract class MarketDataRepository {
+abstract interface class MarketDataRepository {
   Future<List<MarketTheme>> getSwissMarketThemes();
 }

@@ -1,5 +1,7 @@
 import 'package:finora/app/theme.dart';
-import 'package:finora/data/mock_financial_repository.dart';
+import 'package:finora/application/providers.dart';
+import 'package:finora/application/session_controller.dart';
+import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(sessionProvider);
     final institutions =
         ref.watch(institutionsProvider).value ?? const <Institution>[];
     final connections =
@@ -25,35 +28,35 @@ class ProfileScreen extends ConsumerWidget {
         child: FinoraPage(
           child: ListView(
             children: [
-              const Row(
+              Row(
                 children: [
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: finoraInk,
                     foregroundColor: Colors.white,
                     child: Text(
-                      'JM',
-                      style: TextStyle(
+                      session.initials,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 18,
                       ),
                     ),
                   ),
-                  SizedBox(width: 14),
+                  const SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Joan',
-                          style: TextStyle(
+                          session.displayName,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 20,
                           ),
                         ),
                         Text(
-                          'joan@example.com',
-                          style: TextStyle(color: finoraMutedInk),
+                          session.email.isEmpty ? 'Demo profile' : session.email,
+                          style: const TextStyle(color: finoraMutedInk),
                         ),
                       ],
                     ),
@@ -61,6 +64,14 @@ class ProfileScreen extends ConsumerWidget {
                 ],
               ),
               const SectionTitle('Connections'),
+              if (connections.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    'No institutions connected yet.',
+                    style: TextStyle(color: finoraMutedInk),
+                  ),
+                ),
               for (final connection in connections)
                 Builder(
                   builder: (context) {
@@ -106,20 +117,27 @@ class ProfileScreen extends ConsumerWidget {
                     const ListTile(
                       leading: Icon(Icons.currency_franc),
                       title: Text('Display currency'),
+                      subtitle: Text('More currencies are coming soon'),
                       trailing: Text('CHF'),
                     ),
                     const Divider(height: 1),
                     SwitchListTile(
-                      value: true,
-                      onChanged: (_) {},
+                      value: session.dataHealthAlerts,
+                      onChanged: ref
+                          .read(sessionProvider.notifier)
+                          .setDataHealthAlerts,
                       secondary: const Icon(Icons.notifications_none),
                       title: const Text('Data health alerts'),
+                      subtitle: const Text(
+                        'Tell me when a connection is stale or needs consent',
+                      ),
                     ),
                     const Divider(height: 1),
-                    const ListTile(
-                      leading: Icon(Icons.lock_outline),
-                      title: Text('Privacy & security'),
-                      trailing: Icon(Icons.chevron_right),
+                    ListTile(
+                      leading: const Icon(Icons.lock_outline),
+                      title: const Text('Privacy & security'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _showPrivacySheet(context),
                     ),
                   ],
                 ),
@@ -137,7 +155,7 @@ class ProfileScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
               TextButton(
-                onPressed: () => context.go('/onboarding'),
+                onPressed: () => _confirmRestart(context, ref),
                 child: const Text('Restart onboarding'),
               ),
             ],
@@ -146,4 +164,85 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+void _showPrivacySheet(BuildContext context) {
+  showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => const SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Privacy & security',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            ),
+            SizedBox(height: 16),
+            _PrivacyLine(
+              icon: Icons.visibility_outlined,
+              text: 'Read-only: Finora can never pay, transfer or trade.',
+            ),
+            _PrivacyLine(
+              icon: Icons.phone_iphone,
+              text:
+                  'This demo stores only your onboarding choices on this device.',
+            ),
+            _PrivacyLine(
+              icon: Icons.key_off_outlined,
+              text: 'No bank credentials or consent tokens are collected.',
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _PrivacyLine extends StatelessWidget {
+  const _PrivacyLine({required this.icon, required this.text});
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: finoraBlue, size: 20),
+        const SizedBox(width: 12),
+        Expanded(child: Text(text, style: const TextStyle(height: 1.4))),
+      ],
+    ),
+  );
+}
+
+Future<void> _confirmRestart(BuildContext context, WidgetRef ref) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Restart onboarding?'),
+      content: const Text(
+        'Your demo profile and connections on this device will be cleared.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: const Text('Restart'),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true) return;
+  ref.read(onboardingProvider.notifier).reset();
+  ref.read(sessionProvider.notifier).reset();
+  // The router redirects to onboarding once the session is cleared.
 }

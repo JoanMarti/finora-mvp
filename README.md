@@ -19,7 +19,12 @@ Finora is a mobile-first, read-only wealth overview for people in Switzerland. T
 - Mobile-first Material 3 UI that also runs as Flutter Web
 - Riverpod state/dependency management and declarative `go_router` navigation
 
-Not included: real authentication, KYC, payments, trading, financial advice, real bLink/OpenWealth calls, persistent storage, analytics, or production security controls.
+- Demo data generated from the onboarding answers: the institutions and products you pick are exactly what the overview shows
+- Net worth, allocation, history, wealth plan, ideas and alerts derived from account data (nothing hard-coded on screen)
+- Session persisted on the device (onboarding choices and preferences only), with a router guard so returning users skip onboarding
+- Working transaction search, month grouping and CSV copy; notification centre fed by connection health and upcoming bills
+
+Not included: real authentication, KYC, payments, trading, financial advice, real bLink/OpenWealth calls, analytics, or production security controls.
 
 ## Architecture
 
@@ -27,14 +32,20 @@ The project uses a feature/domain structure so financial concepts are shared acr
 
 ```text
 lib/
-├── app/                         # app shell, theme and router
+├── app/                         # app, theme, router and bootstrap (data-source wiring)
+├── application/
+│   ├── providers.dart           # Riverpod providers and derived state (overview, alerts)
+│   └── session_controller.dart  # persisted user session
 ├── domain/
-│   ├── models.dart              # normalized financial entities
+│   ├── models.dart              # normalized financial entities (Money in Rappen, DateTime)
+│   ├── institution_catalogue.dart # single source of truth for supported institutions
+│   ├── user_session.dart        # session model and SessionStore contract
 │   ├── financial_repository.dart# banking data-source contract
 │   └── market_data_repository.dart # market-content contract
 ├── data/
-│   ├── mock_financial_repository.dart
-│   └── mock_market_data_repository.dart
+│   ├── mock_financial_repository.dart   # demo data built from the session
+│   ├── mock_market_data_repository.dart
+│   └── shared_preferences_session_store.dart
 ├── features/
 │   ├── onboarding/              # profile discovery and branching
 │   ├── connections/             # simulated consent/sync journey
@@ -46,7 +57,9 @@ lib/
 └── shared/                      # reusable presentation components
 ```
 
-The UI depends on `FinancialRepository`, not on the mock implementation. A production integration can add `BlinkFinancialRepository` and/or `OpenWealthFinancialRepository`, normalize provider payloads into the domain models, and replace the Riverpod provider override without rewriting the features.
+The UI depends on `FinancialRepository` through `application/providers.dart` and never imports `data/`. The concrete sources are chosen in one place, `app/bootstrap.dart`. A production integration can add `BlinkFinancialRepository` and/or `OpenWealthFinancialRepository`, normalize provider payloads into the domain models, and change that override without rewriting the features.
+
+Aggregates are never stored: `overviewProvider` derives net worth, allocation and history from the accounts, so the dashboard cannot disagree with the account list.
 
 ```text
 bLink / OpenWealth / manual sources
@@ -98,6 +111,7 @@ flutter build web --release
 - **Read-only first:** the MVP reinforces that Finora cannot move money. Any future payment or trade action should hand the user back to their institution.
 - **Value before profiling:** onboarding asks only what is required to assemble an overview. Goals, risk tolerance and income belong in later progressive profiling if the product needs them.
 - **Institution and account are separate:** UBS can own several accounts without duplicating institution metadata or connection health.
+- **Money is exact:** amounts are stored as integer Rappen; dates are `DateTime` and formatted only in the UI.
 - **Data health is a domain concern:** freshness and consent state remain separate from balances, enabling consistent warnings across dashboard, institution and profile views.
 - **Mock behind an interface:** the journey can be validated before commercial/API onboarding with SIX bLink and OpenWealth is complete.
 - **Wealth before accounts:** the first tab explains net worth, evolution, allocation and next actions. Institutions and transactions remain in dedicated detail tabs.

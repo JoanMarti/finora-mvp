@@ -4,7 +4,7 @@ import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
 class BalanceOverviewCard extends StatelessWidget {
-  const BalanceOverviewCard({required this.overview, required this.onRefresh});
+  const BalanceOverviewCard({required this.overview, required this.onRefresh, super.key});
 
   final FinancialOverview overview;
   final VoidCallback onRefresh;

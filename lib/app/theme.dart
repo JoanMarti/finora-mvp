@@ -46,6 +46,7 @@ ThemeData buildFinoraTheme() {
     useMaterial3: true,
     colorScheme: scheme,
     scaffoldBackgroundColor: finoraCanvas,
+    fontFamily: 'Inter',
     textTheme: const TextTheme(
       displaySmall: TextStyle(
         color: finoraInk,

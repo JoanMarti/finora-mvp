@@ -6,7 +6,7 @@ import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
 class BalanceEvolutionCard extends StatelessWidget {
-  const BalanceEvolutionCard({required this.analytics, required this.months});
+  const BalanceEvolutionCard({required this.analytics, required this.months, super.key});
   final AccountAnalytics analytics;
   final int months;
 
@@ -95,7 +95,7 @@ class BalanceEvolutionCard extends StatelessWidget {
 }
 
 class CashFlowCard extends StatelessWidget {
-  const CashFlowCard({required this.analytics, required this.months});
+  const CashFlowCard({required this.analytics, required this.months, super.key});
   final AccountAnalytics analytics;
   final int months;
 
@@ -192,7 +192,7 @@ class CashFlowCard extends StatelessWidget {
 }
 
 class SpendingCategoriesCard extends StatelessWidget {
-  const SpendingCategoriesCard({required this.analytics});
+  const SpendingCategoriesCard({required this.analytics, super.key});
   final AccountAnalytics analytics;
 
   @override
@@ -368,6 +368,7 @@ class RecurringPaymentsCard extends StatelessWidget {
     required this.analytics,
     required this.showAll,
     required this.now,
+    super.key,
   });
   final AccountAnalytics analytics;
   final bool showAll;

@@ -2,7 +2,10 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/user_session.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/formatters.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_helpers.dart';
@@ -171,16 +174,24 @@ void main() {
   });
 
   group('Formatters', () {
-    test('describe connection freshness', () {
+    test('describe connection freshness in every language', () {
       final now = DateTime(2026, 10, 23, 12);
+      final en = lookupAppLocalizations(const Locale('en'));
+      final de = lookupAppLocalizations(const Locale('de'));
       expect(
-        formatSyncTime(now.subtract(const Duration(minutes: 4)), now),
+        en.syncTime(now.subtract(const Duration(minutes: 4)), now),
         'Updated 4 min ago',
       );
       expect(
-        formatSyncTime(now.subtract(const Duration(hours: 26)), now),
+        en.syncTime(now.subtract(const Duration(hours: 26)), now),
         'Updated yesterday',
       );
+      expect(
+        de.syncTime(now.subtract(const Duration(minutes: 4)), now),
+        'Vor 4 Min. aktualisiert',
+      );
+      expect(de.accountCount(1), '1 Konto');
+      expect(de.accountCount(3), '3 Konten');
     });
 
     test('compact amounts keep sign and unit', () {

@@ -17,5 +17,7 @@ class MarketTheme {
 }
 
 abstract interface class MarketDataRepository {
-  Future<List<MarketTheme>> getSwissMarketThemes();
+  /// Educational themes in the user's language ([languageCode] such as
+  /// `de`). Providers should fall back to English.
+  Future<List<MarketTheme>> getSwissMarketThemes({required String languageCode});
 }

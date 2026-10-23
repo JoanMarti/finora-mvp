@@ -1,18 +1,27 @@
 import 'package:finora/app/app.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/user_session.dart';
-import 'package:finora/features/accounts/accounts_screens.dart';
+import 'package:finora/features/accounts/account_detail_screen.dart';
+import 'package:finora/features/accounts/accounts_screen.dart';
 import 'package:finora/features/activity/activity_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 import 'test_helpers.dart';
 
 Widget _screen(Widget child, {UserSession? session}) => ProviderScope(
   overrides: testOverrides(session: session),
-  child: MaterialApp(theme: buildFinoraTheme(), home: child),
+  child: MaterialApp(
+    theme: buildFinoraTheme(),
+    locale: const Locale('en'),
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    home: child,
+  ),
 );
 
 void main() {
@@ -252,5 +261,58 @@ void main() {
     await tester.enterText(find.byType(EditableText), 'nothing-matches');
     await tester.pumpAndSettle();
     expect(find.textContaining('No transactions match'), findsOneWidget);
+  });
+
+  testWidgets('the app speaks German when chosen', (tester) async {
+    usePhoneViewport(tester);
+    addTearDown(() => Intl.defaultLocale = null);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: testOverrides(
+          session: UserSession.demo().copyWith(languageCode: 'de'),
+        ),
+        child: const FinoraApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('GESAMTVERMÖGEN'), findsOneWidget);
+    expect(find.text('Konten'), findsOneWidget);
+    expect(find.text('TOTAL WEALTH'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('language can be changed from the profile', (tester) async {
+    usePhoneViewport(tester);
+    addTearDown(() => Intl.defaultLocale = null);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: testOverrides(
+          session: UserSession.demo().copyWith(languageCode: 'en'),
+        ),
+        child: const FinoraApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+
+    final languageTile = find.widgetWithText(ListTile, 'Language');
+    await tester.dragUntilVisible(
+      languageTile,
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    await tester.ensureVisible(languageTile);
+    await tester.pumpAndSettle();
+    await tester.tap(languageTile);
+    await tester.pumpAndSettle();
+    expect(find.byType(SimpleDialog), findsOneWidget);
+    await tester.tap(find.text('Français'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Profil'), findsWidgets);
+    expect(find.text('Comptes'), findsOneWidget);
+    expect(find.text('Langue'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

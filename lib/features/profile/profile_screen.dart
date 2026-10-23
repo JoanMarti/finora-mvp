@@ -115,6 +115,24 @@ class ProfileScreen extends ConsumerWidget {
                 icon: const Icon(Icons.add),
                 label: Text(l10n.addConnection),
               ),
+              SectionTitle(l10n.planSection),
+              Card(
+                child: ListTile(
+                  leading: Icon(
+                    session.isPlus ? Icons.verified : Icons.auto_awesome,
+                    color: session.isPlus ? finoraGreen : finoraBlueText,
+                  ),
+                  title: Text(
+                    session.isPlus ? l10n.plusActive : l10n.planFree,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                  subtitle: Text(
+                    session.isPlus ? l10n.plusManage : l10n.plusTeaser,
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push('/plus'),
+                ),
+              ),
               SectionTitle(l10n.preferencesSection),
               Card(
                 child: Column(
@@ -184,7 +202,7 @@ class ProfileScreen extends ConsumerWidget {
                       leading: const Icon(Icons.lock_outline),
                       title: Text(l10n.privacySecurity),
                       trailing: const Icon(Icons.chevron_right),
-                      onTap: () => _showPrivacySheet(context),
+                      onTap: () => context.push('/privacy'),
                     ),
                   ],
                 ),
@@ -200,6 +218,16 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.query_stats),
+                  title: Text(l10n.pilotMetricsTitle),
+                  subtitle: Text(l10n.pilotMetricsTileBody),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push('/pilot-metrics'),
+                ),
+              ),
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () => _confirmRestart(context, ref),
@@ -211,63 +239,6 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
-}
-
-void _showPrivacySheet(BuildContext context) {
-  showModalBottomSheet<void>(
-    context: context,
-    showDragHandle: true,
-    builder: (context) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.privacySecurity,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _PrivacyLine(
-              icon: Icons.visibility_outlined,
-              text: context.l10n.privacyReadOnly,
-            ),
-            _PrivacyLine(
-              icon: Icons.phone_iphone,
-              text: context.l10n.privacyDeviceOnly,
-            ),
-            _PrivacyLine(
-              icon: Icons.key_off_outlined,
-              text: context.l10n.privacyNoCredentials,
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class _PrivacyLine extends StatelessWidget {
-  const _PrivacyLine({required this.icon, required this.text});
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: finoraBlue, size: 20),
-        const SizedBox(width: 12),
-        Expanded(child: Text(text, style: const TextStyle(height: 1.4))),
-      ],
-    ),
-  );
 }
 
 Future<void> _confirmRestart(BuildContext context, WidgetRef ref) async {

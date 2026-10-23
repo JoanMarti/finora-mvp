@@ -7,10 +7,13 @@ import 'package:finora/features/analysis/analysis_screen.dart';
 import 'package:finora/features/connections/connection_screen.dart';
 import 'package:finora/features/onboarding/onboarding_screen.dart';
 import 'package:finora/features/offers/opportunities_screen.dart';
+import 'package:finora/features/offers/pilot_metrics_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
 import 'package:finora/features/planning/goals_screen.dart';
 import 'package:finora/features/planning/retirement_screen.dart';
 import 'package:finora/features/planning/tax_summary_screen.dart';
+import 'package:finora/features/plus/plus_screen.dart';
+import 'package:finora/features/privacy/privacy_screen.dart';
 import 'package:finora/features/profile/profile_screen.dart';
 import 'package:finora/features/shell/app_shell.dart';
 import 'package:finora/l10n/l10n.dart';
@@ -68,6 +71,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/offers',
         builder: (_, _) => const OpportunitiesScreen(),
+      ),
+      GoRoute(path: '/plus', builder: (_, _) => const PlusScreen()),
+      GoRoute(path: '/privacy', builder: (_, _) => const PrivacyScreen()),
+      GoRoute(
+        path: '/pilot-metrics',
+        builder: (_, _) => const PilotMetricsScreen(),
       ),
       GoRoute(
         path: '/institution/:institutionId',

@@ -3,6 +3,7 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/analysis.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/trust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Analytics of every connected account, keyed by account.
@@ -61,38 +62,23 @@ final potentialSavingProvider = Provider<Money>((ref) {
 });
 
 // -----------------------------------------------------------------------------
-// Funnel tracking
+// Funnel and plan
 // -----------------------------------------------------------------------------
 
-enum OfferEventType { viewed, partnerClicked, dismissed }
-
-/// One step in the offer funnel. It holds no personal or financial data:
-/// only which kind of offer and what happened, which is what the business
-/// needs to measure conversion and revenue per offer.
-class OfferEvent {
-  const OfferEvent({required this.kind, required this.type, required this.at});
-  final OpportunityKind kind;
-  final OfferEventType type;
-  final DateTime at;
-}
-
-/// In-memory funnel log. A production build would forward these events to
-/// a privacy-friendly analytics backend.
-final offerTrackerProvider = NotifierProvider<OfferTracker, List<OfferEvent>>(
-  OfferTracker.new,
+/// Aggregated offer funnel kept on this device. A production build would
+/// send the same counts (never personal data) to the analytics backend.
+final funnelProvider = Provider<FunnelStats>(
+  (ref) => ref.watch(sessionProvider.select((session) => session.funnel)),
 );
 
-class OfferTracker extends Notifier<List<OfferEvent>> {
-  @override
-  List<OfferEvent> build() => const [];
+/// Consent register, newest first.
+final consentLogProvider = Provider<List<ConsentRecord>>(
+  (ref) => ref
+      .watch(sessionProvider.select((session) => session.consentLog))
+      .reversed
+      .toList(),
+);
 
-  void track(OpportunityKind kind, OfferEventType type) {
-    state = [
-      ...state,
-      OfferEvent(kind: kind, type: type, at: ref.read(clockProvider)()),
-    ];
-  }
-
-  int count(OfferEventType type) =>
-      state.where((event) => event.type == type).length;
-}
+final isPlusProvider = Provider<bool>(
+  (ref) => ref.watch(sessionProvider.select((session) => session.isPlus)),
+);

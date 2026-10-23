@@ -513,13 +513,19 @@ class _WealthTrajectoryCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  formatCompactMoney(change, signed: true),
-                  style: const TextStyle(
-                    color: finoraInk,
-                    fontSize: 23,
-                    height: 1,
-                    fontWeight: FontWeight.w800,
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      formatCompactMoney(change, signed: true),
+                      style: const TextStyle(
+                        color: finoraInk,
+                        fontSize: 23,
+                        height: 1,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ),
                 ),
                 if (changeRate != null) ...[

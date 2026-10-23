@@ -3,7 +3,7 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/data/mock_financial_repository.dart';
 import 'package:finora/data/mock_market_data_repository.dart';
 import 'package:finora/domain/user_session.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 
 /// Wires the demo data sources into the app. A production build would return
 /// bLink/OpenWealth-backed repositories here instead; nothing else changes.

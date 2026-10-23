@@ -1845,7 +1845,7 @@ class _BalanceHistoryPainter extends CustomPainter {
     final offsets = <Offset>[];
     for (var index = 0; index < points.length; index++) {
       final x = size.width * index / (points.length - 1);
-      final normalized = (points[index].balance - minValue) / range;
+      final normalized = (points[index].balance.amount - minValue) / range;
       final y = topPadding + graphHeight * (1 - normalized);
       final offset = Offset(x, y);
       offsets.add(offset);

@@ -1,304 +1,706 @@
+import 'dart:math' as math;
+
 import 'package:finora/domain/financial_repository.dart';
+import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final financialRepositoryProvider = Provider<FinancialRepository>(
-  (ref) => MockFinancialRepository(),
-);
-
-final institutionsProvider = FutureProvider(
-  (ref) => ref.watch(financialRepositoryProvider).getInstitutions(),
-);
-final connectionsProvider = FutureProvider(
-  (ref) => ref.watch(financialRepositoryProvider).getConnections(),
-);
-final accountsProvider = FutureProvider(
-  (ref) => ref.watch(financialRepositoryProvider).getAccounts(),
-);
-final overviewProvider = FutureProvider(
-  (ref) => ref.watch(financialRepositoryProvider).getOverview(),
-);
-final accountAnalyticsProvider = FutureProvider.family(
-  (ref, String accountId) =>
-      ref.watch(financialRepositoryProvider).getAccountAnalytics(accountId),
-);
-final transactionsProvider = FutureProvider.family(
-  (ref, String? accountId) => ref
-      .watch(financialRepositoryProvider)
-      .getTransactions(accountId: accountId),
-);
-
+/// Demo data source. It generates a consistent, fictional financial picture
+/// for exactly the institutions and products the user selected, with dates
+/// relative to "now" so the demo never looks out of date.
 class MockFinancialRepository implements FinancialRepository {
-  static const institutions = <Institution>[
-    Institution(
-      id: 'ubs',
-      name: 'UBS',
-      shortName: 'UBS',
-      colorValue: 0xFFE60000,
-    ),
-    Institution(
-      id: 'zkb',
-      name: 'Zürcher Kantonalbank',
-      shortName: 'ZKB',
-      colorValue: 0xFF1377B8,
-    ),
-    Institution(
-      id: 'swissquote',
-      name: 'Swissquote',
-      shortName: 'SQ',
-      colorValue: 0xFFEB232B,
-    ),
-    Institution(
-      id: 'frankly',
-      name: 'frankly',
-      shortName: 'fr',
-      colorValue: 0xFF111111,
-    ),
-  ];
+  MockFinancialRepository({
+    required this.institutionIds,
+    this.products = const {},
+    this.clock = DateTime.now,
+  });
 
-  static const accounts = <FinancialAccount>[
-    FinancialAccount(
-      id: 'ubs-personal',
-      institutionId: 'ubs',
-      name: 'Personal account',
-      type: FinancialProductType.currentAccount,
-      balance: Money(8420.35),
-      maskedIdentifier: '•••• 8472',
-      change: 1250,
-    ),
-    FinancialAccount(
-      id: 'ubs-savings',
-      institutionId: 'ubs',
-      name: 'Savings',
-      type: FinancialProductType.savings,
-      balance: Money(20000),
-      maskedIdentifier: '•••• 1209',
-      change: 300,
-    ),
-    FinancialAccount(
-      id: 'zkb-private',
-      institutionId: 'zkb',
-      name: 'Private account',
-      type: FinancialProductType.currentAccount,
-      balance: Money(16400.05),
-      maskedIdentifier: '•••• 3601',
-      change: -482.4,
-    ),
-    FinancialAccount(
-      id: 'swissquote-portfolio',
-      institutionId: 'swissquote',
-      name: 'Investment portfolio',
-      type: FinancialProductType.investments,
-      balance: Money(42300),
-      maskedIdentifier: 'Portfolio 1847',
-      change: 1840.2,
-    ),
-    FinancialAccount(
-      id: 'frankly-3a',
-      institutionId: 'frankly',
-      name: 'Pillar 3a',
-      type: FinancialProductType.pillar3a,
-      balance: Money(29360),
-      maskedIdentifier: '3a portfolio',
-      change: 510.8,
-    ),
-  ];
+  /// Institutions the user connected.
+  final Set<String> institutionIds;
 
-  static const transactions = <FinancialTransaction>[
-    FinancialTransaction(
-      id: 't1',
-      accountId: 'ubs-personal',
-      merchant: 'Migros',
-      category: 'Groceries',
-      dateLabel: 'Today',
-      amount: Money(-86.40),
-    ),
-    FinancialTransaction(
-      id: 't2',
-      accountId: 'ubs-personal',
-      merchant: 'SBB Mobile',
-      category: 'Transport',
-      dateLabel: 'Yesterday',
-      amount: Money(-42),
-    ),
-    FinancialTransaction(
-      id: 't3',
-      accountId: 'ubs-personal',
-      merchant: 'Salary',
-      category: 'Income',
-      dateLabel: '15 Sep',
-      amount: Money(6850),
-    ),
-    FinancialTransaction(
-      id: 't4',
-      accountId: 'zkb-private',
-      merchant: 'Swisscom',
-      category: 'Utilities',
-      dateLabel: '14 Sep',
-      amount: Money(-89.90),
-    ),
-    FinancialTransaction(
-      id: 't5',
-      accountId: 'ubs-personal',
-      merchant: 'Coop City',
-      category: 'Shopping',
-      dateLabel: '12 Sep',
-      amount: Money(-154.25),
-    ),
-  ];
+  /// Products chosen in onboarding; empty means "show everything".
+  final Set<FinancialProductType> products;
+  final DateTime Function() clock;
+  DateTime? _refreshedAt;
+
+  /// Monthly Pillar 3a standing order used by the demo profile.
+  static const _pillar3aMonthlyContribution = Money.cents(60500);
+  static const _pillar3aAnnualLimit = Money.cents(725800);
+
+  DateTime get _now => clock();
+
+  List<_AccountTemplate> get _activeTemplates => _accountTemplates
+      .where(
+        (template) =>
+            institutionIds.contains(template.institutionId) &&
+            (products.isEmpty || products.contains(template.type)),
+      )
+      .toList();
 
   @override
-  Future<List<FinancialAccount>> getAccounts() async => accounts;
+  Future<List<Institution>> getInstitutions() async => InstitutionCatalogue.all
+      .where((institution) => institutionIds.contains(institution.id))
+      .toList();
 
   @override
-  Future<AccountAnalytics> getAccountAnalytics(String accountId) async {
-    if (accountId == 'ubs-personal') {
-      return const AccountAnalytics(
-        monthlyIncome: Money(6850),
-        monthlySpending: Money(4128),
-        balanceHistory: [
-          BalanceHistoryPoint(label: 'APR', balance: 6240),
-          BalanceHistoryPoint(label: 'MAY', balance: 6810),
-          BalanceHistoryPoint(label: 'JUN', balance: 7190),
-          BalanceHistoryPoint(label: 'JUL', balance: 6950),
-          BalanceHistoryPoint(label: 'AUG', balance: 7520),
-          BalanceHistoryPoint(label: 'SEP', balance: 8420.35),
-        ],
-        cashFlowHistory: [
-          CashFlowPoint(label: 'APR', income: 6850, spending: 4360),
-          CashFlowPoint(label: 'MAY', income: 6850, spending: 5120),
-          CashFlowPoint(label: 'JUN', income: 7140, spending: 4690),
-          CashFlowPoint(label: 'JUL', income: 6850, spending: 5320),
-          CashFlowPoint(label: 'AUG', income: 6850, spending: 4480),
-          CashFlowPoint(label: 'SEP', income: 6850, spending: 4128),
-        ],
-        recurringPayments: [
-          RecurringPayment(
-            merchant: 'CSS Insurance',
-            category: 'Health insurance',
-            amount: Money(-348.20),
-            cadence: 'Monthly',
-            nextDueLabel: 'Due 28 Sep',
+  Future<List<InstitutionConnection>> getConnections() async {
+    final now = _now;
+    final refreshedAt = _refreshedAt;
+    final institutions = await getInstitutions();
+    return [
+      for (final institution in institutions)
+        if (institution.isManual)
+          InstitutionConnection(
+            institutionId: institution.id,
+            status: ConnectionStatus.manual,
+            lastSyncedAt: now.subtract(const Duration(days: 3)),
+          )
+        else if (refreshedAt != null)
+          InstitutionConnection(
+            institutionId: institution.id,
+            status: ConnectionStatus.connected,
+            lastSyncedAt: refreshedAt,
+          )
+        else if (institution.id == 'zkb')
+          // One stale connection keeps the data-health states visible.
+          InstitutionConnection(
+            institutionId: institution.id,
+            status: ConnectionStatus.stale,
+            lastSyncedAt: now.subtract(const Duration(hours: 26)),
+          )
+        else
+          InstitutionConnection(
+            institutionId: institution.id,
+            status: ConnectionStatus.connected,
+            lastSyncedAt: now.subtract(
+              Duration(minutes: 4 + institution.id.length),
+            ),
           ),
-          RecurringPayment(
-            merchant: 'AXA',
-            category: 'Household insurance',
-            amount: Money(-72.40),
-            cadence: 'Monthly equivalent',
-            nextDueLabel: 'Due 2 Oct',
-          ),
-          RecurringPayment(
-            merchant: 'Swisscom',
-            category: 'Phone & internet',
-            amount: Money(-89.90),
-            cadence: 'Monthly',
-            nextDueLabel: 'Due 4 Oct',
-          ),
-          RecurringPayment(
-            merchant: 'PureGym',
-            category: 'Membership',
-            amount: Money(-54.90),
-            cadence: 'Monthly',
-            nextDueLabel: 'Due 7 Oct',
-          ),
-          RecurringPayment(
-            merchant: 'Netflix',
-            category: 'Streaming',
-            amount: Money(-24.90),
-            cadence: 'Monthly',
-            nextDueLabel: 'Due 11 Oct',
-          ),
-        ],
-        spendingCategories: [
-          SpendingCategory(
-            label: 'Housing',
-            amount: Money(1450),
-            colorValue: 0xFF3C94FF,
-          ),
-          SpendingCategory(
-            label: 'Groceries',
-            amount: Money(740),
-            colorValue: 0xFF272829,
-          ),
-          SpendingCategory(
-            label: 'Other essentials',
-            amount: Money(672.40),
-            colorValue: 0xFF7C8182,
-          ),
-          SpendingCategory(
-            label: 'Shopping',
-            amount: Money(465),
-            colorValue: 0xFF78B6FF,
-          ),
-          SpendingCategory(
-            label: 'Insurance',
-            amount: Money(420.60),
-            colorValue: 0xFFA2AAAC,
-          ),
-          SpendingCategory(
-            label: 'Transport',
-            amount: Money(380),
-            colorValue: 0xFFC2CACC,
-          ),
-        ],
-      );
-    }
-
-    return const AccountAnalytics(
-      monthlyIncome: Money(0),
-      monthlySpending: Money(0),
-      balanceHistory: [],
-      cashFlowHistory: [],
-      recurringPayments: [],
-      spendingCategories: [],
-    );
+    ];
   }
 
   @override
-  Future<List<InstitutionConnection>> getConnections() async => const [
-    InstitutionConnection(
-      institutionId: 'ubs',
-      status: ConnectionStatus.connected,
-      lastSyncLabel: 'Updated 4 min ago',
-    ),
-    InstitutionConnection(
-      institutionId: 'zkb',
-      status: ConnectionStatus.stale,
-      lastSyncLabel: 'Updated yesterday',
-    ),
-    InstitutionConnection(
-      institutionId: 'swissquote',
-      status: ConnectionStatus.connected,
-      lastSyncLabel: 'Updated 12 min ago',
-    ),
-    InstitutionConnection(
-      institutionId: 'frankly',
-      status: ConnectionStatus.manual,
-      lastSyncLabel: 'Manual value · 3 days ago',
-    ),
+  Future<List<FinancialAccount>> getAccounts() async => [
+    for (final template in _activeTemplates) template.toAccount(),
   ];
 
   @override
-  Future<List<Institution>> getInstitutions() async => institutions;
+  Future<AccountAnalytics> getAccountAnalytics(String accountId) async {
+    final template = _activeTemplates
+        .where((item) => item.id == accountId)
+        .firstOrNull;
+    if (template == null) return const AccountAnalytics.empty();
 
-  @override
-  Future<FinancialOverview> getOverview() async => const FinancialOverview(
-    total: Money(116480.40),
-    cash: Money(44820.40),
-    investments: Money(42300),
-    retirement: Money(29360),
-    monthlyChange: 3.1,
-  );
+    final history = _balanceHistory(template);
+    return switch (template.activity) {
+      _Activity.salary => _salaryAnalytics(history),
+      _Activity.household => _householdAnalytics(history),
+      _Activity.card => _cardAnalytics(history),
+      _Activity.none => AccountAnalytics(
+        monthlyIncome: Money.zero,
+        monthlySpending: Money.zero,
+        balanceHistory: history,
+        cashFlowHistory: const [],
+        recurringPayments: const [],
+        spendingCategories: const [],
+      ),
+    };
+  }
 
   @override
   Future<List<FinancialTransaction>> getTransactions({
     String? accountId,
   }) async {
-    if (accountId == null) return transactions;
-    return transactions.where((item) => item.accountId == accountId).toList();
+    final accountIds = _activeTemplates.map((template) => template.id).toSet();
+    final now = _now;
+    final items = <FinancialTransaction>[
+      for (final template in _transactionTemplates)
+        if (accountIds.contains(template.accountId) &&
+            (accountId == null || template.accountId == accountId))
+          FinancialTransaction(
+            id: template.id,
+            accountId: template.accountId,
+            merchant: template.merchant,
+            category: template.category,
+            bookedAt: now.subtract(Duration(days: template.daysAgo)),
+            amount: Money.cents(template.cents),
+          ),
+    ];
+    items.sort((a, b) => b.bookedAt.compareTo(a.bookedAt));
+    return items;
   }
 
   @override
-  Future<void> refresh() =>
-      Future<void>.delayed(const Duration(milliseconds: 600));
+  Future<Money> getPillar3aContributions({required int year}) async {
+    final hasPillar3a = _activeTemplates.any(
+      (template) => template.type == FinancialProductType.pillar3a,
+    );
+    if (!hasPillar3a) return Money.zero;
+    final now = _now;
+    final months = year < now.year ? 12 : (year == now.year ? now.month : 0);
+    final contributed = _pillar3aMonthlyContribution * months;
+    return contributed.compareTo(_pillar3aAnnualLimit) > 0
+        ? _pillar3aAnnualLimit
+        : contributed;
+  }
+
+  @override
+  Future<void> refresh() async {
+    await Future<void>.delayed(const Duration(milliseconds: 600));
+    _refreshedAt = _now;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Generated history and analytics
+  // ---------------------------------------------------------------------------
+
+  /// First day of the month, [monthsAgo] months before now.
+  DateTime _monthStart(int monthsAgo) {
+    final now = _now;
+    return DateTime(now.year, now.month - monthsAgo);
+  }
+
+  List<BalanceHistoryPoint> _balanceHistory(_AccountTemplate template) {
+    final seed = template.id.codeUnits.fold<int>(0, (sum, unit) => sum + unit);
+    final step = template.monthlyChangeCents;
+    final wiggleUnit = math.max(step.abs(), template.balanceCents.abs() ~/ 200);
+    return [
+      for (var monthsAgo = 5; monthsAgo >= 0; monthsAgo--)
+        BalanceHistoryPoint(
+          month: _monthStart(monthsAgo),
+          balance: Money.cents(
+            monthsAgo == 0
+                ? template.balanceCents
+                : template.balanceCents -
+                      step * monthsAgo +
+                      ((((monthsAgo * 37 + seed) % 7) - 3) * wiggleUnit) ~/ 6,
+          ),
+        ),
+    ];
+  }
+
+  List<CashFlowPoint> _cashFlow(List<int> income, List<int> spending) => [
+    for (var index = 0; index < income.length; index++)
+      CashFlowPoint(
+        month: _monthStart(income.length - 1 - index),
+        income: Money.cents(income[index]),
+        spending: Money.cents(spending[index]),
+      ),
+  ];
+
+  DateTime _dueIn(int days) => _now.add(Duration(days: days));
+
+  AccountAnalytics _salaryAnalytics(List<BalanceHistoryPoint> history) {
+    return AccountAnalytics(
+      monthlyIncome: const Money.cents(685000),
+      monthlySpending: const Money.cents(412800),
+      balanceHistory: history,
+      cashFlowHistory: _cashFlow(
+        const [685000, 685000, 714000, 685000, 685000, 685000],
+        const [436000, 512000, 469000, 532000, 448000, 412800],
+      ),
+      recurringPayments: [
+        RecurringPayment(
+          merchant: 'CSS Insurance',
+          category: 'Health insurance',
+          amount: const Money.cents(-34820),
+          cadence: 'Monthly',
+          nextDueAt: _dueIn(5),
+          isInsurance: true,
+        ),
+        RecurringPayment(
+          merchant: 'AXA',
+          category: 'Household insurance',
+          amount: const Money.cents(-7240),
+          cadence: 'Monthly equivalent',
+          nextDueAt: _dueIn(9),
+          isInsurance: true,
+        ),
+        RecurringPayment(
+          merchant: 'Swisscom',
+          category: 'Phone & internet',
+          amount: const Money.cents(-8990),
+          cadence: 'Monthly',
+          nextDueAt: _dueIn(11),
+        ),
+        RecurringPayment(
+          merchant: 'PureGym',
+          category: 'Membership',
+          amount: const Money.cents(-5490),
+          cadence: 'Monthly',
+          nextDueAt: _dueIn(14),
+        ),
+        RecurringPayment(
+          merchant: 'Netflix',
+          category: 'Streaming',
+          amount: const Money.cents(-2490),
+          cadence: 'Monthly',
+          nextDueAt: _dueIn(18),
+        ),
+      ],
+      spendingCategories: const [
+        SpendingCategory(
+          label: 'Housing',
+          amount: Money.cents(145000),
+          colorValue: 0xFF3C94FF,
+        ),
+        SpendingCategory(
+          label: 'Groceries',
+          amount: Money.cents(74000),
+          colorValue: 0xFF272829,
+        ),
+        SpendingCategory(
+          label: 'Other essentials',
+          amount: Money.cents(67240),
+          colorValue: 0xFF7C8182,
+        ),
+        SpendingCategory(
+          label: 'Shopping',
+          amount: Money.cents(46500),
+          colorValue: 0xFF78B6FF,
+        ),
+        SpendingCategory(
+          label: 'Insurance',
+          amount: Money.cents(42060),
+          colorValue: 0xFFA2AAAC,
+        ),
+        SpendingCategory(
+          label: 'Transport',
+          amount: Money.cents(38000),
+          colorValue: 0xFFC2CACC,
+        ),
+      ],
+    );
+  }
+
+  AccountAnalytics _householdAnalytics(List<BalanceHistoryPoint> history) {
+    return AccountAnalytics(
+      monthlyIncome: const Money.cents(250000),
+      monthlySpending: const Money.cents(229800),
+      balanceHistory: history,
+      cashFlowHistory: _cashFlow(
+        const [250000, 250000, 250000, 250000, 250000, 250000],
+        const [231000, 244500, 226000, 238800, 241200, 229800],
+      ),
+      recurringPayments: [
+        RecurringPayment(
+          merchant: 'EWZ',
+          category: 'Electricity',
+          amount: const Money.cents(-6400),
+          cadence: 'Monthly',
+          nextDueAt: _dueIn(8),
+        ),
+        RecurringPayment(
+          merchant: 'Serafe',
+          category: 'Radio & TV fee',
+          amount: const Money.cents(-2790),
+          cadence: 'Monthly equivalent',
+          nextDueAt: _dueIn(20),
+        ),
+      ],
+      spendingCategories: const [
+        SpendingCategory(
+          label: 'Groceries',
+          amount: Money.cents(98000),
+          colorValue: 0xFF272829,
+        ),
+        SpendingCategory(
+          label: 'Dining',
+          amount: Money.cents(61500),
+          colorValue: 0xFF3C94FF,
+        ),
+        SpendingCategory(
+          label: 'Utilities',
+          amount: Money.cents(39100),
+          colorValue: 0xFF7C8182,
+        ),
+        SpendingCategory(
+          label: 'Other',
+          amount: Money.cents(31200),
+          colorValue: 0xFFC2CACC,
+        ),
+      ],
+    );
+  }
+
+  AccountAnalytics _cardAnalytics(List<BalanceHistoryPoint> history) {
+    return AccountAnalytics(
+      monthlyIncome: Money.zero,
+      monthlySpending: const Money.cents(184550),
+      balanceHistory: history,
+      cashFlowHistory: const [],
+      recurringPayments: [
+        RecurringPayment(
+          merchant: 'Spotify',
+          category: 'Streaming',
+          amount: const Money.cents(-1295),
+          cadence: 'Monthly',
+          nextDueAt: _dueIn(6),
+        ),
+      ],
+      spendingCategories: const [
+        SpendingCategory(
+          label: 'Shopping',
+          amount: Money.cents(96400),
+          colorValue: 0xFF78B6FF,
+        ),
+        SpendingCategory(
+          label: 'Dining',
+          amount: Money.cents(52150),
+          colorValue: 0xFF3C94FF,
+        ),
+        SpendingCategory(
+          label: 'Transport',
+          amount: Money.cents(36000),
+          colorValue: 0xFFC2CACC,
+        ),
+      ],
+    );
+  }
 }
+
+// -----------------------------------------------------------------------------
+// Demo catalogue of accounts and transactions
+// -----------------------------------------------------------------------------
+
+enum _Activity { none, salary, household, card }
+
+class _AccountTemplate {
+  const _AccountTemplate({
+    required this.id,
+    required this.institutionId,
+    required this.name,
+    required this.type,
+    required this.balanceCents,
+    required this.maskedIdentifier,
+    required this.monthlyChangeCents,
+    this.activity = _Activity.none,
+  });
+
+  final String id;
+  final String institutionId;
+  final String name;
+  final FinancialProductType type;
+  final int balanceCents;
+  final String maskedIdentifier;
+  final int monthlyChangeCents;
+  final _Activity activity;
+
+  FinancialAccount toAccount() => FinancialAccount(
+    id: id,
+    institutionId: institutionId,
+    name: name,
+    type: type,
+    balance: Money.cents(balanceCents),
+    maskedIdentifier: maskedIdentifier,
+    monthlyChange: Money.cents(monthlyChangeCents),
+  );
+}
+
+const _accountTemplates = <_AccountTemplate>[
+  _AccountTemplate(
+    id: 'ubs-personal',
+    institutionId: 'ubs',
+    name: 'Personal account',
+    type: FinancialProductType.currentAccount,
+    balanceCents: 842035,
+    maskedIdentifier: '•••• 8472',
+    monthlyChangeCents: 90000,
+    activity: _Activity.salary,
+  ),
+  _AccountTemplate(
+    id: 'ubs-savings',
+    institutionId: 'ubs',
+    name: 'Savings',
+    type: FinancialProductType.savings,
+    balanceCents: 2000000,
+    maskedIdentifier: '•••• 1209',
+    monthlyChangeCents: 30000,
+  ),
+  _AccountTemplate(
+    id: 'ubs-card',
+    institutionId: 'ubs',
+    name: 'Visa Platinum',
+    type: FinancialProductType.creditCard,
+    balanceCents: -184550,
+    maskedIdentifier: '•••• 5531',
+    monthlyChangeCents: -21040,
+    activity: _Activity.card,
+  ),
+  _AccountTemplate(
+    id: 'ubs-invest',
+    institutionId: 'ubs',
+    name: 'Manage portfolio',
+    type: FinancialProductType.investments,
+    balanceCents: 1560000,
+    maskedIdentifier: 'Mandate 2210',
+    monthlyChangeCents: 41200,
+  ),
+  _AccountTemplate(
+    id: 'ubs-3a',
+    institutionId: 'ubs',
+    name: 'Vitainvest 3a',
+    type: FinancialProductType.pillar3a,
+    balanceCents: 1520000,
+    maskedIdentifier: '3a •••• 0918',
+    monthlyChangeCents: 24300,
+  ),
+  _AccountTemplate(
+    id: 'zkb-private',
+    institutionId: 'zkb',
+    name: 'Private account',
+    type: FinancialProductType.currentAccount,
+    balanceCents: 1640005,
+    maskedIdentifier: '•••• 3601',
+    monthlyChangeCents: -48240,
+    activity: _Activity.household,
+  ),
+  _AccountTemplate(
+    id: 'zkb-savings',
+    institutionId: 'zkb',
+    name: 'Savings plus',
+    type: FinancialProductType.savings,
+    balanceCents: 850000,
+    maskedIdentifier: '•••• 7745',
+    monthlyChangeCents: 20000,
+  ),
+  _AccountTemplate(
+    id: 'postfinance-private',
+    institutionId: 'postfinance',
+    name: 'Private account',
+    type: FinancialProductType.currentAccount,
+    balanceCents: 512080,
+    maskedIdentifier: '•••• 4410',
+    monthlyChangeCents: 31500,
+    activity: _Activity.household,
+  ),
+  _AccountTemplate(
+    id: 'postfinance-savings',
+    institutionId: 'postfinance',
+    name: 'E-Savings',
+    type: FinancialProductType.savings,
+    balanceCents: 1250000,
+    maskedIdentifier: '•••• 0172',
+    monthlyChangeCents: 25000,
+  ),
+  _AccountTemplate(
+    id: 'raiffeisen-member',
+    institutionId: 'raiffeisen',
+    name: 'Member account',
+    type: FinancialProductType.currentAccount,
+    balanceCents: 734000,
+    maskedIdentifier: '•••• 2289',
+    monthlyChangeCents: 18800,
+    activity: _Activity.household,
+  ),
+  _AccountTemplate(
+    id: 'raiffeisen-mortgage',
+    institutionId: 'raiffeisen',
+    name: 'Fixed-rate mortgage',
+    type: FinancialProductType.mortgage,
+    balanceCents: -48000000,
+    maskedIdentifier: '10-year fixed',
+    monthlyChangeCents: 0,
+  ),
+  _AccountTemplate(
+    id: 'swissquote-portfolio',
+    institutionId: 'swissquote',
+    name: 'Investment portfolio',
+    type: FinancialProductType.investments,
+    balanceCents: 4230000,
+    maskedIdentifier: 'Portfolio 1847',
+    monthlyChangeCents: 184020,
+  ),
+  _AccountTemplate(
+    id: 'julius-baer-mandate',
+    institutionId: 'julius-baer',
+    name: 'Wealth mandate',
+    type: FinancialProductType.investments,
+    balanceCents: 18500000,
+    maskedIdentifier: 'Mandate 5521',
+    monthlyChangeCents: 412000,
+  ),
+  _AccountTemplate(
+    id: 'pictet-portfolio',
+    institutionId: 'pictet',
+    name: 'Balanced portfolio',
+    type: FinancialProductType.investments,
+    balanceCents: 9800000,
+    maskedIdentifier: 'Portfolio 3390',
+    monthlyChangeCents: 165500,
+  ),
+  _AccountTemplate(
+    id: 'frankly-3a',
+    institutionId: 'frankly',
+    name: 'Pillar 3a',
+    type: FinancialProductType.pillar3a,
+    balanceCents: 2936000,
+    maskedIdentifier: '3a portfolio',
+    monthlyChangeCents: 51080,
+  ),
+  _AccountTemplate(
+    id: 'viac-3a',
+    institutionId: 'viac',
+    name: 'Pillar 3a',
+    type: FinancialProductType.pillar3a,
+    balanceCents: 1875000,
+    maskedIdentifier: '3a portfolio',
+    monthlyChangeCents: 38900,
+  ),
+  _AccountTemplate(
+    id: 'finpension-3a',
+    institutionId: 'finpension',
+    name: 'Pillar 3a',
+    type: FinancialProductType.pillar3a,
+    balanceCents: 2210000,
+    maskedIdentifier: '3a portfolio',
+    monthlyChangeCents: 44100,
+  ),
+];
+
+class _TransactionTemplate {
+  const _TransactionTemplate(
+    this.id,
+    this.accountId,
+    this.merchant,
+    this.category,
+    this.daysAgo,
+    this.cents,
+  );
+  final String id;
+  final String accountId;
+  final String merchant;
+  final TransactionCategory category;
+  final int daysAgo;
+  final int cents;
+}
+
+const _transactionTemplates = <_TransactionTemplate>[
+  _TransactionTemplate(
+    't1',
+    'ubs-personal',
+    'Migros',
+    TransactionCategory.groceries,
+    0,
+    -8640,
+  ),
+  _TransactionTemplate(
+    't2',
+    'ubs-personal',
+    'SBB Mobile',
+    TransactionCategory.transport,
+    1,
+    -4200,
+  ),
+  _TransactionTemplate(
+    't3',
+    'ubs-personal',
+    'Salary',
+    TransactionCategory.income,
+    8,
+    685000,
+  ),
+  _TransactionTemplate(
+    't4',
+    'ubs-personal',
+    'Coop City',
+    TransactionCategory.shopping,
+    11,
+    -15425,
+  ),
+  _TransactionTemplate(
+    't5',
+    'ubs-personal',
+    'CSS Insurance',
+    TransactionCategory.insurance,
+    14,
+    -34820,
+  ),
+  _TransactionTemplate(
+    't6',
+    'ubs-personal',
+    'Rent',
+    TransactionCategory.housing,
+    22,
+    -145000,
+  ),
+  _TransactionTemplate(
+    't7',
+    'ubs-personal',
+    'Salary',
+    TransactionCategory.income,
+    38,
+    685000,
+  ),
+  _TransactionTemplate(
+    't8',
+    'ubs-card',
+    'Digitec Galaxus',
+    TransactionCategory.shopping,
+    3,
+    -24900,
+  ),
+  _TransactionTemplate(
+    't9',
+    'ubs-card',
+    'Hiltl',
+    TransactionCategory.dining,
+    6,
+    -6850,
+  ),
+  _TransactionTemplate(
+    't10',
+    'zkb-private',
+    'Swisscom',
+    TransactionCategory.utilities,
+    9,
+    -8990,
+  ),
+  _TransactionTemplate(
+    't11',
+    'zkb-private',
+    'Denner',
+    TransactionCategory.groceries,
+    2,
+    -3215,
+  ),
+  _TransactionTemplate(
+    't12',
+    'zkb-private',
+    'Transfer from UBS',
+    TransactionCategory.income,
+    15,
+    250000,
+  ),
+  _TransactionTemplate(
+    't13',
+    'postfinance-private',
+    'Coop',
+    TransactionCategory.groceries,
+    1,
+    -5730,
+  ),
+  _TransactionTemplate(
+    't14',
+    'postfinance-private',
+    'SBB',
+    TransactionCategory.transport,
+    4,
+    -8800,
+  ),
+  _TransactionTemplate(
+    't15',
+    'raiffeisen-member',
+    'Volg',
+    TransactionCategory.groceries,
+    2,
+    -2945,
+  ),
+  _TransactionTemplate(
+    't16',
+    'raiffeisen-member',
+    'Mortgage interest',
+    TransactionCategory.housing,
+    18,
+    -98000,
+  ),
+];

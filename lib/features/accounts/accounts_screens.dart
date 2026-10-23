@@ -1,7 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:finora/app/theme.dart';
-import 'package:finora/data/mock_financial_repository.dart';
+import 'package:finora/application/providers.dart';
+import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ class AccountsScreen extends ConsumerStatefulWidget {
 
 class _AccountsScreenState extends ConsumerState<AccountsScreen> {
   _AccountFilter _filter = _AccountFilter.all;
-  final Set<String> _disconnectedInstitutionIds = {};
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
         ref.watch(institutionsProvider).value ?? const <Institution>[];
     final connections =
         ref.watch(connectionsProvider).value ?? const <InstitutionConnection>[];
+    final now = ref.watch(clockProvider)();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -43,29 +44,16 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
             error: (_, _) => const Center(
               child: Text('Accounts are temporarily unavailable.'),
             ),
-            data: (items) {
-              final connectedItems = items
-                  .where(
-                    (item) => !_disconnectedInstitutionIds.contains(
-                      item.institutionId,
-                    ),
-                  )
-                  .toList();
+            data: (connectedItems) {
               final filtered = connectedItems.where(_matchesFilter).toList();
-              final total = connectedItems.fold<double>(
-                0,
-                (sum, account) => sum + account.balance.amount,
+              final total = Money.sum(
+                connectedItems.map((account) => account.balance),
               );
-              final cash = connectedItems
-                  .where(
-                    (account) =>
-                        account.type == FinancialProductType.currentAccount ||
-                        account.type == FinancialProductType.savings,
-                  )
-                  .fold<double>(
-                    0,
-                    (sum, account) => sum + account.balance.amount,
-                  );
+              final cash = Money.sum(
+                connectedItems
+                    .where((account) => account.type.isCash)
+                    .map((account) => account.balance),
+              );
               return ListView(
                 children: [
                   Text(
@@ -119,8 +107,14 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                     ),
                   ),
                   const SectionTitle('Connected institutions'),
-                  if (filtered.isEmpty)
-                    const _EmptyAccountsState()
+                  if (connectedItems.isEmpty)
+                    const _EmptyAccountsState(
+                      message: 'No institutions connected yet.',
+                    )
+                  else if (filtered.isEmpty)
+                    const _EmptyAccountsState(
+                      message: 'No accounts match this filter.',
+                    )
                   else
                     for (final institution in institutions)
                       if (filtered.any(
@@ -130,6 +124,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                           padding: const EdgeInsets.only(bottom: 14),
                           child: _InstitutionAccountsGroup(
                             institution: institution,
+                            now: now,
                             connection: connections
                                 .where(
                                   (item) =>
@@ -170,12 +165,9 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
 
   bool _matchesFilter(FinancialAccount account) => switch (_filter) {
     _AccountFilter.all => true,
-    _AccountFilter.cash =>
-      account.type == FinancialProductType.currentAccount ||
-          account.type == FinancialProductType.savings,
+    _AccountFilter.cash => account.type.isCash,
     _AccountFilter.investing =>
-      account.type == FinancialProductType.investments ||
-          account.type == FinancialProductType.pillar3a,
+      account.type.isInvestment || account.type.isRetirement,
   };
 
   Future<void> _handleAccountAction(
@@ -191,8 +183,9 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
           'A production version would securely open ${institution.name}.',
         );
       case _AccountAction.refresh:
-        ref.invalidate(accountsProvider);
-        _showMessage('${account.name} is up to date.');
+        await refreshFinancialData(ref);
+        if (!mounted) return;
+        _showMessage('${institution.name} is up to date.');
       case _AccountAction.disconnect:
         final confirmed = await showDialog<bool>(
           context: context,
@@ -217,15 +210,14 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
           ),
         );
         if (confirmed == true && mounted) {
-          setState(() => _disconnectedInstitutionIds.add(institution.id));
+          final session = ref.read(sessionProvider.notifier);
+          session.disconnect(institution.id);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${institution.name} disconnected from this demo.'),
+              content: Text('${institution.name} disconnected.'),
               action: SnackBarAction(
                 label: 'Undo',
-                onPressed: () => setState(
-                  () => _disconnectedInstitutionIds.remove(institution.id),
-                ),
+                onPressed: () => session.connect(institution.id),
               ),
             ),
           );
@@ -245,15 +237,15 @@ class _AccountsSummaryCard extends StatelessWidget {
     required this.cash,
     required this.accountCount,
   });
-  final double total;
-  final double cash;
+  final Money total;
+  final Money cash;
   final int accountCount;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       label:
-          'Portfolio total ${formatMoney(Money(total))}. Available cash ${formatMoney(Money(cash))}. $accountCount connected accounts.',
+          'Portfolio total ${formatMoney(total)}. Available cash ${formatMoney(cash)}. $accountCount connected accounts.',
       child: ExcludeSemantics(
         child: Card(
           color: finoraInk,
@@ -276,7 +268,7 @@ class _AccountsSummaryCard extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    formatMoney(Money(total)),
+                    formatMoney(total),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -291,7 +283,7 @@ class _AccountsSummaryCard extends StatelessWidget {
                     Expanded(
                       child: _SummaryMetric(
                         label: 'Available cash',
-                        value: formatMoney(Money(cash)),
+                        value: formatMoney(cash),
                       ),
                     ),
                     Container(
@@ -379,6 +371,7 @@ class _AccountFilterChip extends StatelessWidget {
 class _InstitutionAccountsGroup extends StatelessWidget {
   const _InstitutionAccountsGroup({
     required this.institution,
+    required this.now,
     required this.connection,
     required this.accounts,
     required this.onInstitutionTap,
@@ -386,6 +379,7 @@ class _InstitutionAccountsGroup extends StatelessWidget {
     required this.onAction,
   });
   final Institution institution;
+  final DateTime now;
   final InstitutionConnection? connection;
   final List<FinancialAccount> accounts;
   final VoidCallback onInstitutionTap;
@@ -394,10 +388,10 @@ class _InstitutionAccountsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final institutionTotal = accounts.fold<double>(
-      0,
-      (sum, account) => sum + account.balance.amount,
+    final institutionTotal = Money.sum(
+      accounts.map((account) => account.balance),
     );
+    final connection = this.connection;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -424,7 +418,9 @@ class _InstitutionAccountsGroup extends StatelessWidget {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          connection?.lastSyncLabel ?? 'Connection unavailable',
+                          connection == null
+                              ? 'Connection unavailable'
+                              : formatSyncTime(connection.lastSyncedAt, now),
                           style: const TextStyle(
                             color: finoraMutedInk,
                             fontSize: 12,
@@ -451,7 +447,7 @@ class _InstitutionAccountsGroup extends StatelessWidget {
             color: finoraCanvas,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
             child: Text(
-              '${accounts.length} ${accounts.length == 1 ? 'account' : 'accounts'} · ${formatMoney(Money(institutionTotal))}',
+              '${accounts.length} ${accounts.length == 1 ? 'account' : 'accounts'} · ${formatMoney(institutionTotal)}',
               style: const TextStyle(
                 color: finoraMutedInk,
                 fontSize: 12,
@@ -514,9 +510,9 @@ class _AccessibleAccountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final positive = account.change >= 0;
+    final positive = !account.monthlyChange.isNegative;
     final changeLabel =
-        '${positive ? 'up' : 'down'} ${formatMoney(Money(account.change.abs()))}';
+        '${positive ? 'up' : 'down'} ${formatMoney(account.monthlyChange.abs())}';
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -582,7 +578,10 @@ class _AccessibleAccountRow extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${positive ? '+' : '−'} CHF ${account.change.abs().toStringAsFixed(0)}',
+                                  formatCompactMoney(
+                                    account.monthlyChange,
+                                    signed: true,
+                                  ),
                                   style: TextStyle(
                                     color: positive
                                         ? finoraGreen
@@ -667,19 +666,23 @@ IconData _productIcon(FinancialProductType type) => switch (type) {
 };
 
 class _EmptyAccountsState extends StatelessWidget {
-  const _EmptyAccountsState();
+  const _EmptyAccountsState({required this.message});
+  final String message;
 
   @override
-  Widget build(BuildContext context) => const Card(
+  Widget build(BuildContext context) => Card(
     child: Padding(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          Icon(Icons.filter_alt_off_outlined, color: finoraSlate),
-          SizedBox(height: 10),
+          const Icon(Icons.filter_alt_off_outlined, color: finoraSlate),
+          const SizedBox(height: 10),
           Text(
-            'No accounts match this filter.',
-            style: TextStyle(color: finoraInk, fontWeight: FontWeight.w700),
+            message,
+            style: const TextStyle(
+              color: finoraInk,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),
@@ -696,6 +699,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
     final institutions = ref.watch(institutionsProvider).value;
     final accounts = ref.watch(accountsProvider).value;
     final connections = ref.watch(connectionsProvider).value;
+    final now = ref.watch(clockProvider)();
     if (institutions == null || accounts == null || connections == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -711,10 +715,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
     final connection = connections
         .where((item) => item.institutionId == institutionId)
         .firstOrNull;
-    final total = owned.fold<double>(
-      0,
-      (sum, item) => sum + item.balance.amount,
-    );
+    final total = Money.sum(owned.map((item) => item.balance));
 
     return Scaffold(
       appBar: AppBar(
@@ -735,7 +736,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
             const SizedBox(height: 8),
             Center(
               child: Text(
-                formatMoney(Money(total)),
+                formatMoney(total),
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
@@ -755,7 +756,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
                       StatusPill(status: connection.status),
                       const Spacer(),
                       Text(
-                        connection.lastSyncLabel,
+                        formatSyncTime(connection.lastSyncedAt, now),
                         style: const TextStyle(
                           fontSize: 12,
                           color: finoraMutedInk,
@@ -809,7 +810,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
                     leading: const Icon(Icons.sync),
                     title: const Text('Refresh data'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => ref.invalidate(accountsProvider),
+                    onTap: () => refreshFinancialData(ref),
                   ),
                 ],
               ),
@@ -840,6 +841,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   Widget build(BuildContext context) {
     final accounts = ref.watch(accountsProvider).value;
     final institutions = ref.watch(institutionsProvider).value;
+    final connections =
+        ref.watch(connectionsProvider).value ?? const <InstitutionConnection>[];
+    final now = ref.watch(clockProvider)();
     final transactions = ref
         .watch(transactionsProvider(widget.accountId))
         .value;
@@ -858,7 +862,18 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     if (account == null) return const _NotFound(label: 'Account not found');
     final institution = institutions
         .where((item) => item.id == account.institutionId)
-        .first;
+        .firstOrNull;
+    if (institution == null) {
+      return const _NotFound(label: 'Institution not found');
+    }
+    final connection = connections
+        .where((item) => item.institutionId == institution.id)
+        .firstOrNull;
+    final insurance = analytics.insurancePayments;
+    final debtAccounts = accounts
+        .where((item) => item.type.isLiability)
+        .toList();
+    final debtTotal = Money.sum(debtAccounts.map((item) => item.balance)).abs();
 
     return Scaffold(
       appBar: AppBar(
@@ -871,10 +886,14 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             _AccountBalanceCard(
               account: account,
               institution: institution,
+              syncLabel: connection == null
+                  ? 'Connection unavailable'
+                  : formatSyncTime(connection.lastSyncedAt, now),
+              monthLabel: formatMonthShort(now),
               onAction: (action) =>
                   _handleDetailAction(action, account, institution),
             ),
-            if (analytics.balanceHistory.isNotEmpty) ...[
+            if (analytics.hasBalanceHistory) ...[
               const SectionTitle('Account health'),
               _PeriodSelector(
                 selectedMonths: _selectedMonths,
@@ -886,45 +905,83 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 analytics: analytics,
                 months: _selectedMonths,
               ),
+            ] else ...[
+              const SectionTitle('Account health'),
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    'More history is needed before Finora can explain this account.',
+                  ),
+                ),
+              ),
+            ],
+            if (analytics.hasCashFlow) ...[
               const SectionTitle('Cash flow'),
               _CashFlowCard(analytics: analytics, months: _selectedMonths),
+            ],
+            if (analytics.spendingCategories.isNotEmpty) ...[
               const SectionTitle('Spending'),
               _SpendingCategoriesCard(analytics: analytics),
+            ],
+            if (analytics.recurringPayments.isNotEmpty) ...[
               SectionTitle(
                 'Recurring payments',
-                action: TextButton(
-                  onPressed: () =>
-                      setState(() => _showAllRecurring = !_showAllRecurring),
-                  child: Text(_showAllRecurring ? 'Show less' : 'See all'),
-                ),
+                action: analytics.recurringPayments.length > 3
+                    ? TextButton(
+                        onPressed: () => setState(
+                          () => _showAllRecurring = !_showAllRecurring,
+                        ),
+                        child: Text(
+                          _showAllRecurring ? 'Show less' : 'See all',
+                        ),
+                      )
+                    : null,
               ),
               _RecurringPaymentsCard(
                 analytics: analytics,
                 showAll: _showAllRecurring,
+                now: now,
               ),
+            ],
+            if (analytics.hasCashFlow) ...[
               const SectionTitle('Potential improvements'),
-              _OpportunityCard(
-                icon: Icons.health_and_safety_outlined,
-                accent: finoraSlate,
-                eyebrow: 'COVERAGE CHECK · PARTNER OPTION',
-                title: 'Review insurance in one place',
-                description: 'Two insurance payments were detected. A guided comparison could reveal duplicated cover or a better deductible setup.',
-                value: 'Illustrative potential: CHF 35–70 / month',
-                actionLabel: 'Explore a coverage check',
-                onPressed: () => _showServiceMessage(
-                  'Coverage comparison would open only with your consent.',
+              if (insurance.length >= 2) ...[
+                _OpportunityCard(
+                  icon: Icons.health_and_safety_outlined,
+                  accent: finoraSlate,
+                  eyebrow: 'COVERAGE CHECK · PARTNER OPTION',
+                  title: 'Review insurance in one place',
+                  description:
+                      '${insurance.length} insurance payments were detected '
+                      '(${formatMoney(Money.sum(insurance.map((item) => item.amount.abs())))} a month). '
+                      'A guided comparison could reveal duplicated cover or a better deductible setup.',
+                  value: 'Illustrative potential: CHF 35–70 / month',
+                  actionLabel: 'Explore a coverage check',
+                  onPressed: () => _showServiceMessage(
+                    'Coverage comparison would open only with your consent.',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
+              ],
               _OpportunityCard(
                 icon: Icons.account_balance_outlined,
                 accent: finoraBlue,
                 eyebrow: 'DEBT VIEW · OPTIONAL',
                 title: 'See the true cost of your debt',
-                description: 'No cards or loans are connected yet. Add them to compare rates and see whether consolidation deserves a closer look.',
-                value: 'No savings estimate until debt data is available',
-                actionLabel: 'Connect debt accounts',
-                onPressed: () => context.push('/connect'),
+                description: debtAccounts.isEmpty
+                    ? 'No cards or loans are connected yet. Add them to compare rates and see whether consolidation deserves a closer look.'
+                    : '${debtAccounts.length} debt ${debtAccounts.length == 1 ? 'account is' : 'accounts are'} connected, '
+                          'totalling ${formatMoney(debtTotal)}. Compare their rates before deciding what to repay first.',
+                value: debtAccounts.isEmpty
+                    ? 'No savings estimate until debt data is available'
+                    : 'Rates are not available from the demo data yet',
+                actionLabel: debtAccounts.isEmpty
+                    ? 'Connect debt accounts'
+                    : 'Open ${debtAccounts.first.name}',
+                onPressed: debtAccounts.isEmpty
+                    ? () => context.push('/connect')
+                    : () => context.push('/account/${debtAccounts.first.id}'),
               ),
               const SectionTitle('Monitoring'),
               Card(
@@ -961,16 +1018,6 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                           setState(() => _balanceAlerts = value),
                     ),
                   ],
-                ),
-              ),
-            ] else ...[
-              const SectionTitle('Account health'),
-              const Card(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    'More history is needed before Finora can explain cash flow and recurring payments for this account.',
-                  ),
                 ),
               ),
             ],
@@ -1042,9 +1089,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           'A production version would securely open ${institution.name}.',
         );
       case _AccountAction.refresh:
-        ref.invalidate(accountAnalyticsProvider(account.id));
-        ref.invalidate(transactionsProvider(account.id));
-        _showServiceMessage('${account.name} is up to date.');
+        refreshFinancialData(ref).then((_) {
+          if (mounted) _showServiceMessage('${account.name} is up to date.');
+        });
       case _AccountAction.disconnect:
         context.go('/accounts');
         _showServiceMessage(
@@ -1058,11 +1105,15 @@ class _AccountBalanceCard extends StatelessWidget {
   const _AccountBalanceCard({
     required this.account,
     required this.institution,
+    required this.syncLabel,
+    required this.monthLabel,
     required this.onAction,
   });
 
   final FinancialAccount account;
   final Institution institution;
+  final String syncLabel;
+  final String monthLabel;
   final ValueChanged<_AccountAction> onAction;
 
   @override
@@ -1089,9 +1140,9 @@ class _AccountBalanceCard extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const Text(
-                        'Updated 4 min ago',
-                        style: TextStyle(
+                      Text(
+                        syncLabel,
+                        style: const TextStyle(
                           color: finoraSilver,
                           fontSize: 12,
                         ),
@@ -1113,13 +1164,20 @@ class _AccountBalanceCard extends StatelessWidget {
               style: const TextStyle(color: finoraSilver),
             ),
             const SizedBox(height: 5),
-            Text(
-              formatMoney(account.balance),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -.7,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                formatMoney(
+                  account.balance,
+                  signed: account.balance.isNegative,
+                ),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -.7,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -1135,17 +1193,25 @@ class _AccountBalanceCard extends StatelessWidget {
                 Flexible(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: finoraGreen.withValues(alpha: .18),
+                      color: (account.monthlyChange.isNegative
+                              ? finoraDanger
+                              : finoraGreen)
+                          .withValues(alpha: .18),
                       borderRadius: BorderRadius.circular(99),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 5,
+                      ),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '+ CHF 900 in Sep',
+                          '${formatCompactMoney(account.monthlyChange, signed: true)} in $monthLabel',
                           style: TextStyle(
-                            color: Color(0xFF8ED8B9),
+                            color: account.monthlyChange.isNegative
+                                ? const Color(0xFFFFB4AB)
+                                : const Color(0xFF8ED8B9),
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                           ),
@@ -1214,6 +1280,7 @@ class _BalanceEvolutionCard extends StatelessWidget {
       analytics.balanceHistory.length - pointCount,
     );
     final change = points.last.balance - points.first.balance;
+    final positive = !change.isNegative;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(18),
@@ -1242,16 +1309,16 @@ class _BalanceEvolutionCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                _ValuePill(
-                  label: '+ CHF ${change.toStringAsFixed(0)}',
-                  color: finoraGreen,
+                ValuePill(
+                  label: formatCompactMoney(change, signed: true),
+                  color: positive ? finoraGreen : finoraDanger,
                 ),
               ],
             ),
             const SizedBox(height: 22),
             Semantics(
               label:
-                  'Balance increased by CHF ${change.toStringAsFixed(0)} over $months months, ending at CHF ${points.last.balance.toStringAsFixed(2)}.',
+                  'Balance ${positive ? 'increased' : 'decreased'} by ${formatMoney(change.abs())} over $months months, ending at ${formatMoney(points.last.balance)}.',
               child: ExcludeSemantics(
                 child: SizedBox(
                   height: 128,
@@ -1268,7 +1335,7 @@ class _BalanceEvolutionCard extends StatelessWidget {
               children: [
                 for (final point in points)
                   Text(
-                    point.label,
+                    formatMonthShort(point.month),
                     style: TextStyle(
                       color: point == points.last
                           ? finoraBlueText
@@ -1316,7 +1383,7 @@ class _CashFlowCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                _ValuePill(label: '$savingsRate% kept', color: finoraBlue),
+                ValuePill(label: '$savingsRate% kept', color: finoraBlue),
               ],
             ),
             const SizedBox(height: 18),
@@ -1342,7 +1409,7 @@ class _CashFlowCard extends StatelessWidget {
             const SizedBox(height: 20),
             Semantics(
               label:
-                  'Income and spending comparison for $months months. Current income CHF ${analytics.monthlyIncome.amount.toStringAsFixed(0)}, spending CHF ${analytics.monthlySpending.amount.toStringAsFixed(0)}.',
+                  'Income and spending comparison for $months months. Current income ${formatMoney(analytics.monthlyIncome)}, spending ${formatMoney(analytics.monthlySpending)}.',
               child: ExcludeSemantics(
                 child: SizedBox(
                   height: 112,
@@ -1357,7 +1424,7 @@ class _CashFlowCard extends StatelessWidget {
               children: [
                 for (final point in points)
                   Text(
-                    point.label,
+                    formatMonthShort(point.month),
                     style: const TextStyle(
                       color: finoraMutedInk,
                       fontSize: 10,
@@ -1368,7 +1435,9 @@ class _CashFlowCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '+ CHF ${analytics.monthlyNet.toStringAsFixed(0)} available after spending this month',
+              analytics.monthlyNet.isNegative
+                  ? '${formatMoney(analytics.monthlyNet.abs())} more spent than earned this month'
+                  : '${formatMoney(analytics.monthlyNet, signed: true)} available after spending this month',
               style: const TextStyle(
                 color: finoraInk,
                 fontWeight: FontWeight.w700,
@@ -1387,9 +1456,8 @@ class _SpendingCategoriesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total = analytics.spendingCategories.fold<double>(
-      0,
-      (sum, category) => sum + category.amount.amount,
+    final total = Money.sum(
+      analytics.spendingCategories.map((category) => category.amount),
     );
     return Card(
       child: Padding(
@@ -1407,7 +1475,7 @@ class _SpendingCategoriesCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${formatMoney(Money(total))} categorised this month',
+              '${formatMoney(total)} categorised this month',
               style: const TextStyle(color: finoraMutedInk),
             ),
             const SizedBox(height: 20),
@@ -1433,11 +1501,11 @@ class _SpendingCategoriesCard extends StatelessWidget {
 class _SpendingCategoryRow extends StatelessWidget {
   const _SpendingCategoryRow({required this.category, required this.total});
   final SpendingCategory category;
-  final double total;
+  final Money total;
 
   @override
   Widget build(BuildContext context) {
-    final share = total == 0 ? 0.0 : category.amount.amount / total;
+    final share = total.isZero ? 0.0 : category.amount.cents / total.cents;
     final percent = (share * 100).round();
     final color = Color(category.colorValue);
     return Semantics(
@@ -1558,9 +1626,11 @@ class _RecurringPaymentsCard extends StatelessWidget {
   const _RecurringPaymentsCard({
     required this.analytics,
     required this.showAll,
+    required this.now,
   });
   final AccountAnalytics analytics;
   final bool showAll;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -1584,7 +1654,7 @@ class _RecurringPaymentsCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'CHF ${analytics.recurringTotal.toStringAsFixed(2)} / month',
+                  '${formatMoney(analytics.recurringTotal)} / month',
                   style: const TextStyle(
                     color: finoraBlueText,
                     fontWeight: FontWeight.w800,
@@ -1595,7 +1665,7 @@ class _RecurringPaymentsCard extends StatelessWidget {
           ),
           const Divider(height: 1),
           for (var index = 0; index < payments.length; index++) ...[
-            _RecurringPaymentTile(payment: payments[index]),
+            _RecurringPaymentTile(payment: payments[index], now: now),
             if (index != payments.length - 1) const Divider(height: 1),
           ],
         ],
@@ -1605,16 +1675,17 @@ class _RecurringPaymentsCard extends StatelessWidget {
 }
 
 class _RecurringPaymentTile extends StatelessWidget {
-  const _RecurringPaymentTile({required this.payment});
+  const _RecurringPaymentTile({required this.payment, required this.now});
   final RecurringPayment payment;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
     final icon = switch (payment.category) {
-      'Health insurance' ||
-      'Household insurance' => Icons.health_and_safety_outlined,
+      _ when payment.isInsurance => Icons.health_and_safety_outlined,
       'Phone & internet' => Icons.wifi,
       'Membership' => Icons.fitness_center,
+      'Electricity' => Icons.bolt_outlined,
       _ => Icons.subscriptions_outlined,
     };
     return ListTile(
@@ -1629,11 +1700,11 @@ class _RecurringPaymentTile extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        '${payment.category} · ${payment.nextDueLabel}',
+        '${payment.category} · ${formatDueDate(payment.nextDueAt, now)}',
         style: const TextStyle(color: finoraMutedInk, fontSize: 12),
       ),
       trailing: Text(
-        'CHF ${payment.amount.amount.abs().toStringAsFixed(2)}',
+        formatMoney(payment.amount.abs()),
         style: const TextStyle(color: finoraInk, fontWeight: FontWeight.w700),
       ),
     );
@@ -1747,34 +1818,6 @@ class _OpportunityCard extends StatelessWidget {
   }
 }
 
-class _ValuePill extends StatelessWidget {
-  const _ValuePill({required this.label, required this.color});
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final textColor = finoraAccessibleAccent(color);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: .1),
-        borderRadius: BorderRadius.circular(99),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _BalanceHistoryPainter extends CustomPainter {
   const _BalanceHistoryPainter({required this.points});
   final List<BalanceHistoryPoint> points;
@@ -1782,10 +1825,10 @@ class _BalanceHistoryPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (points.length < 2) return;
-    final values = points.map((point) => point.balance).toList();
+    final values = points.map((point) => point.balance.amount).toList();
     final minValue = values.reduce(math.min);
     final maxValue = values.reduce(math.max);
-    final range = math.max(1, maxValue - minValue);
+    final range = math.max(1.0, maxValue - minValue);
     const topPadding = 10.0;
     const bottomPadding = 8.0;
     final graphHeight = size.height - topPadding - bottomPadding;
@@ -1802,7 +1845,7 @@ class _BalanceHistoryPainter extends CustomPainter {
     final offsets = <Offset>[];
     for (var index = 0; index < points.length; index++) {
       final x = size.width * index / (points.length - 1);
-      final normalized = (points[index].balance - minValue) / range;
+      final normalized = (points[index].balance.amount - minValue) / range;
       final y = topPadding + graphHeight * (1 - normalized);
       final offset = Offset(x, y);
       offsets.add(offset);
@@ -1855,8 +1898,9 @@ class _CashFlowPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (points.isEmpty) return;
     final maximum = points
-        .expand((point) => [point.income, point.spending])
+        .expand((point) => [point.income.amount, point.spending.amount])
         .reduce(math.max);
+    if (maximum <= 0) return;
     final groupWidth = size.width / points.length;
     final barWidth = math.min(11.0, groupWidth * .22);
     final baseline = size.height;
@@ -1871,9 +1915,10 @@ class _CashFlowPainter extends CustomPainter {
 
     for (var index = 0; index < points.length; index++) {
       final center = groupWidth * index + groupWidth / 2;
-      final incomeHeight = size.height * points[index].income / maximum * .86;
+      final incomeHeight =
+          size.height * points[index].income.amount / maximum * .86;
       final spendingHeight =
-          size.height * points[index].spending / maximum * .86;
+          size.height * points[index].spending.amount / maximum * .86;
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(

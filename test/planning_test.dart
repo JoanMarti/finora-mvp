@@ -160,7 +160,12 @@ void main() {
     await tester.pumpWidget(_screen(const GoalsScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Flat deposit'), findsOneWidget);
+    final texts = find
+        .byType(Text)
+        .evaluate()
+        .map((element) => (element.widget as Text).data)
+        .join(' | ');
+    expect(find.text('Flat deposit'), findsOneWidget, reason: texts);
     expect(find.textContaining('CHF 575.00 a month'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Add a goal'));

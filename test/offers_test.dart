@@ -182,7 +182,11 @@ void main() {
     );
     await tester.tap(find.text('Yes, show me'));
     await tester.pumpAndSettle();
+    expect(find.text('Yes, show me'), findsNothing);
 
+    // The section changed height: start again from the top.
+    await tester.drag(list, const Offset(0, 6000));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('Compare health insurance before 30 November'),
       200,

@@ -114,10 +114,18 @@ void main() {
     expect(find.text('YOUR WEALTH PLAN'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.drag(find.byType(ListView).first, const Offset(0, -1600));
+    await tester.scrollUntilVisible(
+      find.text('IDEAS FOR YOU'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
-
     expect(find.text('IDEAS FOR YOU'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('Illustrative targets and ideas'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(
       find.textContaining('Illustrative targets and ideas'),
       findsOneWidget,

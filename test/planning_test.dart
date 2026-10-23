@@ -172,12 +172,12 @@ void main() {
     await tester.tap(find.text('Add a goal'));
     await tester.pumpAndSettle();
 
-    final fields = find.descendant(
-      of: find.byType(BottomSheet),
-      matching: find.byType(EditableText),
+    expect(find.byType(BottomSheet), findsOneWidget);
+    await tester.enterText(find.widgetWithText(TextField, 'Name'), 'Car');
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Target amount'),
+      '15000',
     );
-    await tester.enterText(fields.at(0), 'Car');
-    await tester.enterText(fields.at(1), '15000');
     await tester.pump();
     final save = find.text('Save goal');
     await tester.ensureVisible(save);

@@ -296,13 +296,17 @@ void main() {
     await tester.tap(find.text('Profile'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.text('Language'),
-      300,
-      scrollable: find.byType(Scrollable).first,
+    final languageTile = find.widgetWithText(ListTile, 'Language');
+    await tester.dragUntilVisible(
+      languageTile,
+      find.byType(ListView),
+      const Offset(0, -200),
     );
-    await tester.tap(find.text('Language'));
+    await tester.ensureVisible(languageTile);
     await tester.pumpAndSettle();
+    await tester.tap(languageTile);
+    await tester.pumpAndSettle();
+    expect(find.byType(SimpleDialog), findsOneWidget);
     await tester.tap(find.text('Français'));
     await tester.pumpAndSettle();
 

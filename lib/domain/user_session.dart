@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/planning.dart';
 
 /// Everything Finora needs to remember about the user between launches.
 class UserSession {
@@ -12,6 +13,9 @@ class UserSession {
     this.onboardingCompleted = false,
     this.dataHealthAlerts = true,
     this.languageCode,
+    this.targets = const WealthTargets(),
+    this.goals = const [],
+    this.retirement,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -20,6 +24,15 @@ class UserSession {
     products: FinancialProductType.values.toSet(),
     connectedInstitutionIds: InstitutionCatalogue.demoInstitutionIds,
     onboardingCompleted: true,
+    goals: [
+      SavingsGoal(
+        id: 'demo-flat',
+        name: 'Flat deposit',
+        target: const Money.cents(4000000),
+        deadline: DateTime(2028, 6),
+        accountIds: const {'ubs-savings', 'zkb-savings'},
+      ),
+    ],
   );
 
   final String email;
@@ -31,6 +44,13 @@ class UserSession {
   /// Preferred app language (`en`, `de`, `fr`, `it`); `null` follows the
   /// device.
   final String? languageCode;
+
+  /// Wealth-plan targets the user can adjust.
+  final WealthTargets targets;
+  final List<SavingsGoal> goals;
+
+  /// Pension details; `null` until the user fills them in.
+  final RetirementProfile? retirement;
 
   static const _unset = Object();
 
@@ -63,6 +83,9 @@ class UserSession {
     bool? onboardingCompleted,
     bool? dataHealthAlerts,
     Object? languageCode = _unset,
+    WealthTargets? targets,
+    List<SavingsGoal>? goals,
+    RetirementProfile? retirement,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -74,6 +97,9 @@ class UserSession {
       languageCode: identical(languageCode, _unset)
           ? this.languageCode
           : languageCode as String?,
+      targets: targets ?? this.targets,
+      goals: goals ?? this.goals,
+      retirement: retirement ?? this.retirement,
     );
   }
 
@@ -85,6 +111,9 @@ class UserSession {
     'onboardingCompleted': onboardingCompleted,
     'dataHealthAlerts': dataHealthAlerts,
     'languageCode': languageCode,
+    'targets': targets.toJson(),
+    'goals': [for (final goal in goals) goal.toJson()],
+    'retirement': retirement?.toJson(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -105,6 +134,16 @@ class UserSession {
       onboardingCompleted: json['onboardingCompleted'] as bool? ?? false,
       dataHealthAlerts: json['dataHealthAlerts'] as bool? ?? true,
       languageCode: json['languageCode'] as String?,
+      targets: json['targets'] is Map
+          ? WealthTargets.fromJson(
+              (json['targets']! as Map).cast<String, Object?>(),
+            )
+          : const WealthTargets(),
+      goals: [
+        for (final raw in (json['goals'] as List?) ?? const [])
+          ?SavingsGoal.fromJson(raw),
+      ],
+      retirement: RetirementProfile.fromJson(json['retirement']),
     );
   }
 

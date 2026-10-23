@@ -45,7 +45,7 @@ jobs:
           flutter test --no-pub --reporter expanded > test.txt 2>&1 || status=$?
           cat test.txt
           if [ "$status" -ne 0 ]; then
-            details=$(grep -E -A8 'The following|\[E\]' test.txt | grep -vE '^\s*#[0-9]|^--$|package:flutter|dart:async' | head -120 \
+            details=$(grep -E -A14 'The following|\[E\]' test.txt | grep -vE '^--$|package:flutter|package:stack_trace|dart:async|package:test_api|package:matcher' | head -120 \
               | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')
             echo "::error title=Failing tests::${details}"
           fi

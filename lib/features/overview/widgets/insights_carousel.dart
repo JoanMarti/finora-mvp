@@ -121,7 +121,7 @@ List<PersonalInsight> buildInsights(
 }
 
 class PersonalizedInsightsCarousel extends StatefulWidget {
-  const PersonalizedInsightsCarousel({required this.insights});
+  const PersonalizedInsightsCarousel({required this.insights, super.key});
 
   final List<PersonalInsight> insights;
 
@@ -281,7 +281,7 @@ class _PersonalInsightCard extends StatelessWidget {
 }
 
 class MarketDataNote extends StatelessWidget {
-  const MarketDataNote();
+  const MarketDataNote({super.key});
 
   @override
   Widget build(BuildContext context) {

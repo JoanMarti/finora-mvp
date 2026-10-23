@@ -6,7 +6,7 @@ import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
 class WealthTrajectoryCard extends StatelessWidget {
-  const WealthTrajectoryCard({required this.overview});
+  const WealthTrajectoryCard({required this.overview, super.key});
 
   final FinancialOverview overview;
 

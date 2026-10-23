@@ -69,7 +69,7 @@ List<_PlanRowData> _planRows(FinancialOverview overview, WealthTargets targets) 
 }
 
 class WealthPlanCard extends StatelessWidget {
-  const WealthPlanCard({required this.overview, required this.targets});
+  const WealthPlanCard({required this.overview, required this.targets, super.key});
 
   final FinancialOverview overview;
   final WealthTargets targets;

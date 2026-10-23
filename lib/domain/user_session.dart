@@ -16,6 +16,8 @@ class UserSession {
     this.targets = const WealthTargets(),
     this.goals = const [],
     this.retirement,
+    this.offersConsent,
+    this.dismissedOpportunities = const {},
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -52,6 +54,14 @@ class UserSession {
   /// Pension details; `null` until the user fills them in.
   final RetirementProfile? retirement;
 
+  /// Express consent to analyse account data for personalised savings
+  /// offers (required for high-risk profiling under the revised FADP).
+  /// `null` until the user has been asked.
+  final bool? offersConsent;
+
+  /// Opportunity ids the user marked as not interesting.
+  final Set<String> dismissedOpportunities;
+
   static const _unset = Object();
 
   /// Display name derived from the e-mail, e.g. "anna.muster@…" → "Anna".
@@ -86,6 +96,8 @@ class UserSession {
     WealthTargets? targets,
     List<SavingsGoal>? goals,
     RetirementProfile? retirement,
+    bool? offersConsent,
+    Set<String>? dismissedOpportunities,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -100,6 +112,9 @@ class UserSession {
       targets: targets ?? this.targets,
       goals: goals ?? this.goals,
       retirement: retirement ?? this.retirement,
+      offersConsent: offersConsent ?? this.offersConsent,
+      dismissedOpportunities:
+          dismissedOpportunities ?? this.dismissedOpportunities,
     );
   }
 
@@ -114,6 +129,8 @@ class UserSession {
     'targets': targets.toJson(),
     'goals': [for (final goal in goals) goal.toJson()],
     'retirement': retirement?.toJson(),
+    'offersConsent': offersConsent,
+    'dismissedOpportunities': dismissedOpportunities.toList(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -144,6 +161,10 @@ class UserSession {
           ?SavingsGoal.fromJson(raw),
       ],
       retirement: RetirementProfile.fromJson(json['retirement']),
+      offersConsent: json['offersConsent'] as bool?,
+      dismissedOpportunities: {
+        ...?(json['dismissedOpportunities'] as List?)?.whereType<String>(),
+      },
     );
   }
 

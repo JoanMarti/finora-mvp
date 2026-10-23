@@ -2,6 +2,7 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/offers/widgets/opportunity_widgets.dart';
 import 'package:finora/features/overview/widgets/balance_overview_card.dart';
 import 'package:finora/features/overview/widgets/insights_carousel.dart';
 import 'package:finora/features/overview/widgets/wealth_plan_card.dart';
@@ -69,7 +70,9 @@ class DashboardScreen extends ConsumerWidget {
                     targets: ref.watch(wealthTargetsProvider),
                     goals: ref.watch(goalProgressProvider).value ?? const [],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
+                  const SavingsOpportunitiesSection(),
+                  const SizedBox(height: 12),
                   SectionTitle(l10n.planningToolsSection),
                   const _PlanningTools(),
                   const SizedBox(height: 24),
@@ -299,6 +302,12 @@ class _PlanningTools extends ConsumerWidget {
     final projection = ref.watch(retirementProjectionProvider).value;
     final lastYear = ref.watch(clockProvider)().year - 1;
     final tools = [
+      (
+        Icons.donut_small_outlined,
+        l10n.analysisTitle,
+        l10n.analysisToolSubtitle,
+        '/analysis',
+      ),
       (
         Icons.flag_outlined,
         l10n.goalsTitle,

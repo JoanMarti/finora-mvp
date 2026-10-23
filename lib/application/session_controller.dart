@@ -108,6 +108,19 @@ class SessionController extends Notifier<UserSession> {
   void setRetirementProfile(RetirementProfile profile) =>
       _update(state.copyWith(retirement: profile));
 
+  /// Records the user's answer to the personalised-offers question.
+  void setOffersConsent(bool consent) =>
+      _update(state.copyWith(offersConsent: consent));
+
+  void dismissOpportunity(String id) => _update(
+    state.copyWith(
+      dismissedOpportunities: {...state.dismissedOpportunities, id},
+    ),
+  );
+
+  void restoreOpportunities() =>
+      _update(state.copyWith(dismissedOpportunities: const {}));
+
   /// `null` follows the device language.
   void setLanguage(String? languageCode) =>
       _update(state.copyWith(languageCode: languageCode));

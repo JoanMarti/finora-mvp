@@ -9,35 +9,36 @@ import 'package:finora/domain/models.dart';
 /// relative to "now" so the demo never looks out of date.
 class MockFinancialRepository implements FinancialRepository {
   MockFinancialRepository({
-    required Set<String> institutionIds,
-    Set<FinancialProductType> products = const {},
-    DateTime Function() clock = DateTime.now,
-  }) : _institutionIds = institutionIds,
-       _products = products,
-       _clock = clock;
+    required this.institutionIds,
+    this.products = const {},
+    this.clock = DateTime.now,
+  });
 
-  final Set<String> _institutionIds;
-  final Set<FinancialProductType> _products;
-  final DateTime Function() _clock;
+  /// Institutions the user connected.
+  final Set<String> institutionIds;
+
+  /// Products chosen in onboarding; empty means "show everything".
+  final Set<FinancialProductType> products;
+  final DateTime Function() clock;
   DateTime? _refreshedAt;
 
   /// Monthly Pillar 3a standing order used by the demo profile.
   static const _pillar3aMonthlyContribution = Money.cents(60500);
   static const _pillar3aAnnualLimit = Money.cents(725800);
 
-  DateTime get _now => _clock();
+  DateTime get _now => clock();
 
   List<_AccountTemplate> get _activeTemplates => _accountTemplates
       .where(
         (template) =>
-            _institutionIds.contains(template.institutionId) &&
-            (_products.isEmpty || _products.contains(template.type)),
+            institutionIds.contains(template.institutionId) &&
+            (products.isEmpty || products.contains(template.type)),
       )
       .toList();
 
   @override
   Future<List<Institution>> getInstitutions() async => InstitutionCatalogue.all
-      .where((institution) => _institutionIds.contains(institution.id))
+      .where((institution) => institutionIds.contains(institution.id))
       .toList();
 
   @override

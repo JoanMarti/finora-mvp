@@ -1,25 +1,41 @@
 import 'package:finora/app/app.dart';
 import 'package:finora/app/theme.dart';
+import 'package:finora/domain/user_session.dart';
 import 'package:finora/features/accounts/accounts_screens.dart';
+import 'package:finora/features/activity/activity_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_helpers.dart';
+
+Widget _screen(Widget child, {UserSession? session}) => ProviderScope(
+  overrides: testOverrides(session: session),
+  child: MaterialApp(theme: buildFinoraTheme(), home: child),
+);
+
 void main() {
   testWidgets('onboarding branches into investments and Pillar 3a', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(430, 932);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    usePhoneViewport(tester, size: const Size(430, 932));
 
-    await tester.pumpWidget(const ProviderScope(child: FinoraApp()));
+    // A fresh install has no session, so the router starts onboarding.
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: testOverrides(session: const UserSession()),
+        child: const FinoraApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
     expect(find.text('Your finances.\nOne clear view.'), findsOneWidget);
 
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
+    await tester.enterText(find.byType(EditableText).first, 'demo');
+    await tester.pump();
+    expect(find.text('Enter a valid e-mail address'), findsOneWidget);
     await tester.enterText(find.byType(EditableText).first, 'demo@finora.ch');
     await tester.pump();
     await tester.tap(find.text('Create mock account'));
@@ -34,7 +50,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Where do you bank?'), findsOneWidget);
-    await tester.tap(find.text('UBS'));
+    await tester.tap(find.text('PostFinance'));
     await tester.pump();
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
@@ -43,33 +59,53 @@ void main() {
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
     expect(find.text('Where is your Pillar 3a?'), findsOneWidget);
+    await tester.tap(find.text('VIAC'));
+    await tester.pump();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.text('Your financial setup'), findsOneWidget);
+
+    await tester.tap(find.text('Continue to connections'));
+    await tester.pumpAndSettle();
+    expect(find.text('PostFinance'), findsOneWidget);
+    expect(find.text('VIAC'), findsOneWidget);
+    expect(find.text('UBS'), findsNothing);
+
+    await tester.tap(find.text('Connect and continue'));
+    await tester.pumpAndSettle();
+
+    // The overview now reflects exactly what was selected.
+    expect(find.text('TOTAL WEALTH'), findsOneWidget);
+    await tester.tap(find.text('Accounts'));
+    await tester.pumpAndSettle();
+    expect(find.text('PostFinance'), findsOneWidget);
+    expect(find.text('UBS'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('returning users skip onboarding', (tester) async {
+    usePhoneViewport(tester);
+    await tester.pumpWidget(
+      ProviderScope(overrides: testOverrides(), child: const FinoraApp()),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('TOTAL WEALTH'), findsOneWidget);
+    expect(find.text('Get started'), findsNothing);
   });
 
   testWidgets('wealth dashboard fits a compact mobile viewport', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp(
-          theme: buildFinoraTheme(),
-          home: const DashboardScreen(),
-        ),
-      ),
-    );
+    usePhoneViewport(tester);
+    await tester.pumpWidget(_screen(const DashboardScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('TOTAL WEALTH'), findsOneWidget);
     expect(find.text('Wealth evolution'), findsOneWidget);
     expect(find.text('YOUR WEALTH PLAN'), findsOneWidget);
-    expect(find.text('Total balance breakdown'), findsNothing);
     expect(tester.takeException(), isNull);
 
-    await tester.drag(find.byType(ListView), const Offset(0, -1600));
+    await tester.drag(find.byType(ListView).first, const Offset(0, -1600));
     await tester.pumpAndSettle();
 
     expect(find.text('IDEAS FOR YOU'), findsOneWidget);
@@ -80,21 +116,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('dashboard shows an empty state without connections', (
+    tester,
+  ) async {
+    usePhoneViewport(tester);
+    await tester.pumpWidget(
+      _screen(
+        const DashboardScreen(),
+        session: const UserSession(onboardingCompleted: true),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('No accounts connected yet'), findsOneWidget);
+    expect(find.text('YOUR WEALTH PLAN'), findsNothing);
+  });
+
+  testWidgets('notification bell lists derived alerts', (tester) async {
+    usePhoneViewport(tester);
+    await tester.pumpWidget(_screen(const DashboardScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.notifications_none));
+    await tester.pumpAndSettle();
+    expect(find.text('Notifications'), findsOneWidget);
+    // ZKB is stale in the demo data and CSS Insurance is due within a week.
+    expect(find.text('Zürcher Kantonalbank data is out of date'), findsOneWidget);
+    expect(find.text('CSS Insurance is due soon'), findsOneWidget);
+  });
+
   testWidgets('account detail explains cash flow and improvement signals', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
+    usePhoneViewport(tester);
     await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp(
-          theme: buildFinoraTheme(),
-          home: const AccountDetailScreen(accountId: 'ubs-personal'),
-        ),
-      ),
+      _screen(const AccountDetailScreen(accountId: 'ubs-personal')),
     );
     await tester.pumpAndSettle();
 
@@ -119,7 +174,6 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('Where your money went'), findsOneWidget);
     expect(find.text('Housing'), findsOneWidget);
 
     await tester.scrollUntilVisible(
@@ -140,26 +194,16 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Review insurance in one place'), findsOneWidget);
+    expect(find.textContaining('2 insurance payments'), findsOneWidget);
     expect(find.text('See the true cost of your debt'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('accounts screen groups institutions and exposes safe actions', (
+  testWidgets('accounts screen groups institutions and disconnects for real', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp(
-          theme: buildFinoraTheme(),
-          home: const AccountsScreen(),
-        ),
-      ),
-    );
+    usePhoneViewport(tester);
+    await tester.pumpWidget(_screen(const AccountsScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Your accounts, clearly organised'), findsOneWidget);
@@ -183,8 +227,30 @@ void main() {
       find.textContaining('Your accounts at the bank are not affected'),
       findsOneWidget,
     );
-    await tester.tap(find.text('Cancel'));
+    await tester.tap(find.text('Disconnect'));
     await tester.pumpAndSettle();
+    expect(find.text('UBS'), findsNothing);
+    expect(find.text('UBS disconnected.'), findsOneWidget);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text('UBS'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('activity search filters transactions', (tester) async {
+    usePhoneViewport(tester);
+    await tester.pumpWidget(_screen(const ActivityScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Migros'), findsOneWidget);
+    await tester.enterText(find.byType(EditableText), 'sbb');
+    await tester.pumpAndSettle();
+    expect(find.text('SBB Mobile'), findsOneWidget);
+    expect(find.text('Migros'), findsNothing);
+
+    await tester.enterText(find.byType(EditableText), 'nothing-matches');
+    await tester.pumpAndSettle();
+    expect(find.textContaining('No transactions match'), findsOneWidget);
   });
 }

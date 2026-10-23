@@ -1,18 +1,11 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/shared/formatters.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-String formatMoney(Money money, {bool signed = false}) {
-  final formatter = NumberFormat.currency(
-    locale: 'de_CH',
-    symbol: money.currency,
-    decimalDigits: 2,
-  );
-  final value = formatter.format(money.amount.abs()).replaceAll('’', "'");
-  if (!signed || money.amount == 0) return value;
-  return '${money.amount > 0 ? '+' : '−'} $value';
-}
+export 'package:finora/shared/formatters.dart';
 
 class FinoraPage extends StatelessWidget {
   const FinoraPage({
@@ -49,9 +42,16 @@ class InstitutionBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final icon = switch (institution.id) {
       'ubs' => Icons.key_rounded,
-      'zkb' => Icons.account_balance_rounded,
-      'swissquote' => Icons.show_chart_rounded,
-      'frankly' => Icons.savings_outlined,
+      _ when institution.productTypes.contains(
+        FinancialProductType.currentAccount,
+      ) =>
+        Icons.account_balance_rounded,
+      _ when institution.productTypes.contains(
+        FinancialProductType.investments,
+      ) =>
+        Icons.show_chart_rounded,
+      _ when institution.productTypes.contains(FinancialProductType.pillar3a) =>
+        Icons.savings_outlined,
       _ => Icons.account_balance_wallet_outlined,
     };
     return Semantics(
@@ -164,32 +164,36 @@ class StatusPill extends StatelessWidget {
   }
 }
 
-class TransactionTile extends StatelessWidget {
+class TransactionTile extends ConsumerWidget {
   const TransactionTile({required this.transaction, super.key});
   final FinancialTransaction transaction;
 
   @override
-  Widget build(BuildContext context) {
-    final positive = transaction.amount.amount > 0;
-    final icon = switch (transaction.category) {
-      'Income' => Icons.south_west,
-      'Transport' => Icons.train_outlined,
-      'Groceries' => Icons.shopping_basket_outlined,
-      'Utilities' => Icons.receipt_long_outlined,
-      _ => Icons.shopping_bag_outlined,
-    };
-    final accent = switch (transaction.category) {
-      'Income' => finoraGreen,
-      'Transport' => finoraSlate,
-      'Groceries' => finoraBlue,
-      'Utilities' => finoraBlue,
-      _ => finoraSilver,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final now = ref.watch(clockProvider)();
+    final positive = !transaction.amount.isNegative;
+    final (icon, accent) = switch (transaction.category) {
+      TransactionCategory.income => (Icons.south_west, finoraGreen),
+      TransactionCategory.transport => (Icons.train_outlined, finoraSlate),
+      TransactionCategory.groceries => (
+        Icons.shopping_basket_outlined,
+        finoraBlue,
+      ),
+      TransactionCategory.utilities => (Icons.receipt_long_outlined, finoraBlue),
+      TransactionCategory.insurance => (
+        Icons.health_and_safety_outlined,
+        finoraSlate,
+      ),
+      TransactionCategory.dining => (Icons.restaurant_outlined, finoraBlue),
+      TransactionCategory.housing => (Icons.home_outlined, finoraInk),
+      TransactionCategory.shopping ||
+      TransactionCategory.other => (Icons.shopping_bag_outlined, finoraSilver),
     };
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       leading: CircleAvatar(
         backgroundColor: accent.withValues(alpha: .13),
-        foregroundColor: accent,
+        foregroundColor: finoraAccessibleAccent(accent),
         child: Icon(icon, size: 20),
       ),
       title: Text(
@@ -197,7 +201,7 @@ class TransactionTile extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        '${transaction.category} · ${transaction.dateLabel}',
+        '${transaction.category.label} · ${formatRelativeDay(transaction.bookedAt, now)}',
         style: const TextStyle(color: finoraMutedInk, fontSize: 12),
       ),
       trailing: Text(
@@ -205,6 +209,34 @@ class TransactionTile extends StatelessWidget {
         style: TextStyle(
           color: positive ? finoraGreen : finoraInk,
           fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+/// Small rounded label used for gains, losses and statuses.
+class ValuePill extends StatelessWidget {
+  const ValuePill({required this.label, required this.color, super.key});
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .1),
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: finoraAccessibleAccent(color),
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
     );

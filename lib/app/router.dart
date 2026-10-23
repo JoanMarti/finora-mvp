@@ -1,3 +1,4 @@
+import 'package:finora/application/session_controller.dart';
 import 'package:finora/features/accounts/accounts_screens.dart';
 import 'package:finora/features/activity/activity_screen.dart';
 import 'package:finora/features/connections/connection_screen.dart';
@@ -9,11 +10,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+/// Routes reachable before onboarding is finished.
+const _onboardingRoutes = {'/onboarding', '/connect'};
+
 final routerProvider = Provider<GoRouter>((ref) {
-  return GoRouter(
-    initialLocation: '/onboarding',
+  // Re-evaluate redirects when onboarding completes or the session resets,
+  // without rebuilding the router (which would lose navigation state).
+  final onboardingCompleted = ValueNotifier<bool>(
+    ref.read(sessionProvider).onboardingCompleted,
+  );
+  ref
+    ..listen(
+      sessionProvider.select((session) => session.onboardingCompleted),
+      (_, next) => onboardingCompleted.value = next,
+    )
+    ..onDispose(onboardingCompleted.dispose);
+
+  final router = GoRouter(
+    initialLocation: '/home',
+    refreshListenable: onboardingCompleted,
+    redirect: (context, state) {
+      final location = state.matchedLocation;
+      if (!onboardingCompleted.value) {
+        return _onboardingRoutes.contains(location) ? null : '/onboarding';
+      }
+      if (location == '/onboarding' || location == '/') return '/home';
+      return null;
+    },
     routes: [
-      GoRoute(path: '/', redirect: (_, _) => '/onboarding'),
+      GoRoute(path: '/', redirect: (_, _) => '/home'),
       GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
       GoRoute(path: '/connect', builder: (_, _) => const ConnectionScreen()),
       ShellRoute(
@@ -54,4 +79,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ),
   );
+  ref.onDispose(router.dispose);
+  return router;
 });

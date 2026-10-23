@@ -1,8 +1,19 @@
 import 'package:finora/app/app.dart';
+import 'package:finora/app/bootstrap.dart';
+import 'package:finora/data/shared_preferences_session_store.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: FinoraApp()));
+  final preferences = await SharedPreferences.getInstance();
+  runApp(
+    ProviderScope(
+      overrides: demoOverrides(
+        sessionStore: SharedPreferencesSessionStore(preferences),
+      ),
+      child: const FinoraApp(),
+    ),
+  );
 }

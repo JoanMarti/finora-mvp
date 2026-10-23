@@ -1,5 +1,6 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class BalanceOverviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final changeRate = overview.monthlyChangeRate;
     final hasDebt = !overview.liabilities.isZero;
+    final l10n = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -25,9 +27,9 @@ class BalanceOverviewCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'TOTAL WEALTH',
-                        style: TextStyle(
+                      Text(
+                        l10n.totalWealth.toUpperCase(),
+                        style: const TextStyle(
                           color: finoraInk,
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
@@ -37,8 +39,8 @@ class BalanceOverviewCard extends StatelessWidget {
                       const SizedBox(height: 3),
                       Text(
                         hasDebt
-                            ? 'Cash · Investments · Retirement · Debt'
-                            : 'Cash · Investments · Retirement',
+                            ? l10n.wealthComponentsWithDebt
+                            : l10n.wealthComponents,
                         style: const TextStyle(
                           color: finoraMutedInk,
                           fontSize: 12,
@@ -48,7 +50,7 @@ class BalanceOverviewCard extends StatelessWidget {
                   ),
                 ),
                 IconButton.filledTonal(
-                  tooltip: 'Refresh all connections',
+                  tooltip: l10n.refreshAllConnections,
                   onPressed: onRefresh,
                   style: IconButton.styleFrom(
                     backgroundColor: finoraSoftBlue,
@@ -59,9 +61,9 @@ class BalanceOverviewCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Net worth',
-              style: TextStyle(color: finoraMutedInk, fontSize: 13),
+            Text(
+              l10n.netWorth,
+              style: const TextStyle(color: finoraMutedInk, fontSize: 13),
             ),
             const SizedBox(height: 3),
             Row(
@@ -85,8 +87,9 @@ class BalanceOverviewCard extends StatelessWidget {
                 ),
                 if (changeRate != null)
                   Semantics(
-                    label:
-                        'Net worth changed ${formatPercentChange(changeRate)} this month',
+                    label: l10n.netWorthChangedThisMonth(
+                      formatPercentChange(changeRate),
+                    ),
                     child: ExcludeSemantics(
                       child: ValuePill(
                         label: formatPercentChange(changeRate),
@@ -103,23 +106,23 @@ class BalanceOverviewCard extends StatelessWidget {
               children: [
                 _BalancePart(
                   color: finoraBlue,
-                  label: 'Cash',
+                  label: l10n.allocationCash,
                   money: overview.cash,
                 ),
                 _BalancePart(
                   color: finoraInk,
-                  label: 'Investments',
+                  label: l10n.allocationInvestments,
                   money: overview.investments,
                 ),
                 _BalancePart(
                   color: finoraSlate,
-                  label: 'Pillar 3a',
+                  label: l10n.allocationPillar3a,
                   money: overview.retirement,
                 ),
                 if (hasDebt)
                   _BalancePart(
                     color: finoraDanger,
-                    label: 'Debt',
+                    label: l10n.allocationDebt,
                     money: -overview.liabilities,
                   ),
               ],

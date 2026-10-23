@@ -49,8 +49,11 @@ final transactionsProvider =
           .getTransactions(accountId: accountId),
     );
 
-final marketThemesProvider = FutureProvider<List<MarketTheme>>(
-  (ref) => ref.watch(marketDataRepositoryProvider).getSwissMarketThemes(),
+/// Educational themes for a language code such as `de`.
+final marketThemesProvider = FutureProvider.family<List<MarketTheme>, String>(
+  (ref, languageCode) => ref
+      .watch(marketDataRepositoryProvider)
+      .getSwissMarketThemes(languageCode: languageCode),
 );
 
 /// Net worth, allocation and history, always derived from the accounts so
@@ -112,40 +115,22 @@ final alertsProvider = FutureProvider<List<FinoraAlert>>((ref) async {
   final alerts = <FinoraAlert>[];
   if (session.dataHealthAlerts) {
     for (final connection in connections) {
-      final name = nameOf(connection.institutionId);
-      switch (connection.status) {
-        case ConnectionStatus.actionRequired:
-          alerts.add(
-            FinoraAlert(
-              title: '$name needs your attention',
-              description: 'Renew your consent to keep balances up to date.',
-              severity: AlertSeverity.critical,
-              route: '/institution/${connection.institutionId}',
-            ),
-          );
-        case ConnectionStatus.stale:
-          alerts.add(
-            FinoraAlert(
-              title: '$name data is out of date',
-              description: 'Pull down on the overview to refresh it.',
-              severity: AlertSeverity.warning,
-              route: '/institution/${connection.institutionId}',
-            ),
-          );
-        case ConnectionStatus.manual:
-          if (now.difference(connection.lastSyncedAt).inDays >= 30) {
-            alerts.add(
-              FinoraAlert(
-                title: 'Update your $name value',
-                description: 'Manual values older than a month can mislead.',
-                severity: AlertSeverity.info,
-                route: '/institution/${connection.institutionId}',
-              ),
-            );
-          }
-        case ConnectionStatus.connected:
-          break;
-      }
+      final kind = switch (connection.status) {
+        ConnectionStatus.actionRequired => AlertKind.consentRequired,
+        ConnectionStatus.stale => AlertKind.staleConnection,
+        ConnectionStatus.manual
+            when now.difference(connection.lastSyncedAt).inDays >= 30 =>
+          AlertKind.manualValueOutdated,
+        _ => null,
+      };
+      if (kind == null) continue;
+      alerts.add(
+        FinoraAlert(
+          kind: kind,
+          subject: nameOf(connection.institutionId),
+          route: '/institution/${connection.institutionId}',
+        ),
+      );
     }
   }
 
@@ -159,10 +144,11 @@ final alertsProvider = FutureProvider<List<FinoraAlert>>((ref) async {
       if (daysUntilDue >= 0 && daysUntilDue <= 7) {
         alerts.add(
           FinoraAlert(
-            title: '${payment.merchant} is due soon',
-            description:
-                '${payment.category} · ${payment.amount.abs()} in $daysUntilDue days',
-            severity: AlertSeverity.info,
+            kind: AlertKind.billDue,
+            subject: payment.merchant,
+            bill: payment.category,
+            amount: payment.amount.abs(),
+            daysUntilDue: daysUntilDue,
             route: '/account/${account.id}',
           ),
         );

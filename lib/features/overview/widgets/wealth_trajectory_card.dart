@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,8 @@ class WealthTrajectoryCard extends StatelessWidget {
     final changeRate = overview.periodChangeRate;
     final values = [for (final point in history) point.balance.amount];
     final positive = !change.isNegative;
+    final l10n = context.l10n;
+    final period = l10n.monthsCount(history.length);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -25,22 +28,22 @@ class WealthTrajectoryCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Wealth evolution',
-                        style: TextStyle(
+                        l10n.wealthEvolution,
+                        style: const TextStyle(
                           color: finoraInk,
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
-                        'Your unified net worth over time',
-                        style: TextStyle(
+                        l10n.wealthEvolutionSubtitle,
+                        style: const TextStyle(
                           color: finoraMutedInk,
                           fontSize: 12,
                         ),
@@ -49,7 +52,7 @@ class WealthTrajectoryCard extends StatelessWidget {
                   ),
                 ),
                 ValuePill(
-                  label: '${history.length} months',
+                  label: period,
                   color: finoraBlue,
                 ),
               ],
@@ -87,15 +90,17 @@ class WealthTrajectoryCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 3),
-            const Text(
-              'Net contributions and market performance',
-              style: TextStyle(color: finoraMutedInk, fontSize: 11),
+            Text(
+              l10n.contributionsAndPerformance,
+              style: const TextStyle(color: finoraMutedInk, fontSize: 11),
             ),
             const SizedBox(height: 16),
             Semantics(
-              label:
-                  'Net worth ${positive ? 'grew' : 'fell'} by ${formatMoney(change.abs())} over ${history.length} months, '
-                  'ending at ${formatMoney(history.last.balance)}.',
+              label: (positive ? l10n.netWorthTrendGrew : l10n.netWorthTrendFell)(
+                formatMoney(change.abs()),
+                period,
+                formatMoney(history.last.balance),
+              ),
               child: ExcludeSemantics(
                 child: SizedBox(
                   height: 92,

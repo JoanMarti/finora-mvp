@@ -23,6 +23,8 @@ Finora is a mobile-first, read-only wealth overview for people in Switzerland. T
 - Net worth, allocation, history, wealth plan, ideas and alerts derived from account data (nothing hard-coded on screen)
 - Session persisted on the device (onboarding choices and preferences only), with a router guard so returning users skip onboarding
 - Working transaction search, month grouping and CSV copy; notification centre fed by connection health and upcoming bills
+- Available in English, German, French and Italian, following the device language or a choice saved in Profile
+- Inter as the app font on every platform
 
 Not included: real authentication, KYC, payments, trading, financial advice, real bLink/OpenWealth calls, analytics, or production security controls.
 
@@ -46,11 +48,15 @@ lib/
 │   ├── mock_financial_repository.dart   # demo data built from the session
 │   ├── mock_market_data_repository.dart
 │   └── shared_preferences_session_store.dart
+├── l10n/
+│   ├── app_{en,de,fr,it}.arb    # translations (source of truth for UI text)
+│   ├── labels.dart              # localized names for domain enums, dates, alerts
+│   └── l10n.dart                # context.l10n and the language list
 ├── features/
 │   ├── onboarding/              # profile discovery and branching
 │   ├── connections/             # simulated consent/sync journey
-│   ├── overview/                # aggregate dashboard
-│   ├── accounts/                # account/institution views
+│   ├── overview/                # dashboard screen (+ widgets/ for its cards)
+│   ├── accounts/                # list, institution and account detail (+ widgets/)
 │   ├── activity/                # transaction feed
 │   ├── profile/                 # settings and data health
 │   └── shell/                   # bottom navigation
@@ -83,12 +89,19 @@ Market and product discovery follows the same boundary through `MarketDataReposi
 
 The preferred production flow is `provider → backend adapter/cache → normalized MarketDataRepository → Riverpod → UI`. Provider attribution, timestamps and delayed/live status should accompany every market value.
 
+## Translations
+
+UI text lives in `lib/l10n/app_<locale>.arb`; Dart code never contains user-facing strings. `flutter gen-l10n` (run automatically by `flutter run`, `flutter build` and in CI) generates `AppLocalizations` into `lib/l10n/generated/`, which is not committed. Domain enums stay language-free and are named in `l10n/labels.dart`. `test/l10n_test.dart` fails if a language misses a message or changes its placeholders.
+
+To add a language, copy `app_en.arb`, translate it, add it to `finoraLanguages` in `l10n/l10n.dart` and to the mock market themes.
+
 ## Run locally
 
 Use the current stable Flutter SDK (the project was validated with Flutter 3.47.4 / Dart 3.13.3).
 
 ```bash
 flutter pub get
+flutter gen-l10n
 flutter run
 ```
 

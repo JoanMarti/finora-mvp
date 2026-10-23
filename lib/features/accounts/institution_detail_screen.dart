@@ -1,6 +1,8 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +18,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
     final accounts = ref.watch(accountsProvider).value;
     final connections = ref.watch(connectionsProvider).value;
     final now = ref.watch(clockProvider)();
+    final l10n = context.l10n;
     if (institutions == null || accounts == null || connections == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -23,7 +26,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
         .where((item) => item.id == institutionId)
         .firstOrNull;
     if (institution == null) {
-      return const NotFoundScreen(label: 'Institution not found');
+      return NotFoundScreen(label: l10n.institutionNotFound);
     }
     final owned = accounts
         .where((item) => item.institutionId == institutionId)
@@ -72,7 +75,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
                       StatusPill(status: connection.status),
                       const Spacer(),
                       Text(
-                        formatSyncTime(connection.lastSyncedAt, now),
+                        l10n.syncTime(connection.lastSyncedAt, now),
                         style: const TextStyle(
                           fontSize: 12,
                           color: finoraMutedInk,
@@ -82,7 +85,7 @@ class InstitutionDetailScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-            const SectionTitle('Accounts'),
+            SectionTitle(l10n.accountsSection),
             for (final account in owned)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -112,19 +115,19 @@ class InstitutionDetailScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-            const SectionTitle('Connection'),
+            SectionTitle(l10n.connectionSection),
             Card(
               child: Column(
                 children: [
-                  const ListTile(
-                    leading: Icon(Icons.visibility_outlined),
-                    title: Text('Read-only access'),
-                    subtitle: Text('Balances and transactions only'),
+                  ListTile(
+                    leading: const Icon(Icons.visibility_outlined),
+                    title: Text(l10n.readOnlyAccess),
+                    subtitle: Text(l10n.balancesAndTransactionsOnly),
                   ),
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.sync),
-                    title: const Text('Refresh data'),
+                    title: Text(l10n.refreshData),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => refreshFinancialData(ref),
                   ),

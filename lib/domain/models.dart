@@ -1,13 +1,12 @@
+/// Product families. Display names live in the localization layer
+/// (`l10n/labels.dart`), never in the domain.
 enum FinancialProductType {
-  currentAccount('Current account'),
-  savings('Savings'),
-  investments('Investments'),
-  pillar3a('Pillar 3a'),
-  creditCard('Credit card'),
-  mortgage('Mortgage');
-
-  const FinancialProductType(this.label);
-  final String label;
+  currentAccount,
+  savings,
+  investments,
+  pillar3a,
+  creditCard,
+  mortgage;
 
   bool get isCash => this == currentAccount || this == savings;
   bool get isInvestment => this == investments;
@@ -150,18 +149,15 @@ class FinancialAccount {
 }
 
 enum TransactionCategory {
-  income('Income'),
-  groceries('Groceries'),
-  transport('Transport'),
-  utilities('Utilities'),
-  shopping('Shopping'),
-  insurance('Insurance'),
-  dining('Dining'),
-  housing('Housing'),
-  other('Other');
-
-  const TransactionCategory(this.label);
-  final String label;
+  income,
+  groceries,
+  transport,
+  utilities,
+  shopping,
+  insurance,
+  dining,
+  housing,
+  other,
 }
 
 class FinancialTransaction {
@@ -200,6 +196,21 @@ class CashFlowPoint {
   final Money spending;
 }
 
+enum BillCategory {
+  healthInsurance,
+  householdInsurance,
+  phoneInternet,
+  membership,
+  streaming,
+  electricity,
+  radioTvFee;
+
+  bool get isInsurance =>
+      this == healthInsurance || this == householdInsurance;
+}
+
+enum BillCadence { monthly, monthlyEquivalent }
+
 class RecurringPayment {
   const RecurringPayment({
     required this.merchant,
@@ -207,23 +218,23 @@ class RecurringPayment {
     required this.amount,
     required this.cadence,
     required this.nextDueAt,
-    this.isInsurance = false,
   });
   final String merchant;
-  final String category;
+  final BillCategory category;
   final Money amount;
-  final String cadence;
+  final BillCadence cadence;
   final DateTime nextDueAt;
-  final bool isInsurance;
+
+  bool get isInsurance => category.isInsurance;
 }
 
 class SpendingCategory {
   const SpendingCategory({
-    required this.label,
+    required this.category,
     required this.amount,
     required this.colorValue,
   });
-  final String label;
+  final TransactionCategory category;
   final Money amount;
   final int colorValue;
 }
@@ -367,18 +378,33 @@ class WealthTargets {
 
 enum AlertSeverity { info, warning, critical }
 
+enum AlertKind { consentRequired, staleConnection, manualValueOutdated, billDue }
+
 /// Something the user should know about, derived from their own data.
+/// It carries facts only; the UI turns them into localized text.
 class FinoraAlert {
   const FinoraAlert({
-    required this.title,
-    required this.description,
-    required this.severity,
+    required this.kind,
+    required this.subject,
+    this.bill,
+    this.amount,
+    this.daysUntilDue,
     this.route,
   });
-  final String title;
-  final String description;
-  final AlertSeverity severity;
+  final AlertKind kind;
+
+  /// Institution name or merchant the alert is about.
+  final String subject;
+  final BillCategory? bill;
+  final Money? amount;
+  final int? daysUntilDue;
 
   /// Optional in-app location that helps resolve the alert.
   final String? route;
+
+  AlertSeverity get severity => switch (kind) {
+    AlertKind.consentRequired => AlertSeverity.critical,
+    AlertKind.staleConnection => AlertSeverity.warning,
+    AlertKind.manualValueOutdated || AlertKind.billDue => AlertSeverity.info,
+  };
 }

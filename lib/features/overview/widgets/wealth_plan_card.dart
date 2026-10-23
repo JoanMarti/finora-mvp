@@ -1,5 +1,6 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,11 @@ class _PlanRowData {
 
 /// Turns the overview and targets into the three plan rows. Kept separate
 /// from the widget so the maths is easy to read and test.
-List<_PlanRowData> _planRows(FinancialOverview overview, WealthTargets targets) {
+List<_PlanRowData> _planRows(
+  AppLocalizations l10n,
+  FinancialOverview overview,
+  WealthTargets targets,
+) {
   // Safety buffer: savings vs. N months of everyday spending.
   final bufferTarget = overview.monthlySpending.isZero
       ? const Money.cents(2000000)
@@ -44,24 +49,31 @@ List<_PlanRowData> _planRows(FinancialOverview overview, WealthTargets targets) 
 
   return [
     _PlanRowData(
-      label: 'Safety buffer',
-      value:
-          '${formatCompactMoney(overview.savings)} of ${formatCompactMoney(bufferTarget)}',
+      label: l10n.planSafetyBuffer,
+      value: l10n.planProgressOf(
+        formatCompactMoney(overview.savings),
+        formatCompactMoney(bufferTarget),
+      ),
       progress: bufferProgress,
       color: finoraBlue,
     ),
     _PlanRowData(
-      label: 'Long-term allocation',
-      value:
-          '${(longTermShare * 100).round()}% of ${(targets.longTermShare * 100).round()}% target',
+      label: l10n.planLongTerm,
+      value: l10n.planShareOfTarget(
+        (longTermShare * 100).round(),
+        (targets.longTermShare * 100).round(),
+      ),
       progress: longTermProgress,
       color: finoraInk,
     ),
     _PlanRowData(
-      label: 'Pillar 3a this year',
+      label: l10n.planPillar3aYear,
       value: hasPillar3a
-          ? '${formatCompactMoney(contributed)} of ${formatCompactMoney(targets.pillar3aAnnualLimit)}'
-          : 'No Pillar 3a connected',
+          ? l10n.planProgressOf(
+              formatCompactMoney(contributed),
+              formatCompactMoney(targets.pillar3aAnnualLimit),
+            )
+          : l10n.planNoPillar3a,
       progress: pillarProgress,
       color: finoraSlate,
     ),
@@ -76,7 +88,8 @@ class WealthPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rows = _planRows(overview, targets);
+    final l10n = context.l10n;
+    final rows = _planRows(l10n, overview, targets);
     final onTrack = rows.every((row) => row.progress >= .75);
     final statusColor = onTrack ? finoraGreen : finoraWarning;
     return Card(
@@ -88,22 +101,22 @@ class WealthPlanCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Are you on track?',
-                        style: TextStyle(
+                        l10n.planTitle,
+                        style: const TextStyle(
                           color: finoraInk,
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
-                        'Progress against your personal targets',
-                        style: TextStyle(
+                        l10n.planSubtitle,
+                        style: const TextStyle(
                           color: finoraMutedInk,
                           fontSize: 12,
                         ),
@@ -130,7 +143,7 @@ class WealthPlanCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        onTrack ? 'On track' : 'Needs attention',
+                        onTrack ? l10n.planOnTrack : l10n.planNeedsAttention,
                         style: TextStyle(
                           color: statusColor,
                           fontSize: 10,
@@ -149,9 +162,7 @@ class WealthPlanCard extends StatelessWidget {
             ],
             const SizedBox(height: 18),
             Text(
-              'Buffer target: ${targets.safetyBufferMonths} months of spending. '
-              'Pillar 3a limit for employees with a pension fund. '
-              'Personal targets are coming in a later step.',
+              l10n.planFootnote(targets.safetyBufferMonths),
               style: const TextStyle(
                 color: finoraMutedInk,
                 fontSize: 10,
@@ -173,8 +184,11 @@ class _PlanProgressRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label:
-          '${data.label}: ${data.value}, ${(data.progress * 100).round()} percent',
+      label: context.l10n.planRowSemantics(
+        data.label,
+        data.value,
+        (data.progress * 100).round(),
+      ),
       child: ExcludeSemantics(
         child: Column(
           children: [

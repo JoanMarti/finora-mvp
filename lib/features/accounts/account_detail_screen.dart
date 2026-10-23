@@ -3,6 +3,8 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/accounts/widgets/account_actions.dart';
 import 'package:finora/features/accounts/widgets/account_analytics_cards.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +32,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     final connections =
         ref.watch(connectionsProvider).value ?? const <InstitutionConnection>[];
     final now = ref.watch(clockProvider)();
+    final l10n = context.l10n;
     final transactions = ref
         .watch(transactionsProvider(widget.accountId))
         .value;
@@ -45,12 +48,12 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     final account = accounts
         .where((item) => item.id == widget.accountId)
         .firstOrNull;
-    if (account == null) return const NotFoundScreen(label: 'Account not found');
+    if (account == null) return NotFoundScreen(label: l10n.accountNotFound);
     final institution = institutions
         .where((item) => item.id == account.institutionId)
         .firstOrNull;
     if (institution == null) {
-      return const NotFoundScreen(label: 'Institution not found');
+      return NotFoundScreen(label: l10n.institutionNotFound);
     }
     final connection = connections
         .where((item) => item.institutionId == institution.id)
@@ -64,7 +67,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Account insight'),
+        title: Text(l10n.accountInsightTitle),
       ),
       body: FinoraPage(
         child: ListView(
@@ -72,15 +75,13 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             _AccountBalanceCard(
               account: account,
               institution: institution,
-              syncLabel: connection == null
-                  ? 'Connection unavailable'
-                  : formatSyncTime(connection.lastSyncedAt, now),
+              syncLabel: l10n.syncLabel(connection, now),
               monthLabel: formatMonthShort(now),
               onAction: (action) =>
                   _handleDetailAction(action, account, institution),
             ),
             if (analytics.hasBalanceHistory) ...[
-              const SectionTitle('Account health'),
+              SectionTitle(l10n.accountHealthSection),
               _PeriodSelector(
                 selectedMonths: _selectedMonths,
                 onSelected: (months) =>
@@ -92,34 +93,32 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 months: _selectedMonths,
               ),
             ] else ...[
-              const SectionTitle('Account health'),
-              const Card(
+              SectionTitle(l10n.accountHealthSection),
+              Card(
                 child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    'More history is needed before Finora can explain this account.',
-                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Text(l10n.moreHistoryNeeded),
                 ),
               ),
             ],
             if (analytics.hasCashFlow) ...[
-              const SectionTitle('Cash flow'),
+              SectionTitle(l10n.cashFlowSection),
               CashFlowCard(analytics: analytics, months: _selectedMonths),
             ],
             if (analytics.spendingCategories.isNotEmpty) ...[
-              const SectionTitle('Spending'),
+              SectionTitle(l10n.spendingSection),
               SpendingCategoriesCard(analytics: analytics),
             ],
             if (analytics.recurringPayments.isNotEmpty) ...[
               SectionTitle(
-                'Recurring payments',
+                l10n.recurringPaymentsSection,
                 action: analytics.recurringPayments.length > 3
                     ? TextButton(
                         onPressed: () => setState(
                           () => _showAllRecurring = !_showAllRecurring,
                         ),
                         child: Text(
-                          _showAllRecurring ? 'Show less' : 'See all',
+                          _showAllRecurring ? l10n.showLess : l10n.seeAll,
                         ),
                       )
                     : null,
@@ -131,57 +130,58 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               ),
             ],
             if (analytics.hasCashFlow) ...[
-              const SectionTitle('Potential improvements'),
+              SectionTitle(l10n.improvementsSection),
               if (insurance.length >= 2) ...[
                 _OpportunityCard(
                   icon: Icons.health_and_safety_outlined,
                   accent: finoraSlate,
-                  eyebrow: 'COVERAGE CHECK · PARTNER OPTION',
-                  title: 'Review insurance in one place',
-                  description:
-                      '${insurance.length} insurance payments were detected '
-                      '(${formatMoney(Money.sum(insurance.map((item) => item.amount.abs())))} a month). '
-                      'A guided comparison could reveal duplicated cover or a better deductible setup.',
-                  value: 'Illustrative potential: CHF 35–70 / month',
-                  actionLabel: 'Explore a coverage check',
-                  onPressed: () => _showServiceMessage(
-                    'Coverage comparison would open only with your consent.',
+                  eyebrow: l10n.coverageEyebrow,
+                  title: l10n.coverageTitle,
+                  description: l10n.coverageBody(
+                    insurance.length,
+                    formatMoney(
+                      Money.sum(insurance.map((item) => item.amount.abs())),
+                    ),
                   ),
+                  value: l10n.coverageValue,
+                  actionLabel: l10n.coverageAction,
+                  onPressed: () =>
+                      _showServiceMessage(l10n.coverageConsentMessage),
                 ),
                 const SizedBox(height: 12),
               ],
               _OpportunityCard(
                 icon: Icons.account_balance_outlined,
                 accent: finoraBlue,
-                eyebrow: 'DEBT VIEW · OPTIONAL',
-                title: 'See the true cost of your debt',
+                eyebrow: l10n.debtEyebrow,
+                title: l10n.debtTitle,
                 description: debtAccounts.isEmpty
-                    ? 'No cards or loans are connected yet. Add them to compare rates and see whether consolidation deserves a closer look.'
-                    : '${debtAccounts.length} debt ${debtAccounts.length == 1 ? 'account is' : 'accounts are'} connected, '
-                          'totalling ${formatMoney(debtTotal)}. Compare their rates before deciding what to repay first.',
+                    ? l10n.debtBodyNone
+                    : l10n.debtBodySome(
+                        l10n.debtAccountCount(debtAccounts.length),
+                        formatMoney(debtTotal),
+                      ),
                 value: debtAccounts.isEmpty
-                    ? 'No savings estimate until debt data is available'
-                    : 'Rates are not available from the demo data yet',
+                    ? l10n.debtValueNone
+                    : l10n.debtValueSome,
                 actionLabel: debtAccounts.isEmpty
-                    ? 'Connect debt accounts'
-                    : 'Open ${debtAccounts.first.name}',
+                    ? l10n.connectDebtAccounts
+                    : l10n.openAccount(debtAccounts.first.name),
                 onPressed: debtAccounts.isEmpty
                     ? () => context.push('/connect')
                     : () => context.push('/account/${debtAccounts.first.id}'),
               ),
-              const SectionTitle('Monitoring'),
+              SectionTitle(l10n.monitoringSection),
               Card(
                 child: Column(
                   children: [
                     SwitchListTile(
                       secondary: const Icon(Icons.autorenew, color: finoraBlue),
-                      title: const Text(
-                        'Recurring payment changes',
-                        style: TextStyle(fontWeight: FontWeight.w700),
+                      title: Text(
+                        l10n.recurringChangesTitle,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
                       ),
-                      subtitle: const Text(
-                        'Alert me when a regular bill changes',
-                      ),
+                      subtitle: Text(l10n.recurringChangesBody),
                       value: _recurringMonitoring,
                       onChanged: (value) =>
                           setState(() => _recurringMonitoring = value),
@@ -192,13 +192,11 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                         Icons.notifications_active_outlined,
                         color: finoraBlue,
                       ),
-                      title: const Text(
-                        'Low balance forecast',
-                        style: TextStyle(fontWeight: FontWeight.w700),
+                      title: Text(
+                        l10n.lowBalanceTitle,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
                       ),
-                      subtitle: const Text(
-                        'Warn me before planned bills put cash at risk',
-                      ),
+                      subtitle: Text(l10n.lowBalanceBody),
                       value: _balanceAlerts,
                       onChanged: (value) =>
                           setState(() => _balanceAlerts = value),
@@ -208,17 +206,17 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               ),
             ],
             SectionTitle(
-              'Recent transactions',
+              l10n.recentTransactionsSection,
               action: TextButton(
                 onPressed: () => context.push('/activity'),
-                child: const Text('View all'),
+                child: Text(l10n.viewAll),
               ),
             ),
             Card(
               child: transactions.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Center(child: Text('No recent transactions')),
+                  ? Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Center(child: Text(l10n.noRecentTransactions)),
                     )
                   : Column(
                       children: [
@@ -228,19 +226,19 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                     ),
             ),
             const SizedBox(height: 20),
-            const Card(
+            Card(
               color: finoraSoftBlue,
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.info_outline, color: finoraBlue, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(Icons.info_outline, color: finoraBlue, size: 20),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Insights use mock transaction patterns and are not financial advice. Finora never applies for or switches a product without explicit consent.',
-                        style: TextStyle(
+                        l10n.insightsDisclaimer,
+                        style: const TextStyle(
                           color: finoraMutedInk,
                           fontSize: 12,
                           height: 1.35,
@@ -267,22 +265,19 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     FinancialAccount account,
     Institution institution,
   ) {
+    final l10n = context.l10n;
     switch (action) {
       case AccountAction.viewDetails:
         break;
       case AccountAction.openBank:
-        _showServiceMessage(
-          'A production version would securely open ${institution.name}.',
-        );
+        _showServiceMessage(l10n.openBankMessage(institution.name));
       case AccountAction.refresh:
         refreshFinancialData(ref).then((_) {
-          if (mounted) _showServiceMessage('${account.name} is up to date.');
+          if (mounted) _showServiceMessage(l10n.upToDateMessage(account.name));
         });
       case AccountAction.disconnect:
         context.go('/accounts');
-        _showServiceMessage(
-          'Use the institution menu to review and confirm disconnection.',
-        );
+        _showServiceMessage(l10n.useInstitutionMenuToDisconnect);
     }
   }
 }
@@ -337,10 +332,11 @@ class _AccountBalanceCard extends StatelessWidget {
                   ),
                 ),
                 PopupMenuButton<AccountAction>(
-                  tooltip: 'More actions for ${account.name}',
+                  tooltip: context.l10n.moreActionsFor(account.name),
                   icon: const Icon(Icons.more_vert, color: Colors.white70),
                   onSelected: onAction,
-                  itemBuilder: (_) => accountActionItems(institution.name),
+                  itemBuilder: (_) =>
+                      accountActionItems(context.l10n, institution.name),
                 ),
               ],
             ),
@@ -393,7 +389,13 @@ class _AccountBalanceCard extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '${formatCompactMoney(account.monthlyChange, signed: true)} in $monthLabel',
+                          context.l10n.changeInMonth(
+                            formatCompactMoney(
+                              account.monthlyChange,
+                              signed: true,
+                            ),
+                            monthLabel,
+                          ),
                           style: TextStyle(
                             color: account.monthlyChange.isNegative
                                 ? const Color(0xFFFFB4AB)
@@ -426,14 +428,16 @@ class _PeriodSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Select account analysis period',
+      label: context.l10n.selectPeriod,
       child: SizedBox(
         width: double.infinity,
         child: SegmentedButton<int>(
-          segments: const [
-            ButtonSegment(value: 1, label: Text('1 month')),
-            ButtonSegment(value: 3, label: Text('3 months')),
-            ButtonSegment(value: 6, label: Text('6 months')),
+          segments: [
+            for (final months in const [1, 3, 6])
+              ButtonSegment(
+                value: months,
+                label: Text(context.l10n.monthsCount(months)),
+              ),
           ],
           selected: {selectedMonths},
           showSelectedIcon: false,

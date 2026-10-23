@@ -153,6 +153,33 @@ class ProfileScreen extends ConsumerWidget {
                       subtitle: Text(l10n.dataHealthAlertsBody),
                     ),
                     const Divider(height: 1),
+                    SwitchListTile(
+                      value: session.offersConsent ?? false,
+                      onChanged: ref
+                          .read(sessionProvider.notifier)
+                          .setOffersConsent,
+                      secondary: const Icon(Icons.savings_outlined),
+                      title: Text(l10n.offersSetting),
+                      subtitle: Text(l10n.offersSettingBody),
+                    ),
+                    if (session.dismissedOpportunities.isNotEmpty) ...[
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.visibility_outlined),
+                        title: Text(
+                          l10n.hiddenOffers(
+                            session.dismissedOpportunities.length,
+                          ),
+                        ),
+                        trailing: TextButton(
+                          onPressed: ref
+                              .read(sessionProvider.notifier)
+                              .restoreOpportunities,
+                          child: Text(l10n.showAgain),
+                        ),
+                      ),
+                    ],
+                    const Divider(height: 1),
                     ListTile(
                       leading: const Icon(Icons.lock_outline),
                       title: Text(l10n.privacySecurity),

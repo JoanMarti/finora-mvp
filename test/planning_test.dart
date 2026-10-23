@@ -163,7 +163,9 @@ void main() {
     final list = find.byType(Scrollable).first;
     await tester.scrollUntilVisible(find.text('Flat deposit'), 200, scrollable: list);
     expect(find.text('Flat deposit'), findsOneWidget);
-    expect(find.textContaining('CHF 575.00 a month'), findsOneWidget);
+    final monthly = find.textContaining('575.00 a month');
+    await tester.scrollUntilVisible(monthly, 100, scrollable: list);
+    expect(monthly, findsOneWidget);
 
     await tester.ensureVisible(find.text('Add a goal'));
     await tester.pumpAndSettle();

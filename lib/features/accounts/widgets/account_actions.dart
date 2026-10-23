@@ -1,18 +1,20 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 enum AccountAction { viewDetails, openBank, refresh, disconnect }
 
 List<PopupMenuEntry<AccountAction>> accountActionItems(
+  AppLocalizations l10n,
   String institutionName,
 ) => [
-  const PopupMenuItem(
+  PopupMenuItem(
     value: AccountAction.viewDetails,
     child: ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(Icons.analytics_outlined),
-      title: Text('View account insights'),
+      leading: const Icon(Icons.analytics_outlined),
+      title: Text(l10n.actionViewInsights),
     ),
   ),
   PopupMenuItem(
@@ -20,24 +22,24 @@ List<PopupMenuEntry<AccountAction>> accountActionItems(
     child: ListTile(
       contentPadding: EdgeInsets.zero,
       leading: const Icon(Icons.open_in_new),
-      title: Text('Open $institutionName'),
+      title: Text(l10n.actionOpenBank(institutionName)),
     ),
   ),
-  const PopupMenuItem(
+  PopupMenuItem(
     value: AccountAction.refresh,
     child: ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(Icons.sync),
-      title: Text('Refresh account'),
+      leading: const Icon(Icons.sync),
+      title: Text(l10n.actionRefreshAccount),
     ),
   ),
   PopupMenuItem(
     value: AccountAction.disconnect,
     child: ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(Icons.link_off, color: finoraDanger),
+      leading: const Icon(Icons.link_off, color: finoraDanger),
       title: Text(
-        'Disconnect institution',
+        l10n.actionDisconnectInstitution,
         style: const TextStyle(color: finoraDanger),
       ),
     ),

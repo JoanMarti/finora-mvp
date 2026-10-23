@@ -3,6 +3,8 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/accounts/widgets/account_actions.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,19 +30,18 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
     final connections =
         ref.watch(connectionsProvider).value ?? const <InstitutionConnection>[];
     final now = ref.watch(clockProvider)();
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Accounts'),
+        title: Text(l10n.navAccounts),
       ),
       body: SafeArea(
         top: false,
         child: FinoraPage(
           child: accounts.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, _) => const Center(
-              child: Text('Accounts are temporarily unavailable.'),
-            ),
+            error: (_, _) => Center(child: Text(l10n.accountsUnavailable)),
             data: (connectedItems) {
               final filtered = connectedItems.where(_matchesFilter).toList();
               final total = Money.sum(
@@ -54,12 +55,12 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
               return ListView(
                 children: [
                   Text(
-                    'Your accounts, clearly organised',
+                    l10n.accountsTitle,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Compare balances, check data health and manage each connection.',
+                    l10n.accountsSubtitle,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 20),
@@ -70,13 +71,13 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                   ),
                   const SizedBox(height: 18),
                   Semantics(
-                    label: 'Filter accounts by product type',
+                    label: l10n.filterAccountsLabel,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
                           _AccountFilterChip(
-                            label: 'All',
+                            label: l10n.filterAll,
                             icon: Icons.grid_view_rounded,
                             selected: _filter == _AccountFilter.all,
                             onSelected: () =>
@@ -84,7 +85,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                           ),
                           const SizedBox(width: 8),
                           _AccountFilterChip(
-                            label: 'Cash',
+                            label: l10n.filterCash,
                             icon: Icons.account_balance_wallet_outlined,
                             selected: _filter == _AccountFilter.cash,
                             onSelected: () =>
@@ -92,7 +93,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                           ),
                           const SizedBox(width: 8),
                           _AccountFilterChip(
-                            label: 'Investing',
+                            label: l10n.filterInvesting,
                             icon: Icons.trending_up,
                             selected: _filter == _AccountFilter.investing,
                             onSelected: () => setState(
@@ -103,15 +104,11 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                       ),
                     ),
                   ),
-                  const SectionTitle('Connected institutions'),
+                  SectionTitle(l10n.connectedInstitutionsSection),
                   if (connectedItems.isEmpty)
-                    const _EmptyAccountsState(
-                      message: 'No institutions connected yet.',
-                    )
+                    _EmptyAccountsState(message: l10n.noInstitutionsConnected)
                   else if (filtered.isEmpty)
-                    const _EmptyAccountsState(
-                      message: 'No accounts match this filter.',
-                    )
+                    _EmptyAccountsState(message: l10n.noAccountsMatchFilter)
                   else
                     for (final institution in institutions)
                       if (filtered.any(
@@ -149,7 +146,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                   OutlinedButton.icon(
                     onPressed: () => context.push('/connect'),
                     icon: const Icon(Icons.add),
-                    label: const Text('Add an institution'),
+                    label: Text(l10n.addInstitutionTitle),
                   ),
                 ],
               );
@@ -172,36 +169,33 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
     FinancialAccount account,
     Institution institution,
   ) async {
+    final l10n = context.l10n;
     switch (action) {
       case AccountAction.viewDetails:
         context.push('/account/${account.id}');
       case AccountAction.openBank:
-        _showMessage(
-          'A production version would securely open ${institution.name}.',
-        );
+        _showMessage(l10n.openBankMessage(institution.name));
       case AccountAction.refresh:
         await refreshFinancialData(ref);
         if (!mounted) return;
-        _showMessage('${institution.name} is up to date.');
+        _showMessage(l10n.upToDateMessage(institution.name));
       case AccountAction.disconnect:
         final confirmed = await showDialog<bool>(
           context: context,
           builder: (dialogContext) => AlertDialog(
-            title: Text('Disconnect ${institution.name}?'),
-            content: Text(
-              'All ${institution.name} accounts will disappear from Finora. Your accounts at the bank are not affected.',
-            ),
+            title: Text(l10n.disconnectTitle(institution.name)),
+            content: Text(l10n.disconnectBody(institution.name)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogContext, false),
-                child: const Text('Cancel'),
+                child: Text(l10n.commonCancel),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(dialogContext, true),
                 style: FilledButton.styleFrom(
                   backgroundColor: finoraDanger,
                 ),
-                child: const Text('Disconnect'),
+                child: Text(l10n.disconnect),
               ),
             ],
           ),
@@ -211,9 +205,9 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
           session.disconnect(institution.id);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${institution.name} disconnected.'),
+              content: Text(l10n.disconnectedMessage(institution.name)),
               action: SnackBarAction(
-                label: 'Undo',
+                label: l10n.commonUndo,
                 onPressed: () => session.connect(institution.id),
               ),
             ),
@@ -240,9 +234,13 @@ class _AccountsSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Semantics(
-      label:
-          'Portfolio total ${formatMoney(total)}. Available cash ${formatMoney(cash)}. $accountCount connected accounts.',
+      label: l10n.portfolioSemantics(
+        formatMoney(total),
+        formatMoney(cash),
+        l10n.accountCount(accountCount),
+      ),
       child: ExcludeSemantics(
         child: Card(
           color: finoraInk,
@@ -251,9 +249,9 @@ class _AccountsSummaryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'PORTFOLIO TOTAL',
-                  style: TextStyle(
+                Text(
+                  l10n.portfolioTotal.toUpperCase(),
+                  style: const TextStyle(
                     color: finoraSilver,
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
@@ -279,7 +277,7 @@ class _AccountsSummaryCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _SummaryMetric(
-                        label: 'Available cash',
+                        label: l10n.availableCash,
                         value: formatMoney(cash),
                       ),
                     ),
@@ -290,8 +288,8 @@ class _AccountsSummaryCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: _SummaryMetric(
-                        label: 'Connected',
-                        value: '$accountCount accounts',
+                        label: l10n.connectedLabel,
+                        value: l10n.accountCount(accountCount),
                       ),
                     ),
                   ],
@@ -415,9 +413,7 @@ class _InstitutionAccountsGroup extends StatelessWidget {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          connection == null
-                              ? 'Connection unavailable'
-                              : formatSyncTime(connection.lastSyncedAt, now),
+                          context.l10n.syncLabel(connection, now),
                           style: const TextStyle(
                             color: finoraMutedInk,
                             fontSize: 12,
@@ -431,7 +427,9 @@ class _InstitutionAccountsGroup extends StatelessWidget {
                         connection?.status ?? ConnectionStatus.actionRequired,
                   ),
                   IconButton(
-                    tooltip: 'Open ${institution.name} details',
+                    tooltip: context.l10n.openInstitutionDetails(
+                      institution.name,
+                    ),
                     onPressed: onInstitutionTap,
                     icon: const Icon(Icons.chevron_right),
                   ),
@@ -444,7 +442,7 @@ class _InstitutionAccountsGroup extends StatelessWidget {
             color: finoraCanvas,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
             child: Text(
-              '${accounts.length} ${accounts.length == 1 ? 'account' : 'accounts'} · ${formatMoney(institutionTotal)}',
+              '${context.l10n.accountCount(accounts.length)} · ${formatMoney(institutionTotal)}',
               style: const TextStyle(
                 color: finoraMutedInk,
                 fontSize: 12,
@@ -473,16 +471,17 @@ class _CompactConnectionStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (label, color) = switch (status) {
-      ConnectionStatus.connected => ('Synced', finoraGreen),
-      ConnectionStatus.stale => ('Stale', finoraWarning),
-      ConnectionStatus.actionRequired => ('Action', finoraDanger),
-      ConnectionStatus.manual => ('Manual', finoraSlate),
+    final label = context.l10n.connectionStatusShort(status);
+    final color = switch (status) {
+      ConnectionStatus.connected => finoraGreen,
+      ConnectionStatus.stale => finoraWarning,
+      ConnectionStatus.actionRequired => finoraDanger,
+      ConnectionStatus.manual => finoraSlate,
     };
     return Tooltip(
       message: label,
       child: Semantics(
-        label: 'Connection status: $label',
+        label: context.l10n.connectionStatusLabel(label),
         child: Container(
           width: 10,
           height: 10,
@@ -508,16 +507,24 @@ class _AccessibleAccountRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final positive = !account.monthlyChange.isNegative;
-    final changeLabel =
-        '${positive ? 'up' : 'down'} ${formatMoney(account.monthlyChange.abs())}';
+    final l10n = context.l10n;
+    final changeAmount = formatMoney(account.monthlyChange.abs());
+    final changeLabel = positive
+        ? l10n.changeUp(changeAmount)
+        : l10n.changeDown(changeAmount);
+    final typeLabel = l10n.productType(account.type);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Semantics(
             button: true,
-            label:
-                '${account.name}, ${account.type.label}, ${formatMoney(account.balance)}, $changeLabel this month',
+            label: l10n.accountRowSemantics(
+              account.name,
+              typeLabel,
+              formatMoney(account.balance),
+              changeLabel,
+            ),
             child: ExcludeSemantics(
               child: InkWell(
                 onTap: onTap,
@@ -554,7 +561,7 @@ class _AccessibleAccountRow extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              '${account.type.label} · ${account.maskedIdentifier}',
+                              '$typeLabel · ${account.maskedIdentifier}',
                               style: const TextStyle(
                                 color: finoraMutedInk,
                                 fontSize: 12,
@@ -602,10 +609,10 @@ class _AccessibleAccountRow extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 4),
           child: PopupMenuButton<AccountAction>(
-            tooltip: 'More actions for ${account.name}',
+            tooltip: l10n.moreActionsFor(account.name),
             icon: const Icon(Icons.more_vert),
             onSelected: onAction,
-            itemBuilder: (_) => accountActionItems(institution.name),
+            itemBuilder: (_) => accountActionItems(l10n, institution.name),
           ),
         ),
       ],

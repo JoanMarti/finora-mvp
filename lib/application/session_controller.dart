@@ -77,9 +77,14 @@ class SessionController extends Notifier<UserSession> {
   void setDataHealthAlerts(bool enabled) =>
       _update(state.copyWith(dataHealthAlerts: enabled));
 
+  /// `null` follows the device language.
+  void setLanguage(String? languageCode) =>
+      _update(state.copyWith(languageCode: languageCode));
+
   /// Forgets everything and returns to the first onboarding screen.
   void reset() {
-    unawaited(ref.read(sessionStoreProvider).clear());
-    state = const UserSession();
+    // Keep the chosen language: restarting onboarding is not a reason to
+    // switch the interface back to another language.
+    _update(UserSession(languageCode: state.languageCode));
   }
 }

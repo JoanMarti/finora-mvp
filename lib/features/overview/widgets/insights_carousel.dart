@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -27,34 +28,37 @@ class PersonalInsight {
 /// Ideas generated from the user's own numbers, followed by educational
 /// market themes from [MarketDataRepository].
 List<PersonalInsight> buildInsights(
+  AppLocalizations l10n,
   FinancialOverview overview,
   WealthTargets targets,
   List<MarketTheme> themes,
 ) {
   final cashShare = overview.share(overview.cash);
   final allocations = {
-    'Cash': overview.cash,
-    'Investments': overview.investments,
-    'Pillar 3a': overview.retirement,
+    l10n.allocationCash: overview.cash,
+    l10n.allocationInvestments: overview.investments,
+    l10n.allocationPillar3a: overview.retirement,
   };
   final largest = allocations.entries.reduce(
     (a, b) => a.value.compareTo(b.value) >= 0 ? a : b,
   );
+  final cashIsLargest = identical(largest.value, overview.cash);
   final changeRate = overview.monthlyChangeRate;
   final pillarRoom =
       targets.pillar3aAnnualLimit - overview.pillar3aContributionsThisYear;
+  final hasPillarRoom = pillarRoom.cents > 0;
 
   return [
     PersonalInsight(
       icon: Icons.water_drop_outlined,
       color: finoraBlue,
-      eyebrow: 'ALLOCATION',
+      eyebrow: l10n.insightAllocationEyebrow,
       metric:
           '${formatCompactMoney(largest.value)} · ${(overview.share(largest.value) * 100).round()}%',
-      title: '${largest.key} is your largest allocation',
-      description: largest.key == 'Cash'
-          ? 'Set a personal liquidity target before deciding what could support longer-term goals.'
-          : 'Check that your cash buffer still covers unexpected costs before adding more.',
+      title: l10n.insightLargestAllocation(largest.key),
+      description: cashIsLargest
+          ? l10n.insightCashLargestBody
+          : l10n.insightOtherLargestBody,
     ),
     if (changeRate != null)
       PersonalInsight(
@@ -62,38 +66,38 @@ List<PersonalInsight> buildInsights(
             ? Icons.trending_down_rounded
             : Icons.trending_up_rounded,
         color: changeRate < 0 ? finoraWarning : finoraGreen,
-        eyebrow: 'MOMENTUM',
-        metric: '${formatPercentChange(changeRate)} this month',
+        eyebrow: l10n.insightMomentumEyebrow,
+        metric: l10n.insightChangeThisMonth(formatPercentChange(changeRate)),
         title: changeRate < 0
-            ? 'Your wealth dipped this month'
-            : 'Your wealth is moving upward',
-        description:
-            'Compare new contributions with market performance before changing your strategy.',
+            ? l10n.insightWealthDipped
+            : l10n.insightWealthUp,
+        description: l10n.insightMomentumBody,
       ),
     if (!overview.retirement.isZero)
       PersonalInsight(
         icon: Icons.savings_outlined,
         color: finoraSlate,
-        eyebrow: 'RETIREMENT',
-        metric: pillarRoom.cents > 0
-            ? '${formatCompactMoney(pillarRoom)} left this year'
-            : 'Annual limit reached',
-        title: pillarRoom.cents > 0
-            ? 'Room left in your Pillar 3a'
-            : 'Pillar 3a maxed out this year',
-        description: pillarRoom.cents > 0
-            ? 'Contributions up to the annual limit reduce taxable income if they are booked before the year ends.'
-            : 'Keep contributions, fees and equity allocation visible across every 3a provider.',
+        eyebrow: l10n.insightRetirementEyebrow,
+        metric: hasPillarRoom
+            ? l10n.insightPillarRoomMetric(formatCompactMoney(pillarRoom))
+            : l10n.insightPillarLimitReached,
+        title: hasPillarRoom
+            ? l10n.insightPillarRoomTitle
+            : l10n.insightPillarMaxedTitle,
+        description: hasPillarRoom
+            ? l10n.insightPillarRoomBody
+            : l10n.insightPillarMaxedBody,
       ),
     if (!overview.liabilities.isZero)
       PersonalInsight(
         icon: Icons.credit_card_outlined,
         color: finoraDanger,
-        eyebrow: 'DEBT',
-        metric: '${formatCompactMoney(overview.liabilities)} outstanding',
-        title: 'Keep debt next to your savings',
-        description:
-            'Seeing balances and rates together makes it easier to decide what to repay first.',
+        eyebrow: l10n.insightDebtEyebrow,
+        metric: l10n.insightDebtMetric(
+          formatCompactMoney(overview.liabilities),
+        ),
+        title: l10n.insightDebtTitle,
+        description: l10n.insightDebtBody,
       ),
     for (final theme in themes)
       PersonalInsight(
@@ -109,10 +113,11 @@ List<PersonalInsight> buildInsights(
         },
         eyebrow: theme.tag,
         metric: switch (theme.type) {
-          MarketThemeType.bonds =>
-            'Because cash represents ${(cashShare * 100).round()}%',
-          MarketThemeType.equities => 'Long-term allocation idea',
-          MarketThemeType.retirement => 'Across every 3a provider',
+          MarketThemeType.bonds => l10n.themeBondsMetric(
+            (cashShare * 100).round(),
+          ),
+          MarketThemeType.equities => l10n.themeEquitiesMetric,
+          MarketThemeType.retirement => l10n.themeRetirementMetric,
         },
         title: theme.title,
         description: theme.description,
@@ -171,7 +176,7 @@ class _PersonalizedInsightsCarouselState
         ),
         const SizedBox(height: 10),
         Semantics(
-          label: 'Idea ${current + 1} of ${insights.length}',
+          label: context.l10n.ideaPosition(current + 1, insights.length),
           child: ExcludeSemantics(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -291,15 +296,15 @@ class MarketDataNote extends StatelessWidget {
         color: finoraSoftBlue,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.info_outline, color: finoraBlue, size: 19),
-          SizedBox(width: 10),
+          const Icon(Icons.info_outline, color: finoraBlue, size: 19),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Illustrative targets and ideas, not investment advice. Live prices and product data are not connected yet.',
-              style: TextStyle(
+              context.l10n.marketDataNote,
+              style: const TextStyle(
                 color: finoraMutedInk,
                 fontSize: 11,
                 height: 1.4,

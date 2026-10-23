@@ -34,38 +34,12 @@ String formatPercentChange(double rate) {
   return '${rate < 0 ? '−' : '+'}$percent%';
 }
 
+// Month names follow `Intl.defaultLocale`, which `FinoraApp` keeps in sync
+// with the active app language.
+
 /// Three-letter month for chart axes, e.g. `OCT`.
 String formatMonthShort(DateTime month) =>
     DateFormat.MMM().format(month).toUpperCase();
 
 /// Full month name for section headers, e.g. `October 2026`.
 String formatMonthYear(DateTime month) => DateFormat.yMMMM().format(month);
-
-bool _isSameDay(DateTime a, DateTime b) =>
-    a.year == b.year && a.month == b.month && a.day == b.day;
-
-/// `Today`, `Yesterday` or `12 Oct`.
-String formatRelativeDay(DateTime date, DateTime now) {
-  if (_isSameDay(date, now)) return 'Today';
-  if (_isSameDay(date, now.subtract(const Duration(days: 1)))) {
-    return 'Yesterday';
-  }
-  return DateFormat('d MMM').format(date);
-}
-
-/// `Due today`, `Due tomorrow` or `Due 28 Oct`.
-String formatDueDate(DateTime due, DateTime now) {
-  if (_isSameDay(due, now)) return 'Due today';
-  if (_isSameDay(due, now.add(const Duration(days: 1)))) return 'Due tomorrow';
-  return 'Due ${DateFormat('d MMM').format(due)}';
-}
-
-/// How fresh a connection is, e.g. `Updated 4 min ago`.
-String formatSyncTime(DateTime syncedAt, DateTime now) {
-  final age = now.difference(syncedAt);
-  if (age.inMinutes < 1) return 'Updated just now';
-  if (age.inMinutes < 60) return 'Updated ${age.inMinutes} min ago';
-  if (age.inHours < 24) return 'Updated ${age.inHours} h ago';
-  if (age.inDays == 1) return 'Updated yesterday';
-  return 'Updated ${age.inDays} days ago';
-}

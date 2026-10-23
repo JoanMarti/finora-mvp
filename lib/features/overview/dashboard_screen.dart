@@ -6,6 +6,8 @@ import 'package:finora/features/overview/widgets/balance_overview_card.dart';
 import 'package:finora/features/overview/widgets/insights_carousel.dart';
 import 'package:finora/features/overview/widgets/wealth_plan_card.dart';
 import 'package:finora/features/overview/widgets/wealth_trajectory_card.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +20,8 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final overview = ref.watch(overviewProvider);
     final overviewValue = overview.value;
+    final l10n = context.l10n;
+    final languageCode = Localizations.localeOf(context).languageCode;
 
     return Scaffold(
       body: SafeArea(
@@ -34,10 +38,10 @@ class DashboardScreen extends ConsumerWidget {
                     height: 218,
                     child: Center(child: CircularProgressIndicator()),
                   ),
-                  error: (_, _) => const Card(
+                  error: (_, _) => Card(
                     child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Text('Your overview is temporarily unavailable.'),
+                      padding: const EdgeInsets.all(24),
+                      child: Text(l10n.overviewUnavailable),
                     ),
                   ),
                   data: (data) => data.isEmpty
@@ -53,18 +57,20 @@ class DashboardScreen extends ConsumerWidget {
                     WealthTrajectoryCard(overview: overviewValue),
                   ],
                   const SizedBox(height: 24),
-                  const SectionTitle('Your wealth plan'),
+                  SectionTitle(l10n.wealthPlanSection),
                   WealthPlanCard(
                     overview: overviewValue,
                     targets: ref.watch(wealthTargetsProvider),
                   ),
                   const SizedBox(height: 24),
-                  const SectionTitle('Ideas for you'),
+                  SectionTitle(l10n.ideasSection),
                   PersonalizedInsightsCarousel(
                     insights: buildInsights(
+                      l10n,
                       overviewValue,
                       ref.watch(wealthTargetsProvider),
-                      ref.watch(marketThemesProvider).value ?? const [],
+                      ref.watch(marketThemesProvider(languageCode)).value ??
+                          const [],
                     ),
                   ),
                 ],
@@ -109,11 +115,11 @@ class _FinoraHeader extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 10),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'finora',
                 style: TextStyle(
                   color: finoraBlue,
@@ -123,18 +129,18 @@ class _FinoraHeader extends ConsumerWidget {
                   letterSpacing: -.7,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'Your wealth at a glance',
-                style: TextStyle(color: finoraMutedInk, fontSize: 12),
+                context.l10n.headerTagline,
+                style: const TextStyle(color: finoraMutedInk, fontSize: 12),
               ),
             ],
           ),
         ),
         IconButton(
           tooltip: alerts.isEmpty
-              ? 'Notifications'
-              : 'Notifications, ${alerts.length} new',
+              ? context.l10n.notifications
+              : context.l10n.notificationsNew(alerts.length),
           onPressed: () => _showAlerts(context, alerts),
           icon: Badge(
             isLabelVisible: alerts.isNotEmpty,
@@ -165,27 +171,32 @@ void _showAlerts(BuildContext context, List<FinoraAlert> alerts) {
   showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
-    builder: (sheetContext) => SafeArea(
+    builder: (sheetContext) {
+      final l10n = sheetContext.l10n;
+      return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                'Notifications',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                l10n.notifications,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
             const SizedBox(height: 8),
             if (alerts.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(8),
+              Padding(
+                padding: const EdgeInsets.all(8),
                 child: Text(
-                  "You're all caught up. Connections are healthy and no bills are due this week.",
-                  style: TextStyle(color: finoraMutedInk, height: 1.4),
+                  l10n.allCaughtUp,
+                  style: const TextStyle(color: finoraMutedInk, height: 1.4),
                 ),
               )
             else
@@ -208,10 +219,10 @@ void _showAlerts(BuildContext context, List<FinoraAlert> alerts) {
                           },
                         ),
                         title: Text(
-                          alert.title,
+                          l10n.alertTitle(alert),
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
-                        subtitle: Text(alert.description),
+                        subtitle: Text(l10n.alertDescription(alert)),
                         trailing: alert.route == null
                             ? null
                             : const Icon(Icons.chevron_right),
@@ -228,7 +239,8 @@ void _showAlerts(BuildContext context, List<FinoraAlert> alerts) {
           ],
         ),
       ),
-    ),
+    );
+    },
   );
 }
 
@@ -245,20 +257,20 @@ class _EmptyOverview extends StatelessWidget {
           children: [
             const Icon(Icons.link_off, color: finoraSlate, size: 32),
             const SizedBox(height: 12),
-            const Text(
-              'No accounts connected yet',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            Text(
+              context.l10n.noAccountsTitle,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'Connect a bank, investment or Pillar 3a provider to see your net worth here.',
-              style: TextStyle(color: finoraMutedInk, height: 1.4),
+            Text(
+              context.l10n.noAccountsBody,
+              style: const TextStyle(color: finoraMutedInk, height: 1.4),
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
               onPressed: () => context.push('/connect'),
               icon: const Icon(Icons.add),
-              label: const Text('Add an institution'),
+              label: Text(context.l10n.addInstitutionTitle),
             ),
           ],
         ),

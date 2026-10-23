@@ -1,6 +1,8 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/formatters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +57,7 @@ class InstitutionBadge extends StatelessWidget {
       _ => Icons.account_balance_wallet_outlined,
     };
     return Semantics(
-      label: '${institution.name} institution logo',
+      label: context.l10n.institutionLogo(institution.name),
       image: true,
       child: ExcludeSemantics(
         child: Container(
@@ -115,27 +117,12 @@ class StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (label, color, icon) = switch (status) {
-      ConnectionStatus.connected => (
-        'Healthy',
-        finoraGreen,
-        Icons.check_circle,
-      ),
-      ConnectionStatus.stale => (
-        'Needs refresh',
-        finoraWarning,
-        Icons.schedule,
-      ),
-      ConnectionStatus.actionRequired => (
-        'Action needed',
-        finoraDanger,
-        Icons.error,
-      ),
-      ConnectionStatus.manual => (
-        'Manual',
-        finoraSlate,
-        Icons.edit_note,
-      ),
+    final label = context.l10n.connectionStatus(status);
+    final (color, icon) = switch (status) {
+      ConnectionStatus.connected => (finoraGreen, Icons.check_circle),
+      ConnectionStatus.stale => (finoraWarning, Icons.schedule),
+      ConnectionStatus.actionRequired => (finoraDanger, Icons.error),
+      ConnectionStatus.manual => (finoraSlate, Icons.edit_note),
     };
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -171,6 +158,7 @@ class TransactionTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider)();
+    final l10n = context.l10n;
     final positive = !transaction.amount.isNegative;
     final (icon, accent) = switch (transaction.category) {
       TransactionCategory.income => (Icons.south_west, finoraGreen),
@@ -201,7 +189,7 @@ class TransactionTile extends ConsumerWidget {
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        '${transaction.category.label} · ${formatRelativeDay(transaction.bookedAt, now)}',
+        '${l10n.transactionCategory(transaction.category)} · ${l10n.relativeDay(transaction.bookedAt, now)}',
         style: const TextStyle(color: finoraMutedInk, fontSize: 12),
       ),
       trailing: Text(

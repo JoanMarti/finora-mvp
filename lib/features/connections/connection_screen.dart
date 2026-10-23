@@ -2,6 +2,7 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -123,14 +124,17 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
               item == _SimulatedStatus.manual,
         )
         .length;
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
-          _addingToExisting ? 'Add an institution' : 'Connect institutions',
+          _addingToExisting
+              ? l10n.addInstitutionTitle
+              : l10n.connectInstitutionsTitle,
         ),
         leading: IconButton(
-          tooltip: 'Back',
+          tooltip: l10n.commonBack,
           onPressed: _leave,
           icon: const Icon(Icons.arrow_back),
         ),
@@ -143,21 +147,21 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
             children: [
               Text(
                 _addingToExisting
-                    ? 'Bring in another institution'
-                    : 'Bring your accounts together',
+                    ? l10n.bringAnotherInstitution
+                    : l10n.bringAccountsTogether,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 10),
               Text(
-                'This demo simulates the bank hand-off, consent and first synchronisation.',
+                l10n.connectionDemoNote,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 22),
               Expanded(
                 child: _statuses.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
-                          'Every supported institution is already connected.',
+                          l10n.allInstitutionsConnected,
                           textAlign: TextAlign.center,
                         ),
                       )
@@ -179,7 +183,7 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
                   padding: const EdgeInsets.only(top: 12),
                   child: FilledButton(
                     onPressed: _leave,
-                    child: const Text('Done'),
+                    child: Text(l10n.commonDone),
                   ),
                 )
               else ...[
@@ -195,7 +199,7 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '$ready of ${_statuses.length} ready · read-only access',
+                          l10n.readyCount(ready, _statuses.length),
                           style: const TextStyle(color: finoraMutedInk),
                         ),
                       ),
@@ -206,14 +210,14 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
                   onPressed: _busy ? null : _connectAllAndContinue,
                   child: Text(
                     ready == _statuses.length
-                        ? 'View my overview'
-                        : 'Connect and continue',
+                        ? l10n.viewMyOverview
+                        : l10n.connectAndContinue,
                   ),
                 ),
                 Center(
                   child: TextButton(
                     onPressed: _busy ? null : _useDemoData,
-                    child: const Text('Use demo data instead'),
+                    child: Text(l10n.useDemoDataInstead),
                   ),
                 ),
               ],
@@ -239,6 +243,8 @@ class _ConnectionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final institution = InstitutionCatalogue.byId(institutionId);
+    final l10n = context.l10n;
+    final isManual = institution?.isManual ?? false;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -262,7 +268,15 @@ class _ConnectionTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _statusLabel(status, institution?.isManual ?? false),
+                    switch (status) {
+                      _SimulatedStatus.ready =>
+                        isManual
+                            ? l10n.enterValueManually
+                            : l10n.secureRedirectAvailable,
+                      _SimulatedStatus.connecting => l10n.synchronisingAccounts,
+                      _SimulatedStatus.connected => l10n.connectedConsentActive,
+                      _SimulatedStatus.manual => l10n.manualValueReady,
+                    },
                     style: const TextStyle(color: finoraMutedInk),
                   ),
                 ],
@@ -275,15 +289,15 @@ class _ConnectionTile extends StatelessWidget {
                 child: CircularProgressIndicator(strokeWidth: 2.5),
               ),
               _SimulatedStatus.connected ||
-              _SimulatedStatus.manual => const Icon(
+              _SimulatedStatus.manual => Icon(
                 Icons.check_circle,
                 color: finoraGreen,
-                semanticLabel: 'Ready',
+                semanticLabel: l10n.ready,
               ),
               _SimulatedStatus.ready => OutlinedButton(
                 onPressed: onConnect,
                 child: Text(
-                  (institution?.isManual ?? false) ? 'Add' : 'Connect',
+                  isManual ? l10n.add : l10n.connect,
                 ),
               ),
             },
@@ -293,12 +307,3 @@ class _ConnectionTile extends StatelessWidget {
     );
   }
 }
-
-String _statusLabel(_SimulatedStatus status, bool isManual) =>
-    switch (status) {
-      _SimulatedStatus.ready =>
-        isManual ? 'Enter the value manually' : 'Secure bank redirect available',
-      _SimulatedStatus.connecting => 'Synchronising accounts…',
-      _SimulatedStatus.connected => 'Connected · consent active',
-      _SimulatedStatus.manual => 'Manual value ready',
-    };

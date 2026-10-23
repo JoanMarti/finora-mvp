@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +24,7 @@ class BalanceEvolutionCard extends StatelessWidget {
     );
     final change = points.last.balance - points.first.balance;
     final positive = !change.isNegative;
+    final l10n = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(18),
@@ -30,22 +33,22 @@ class BalanceEvolutionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Balance evolution',
-                        style: TextStyle(
+                        l10n.balanceEvolution,
+                        style: const TextStyle(
                           color: finoraInk,
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      SizedBox(height: 3),
+                      const SizedBox(height: 3),
                       Text(
-                        'Closing balance for the selected period',
-                        style: TextStyle(color: finoraMutedInk),
+                        l10n.balanceEvolutionSubtitle,
+                        style: const TextStyle(color: finoraMutedInk),
                       ),
                     ],
                   ),
@@ -58,8 +61,11 @@ class BalanceEvolutionCard extends StatelessWidget {
             ),
             const SizedBox(height: 22),
             Semantics(
-              label:
-                  'Balance ${positive ? 'increased' : 'decreased'} by ${formatMoney(change.abs())} over $months months, ending at ${formatMoney(points.last.balance)}.',
+              label: (positive ? l10n.balanceTrendUp : l10n.balanceTrendDown)(
+                formatMoney(change.abs()),
+                l10n.monthsCount(months),
+                formatMoney(points.last.balance),
+              ),
               child: ExcludeSemantics(
                 child: SizedBox(
                   height: 128,
@@ -102,6 +108,7 @@ class CashFlowCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final savingsRate = (analytics.savingsRate * 100).round();
+    final l10n = context.l10n;
     final pointCount = math.min(months, analytics.cashFlowHistory.length);
     final points = analytics.cashFlowHistory.sublist(
       analytics.cashFlowHistory.length - pointCount,
@@ -114,17 +121,17 @@ class CashFlowCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Income vs spending',
-                    style: TextStyle(
+                    l10n.incomeVsSpending,
+                    style: const TextStyle(
                       color: finoraInk,
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
-                ValuePill(label: '$savingsRate% kept', color: finoraBlue),
+                ValuePill(label: l10n.keptPercent(savingsRate), color: finoraBlue),
               ],
             ),
             const SizedBox(height: 18),
@@ -132,7 +139,7 @@ class CashFlowCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _CashFlowMetric(
-                    label: 'INCOME',
+                    label: l10n.incomeLabel.toUpperCase(),
                     value: formatMoney(analytics.monthlyIncome),
                     color: finoraGreen,
                   ),
@@ -140,7 +147,7 @@ class CashFlowCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: _CashFlowMetric(
-                    label: 'SPENDING',
+                    label: l10n.spendingLabel.toUpperCase(),
                     value: formatMoney(analytics.monthlySpending),
                     color: finoraBlue,
                   ),
@@ -149,8 +156,11 @@ class CashFlowCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Semantics(
-              label:
-                  'Income and spending comparison for $months months. Current income ${formatMoney(analytics.monthlyIncome)}, spending ${formatMoney(analytics.monthlySpending)}.',
+              label: l10n.cashFlowSemantics(
+                l10n.monthsCount(months),
+                formatMoney(analytics.monthlyIncome),
+                formatMoney(analytics.monthlySpending),
+              ),
               child: ExcludeSemantics(
                 child: SizedBox(
                   height: 112,
@@ -177,8 +187,10 @@ class CashFlowCard extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               analytics.monthlyNet.isNegative
-                  ? '${formatMoney(analytics.monthlyNet.abs())} more spent than earned this month'
-                  : '${formatMoney(analytics.monthlyNet, signed: true)} available after spending this month',
+                  ? l10n.overspentThisMonth(formatMoney(analytics.monthlyNet.abs()))
+                  : l10n.availableAfterSpending(
+                      formatMoney(analytics.monthlyNet, signed: true),
+                    ),
               style: const TextStyle(
                 color: finoraInk,
                 fontWeight: FontWeight.w700,
@@ -206,9 +218,9 @@ class SpendingCategoriesCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Where your money went',
-              style: TextStyle(
+            Text(
+              context.l10n.whereMoneyWent,
+              style: const TextStyle(
                 color: finoraInk,
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -216,7 +228,7 @@ class SpendingCategoriesCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${formatMoney(total)} categorised this month',
+              context.l10n.categorisedThisMonth(formatMoney(total)),
               style: const TextStyle(color: finoraMutedInk),
             ),
             const SizedBox(height: 20),
@@ -251,7 +263,11 @@ class _SpendingCategoryRow extends StatelessWidget {
     final color = Color(category.colorValue);
     return Semantics(
       label:
-          '${category.label}, ${formatMoney(category.amount)}, $percent percent of spending',
+          context.l10n.categorySemantics(
+            context.l10n.transactionCategory(category.category),
+            formatMoney(category.amount),
+            percent,
+          ),
       child: ExcludeSemantics(
         child: Column(
           children: [
@@ -268,7 +284,7 @@ class _SpendingCategoryRow extends StatelessWidget {
                 const SizedBox(width: 9),
                 Expanded(
                   child: Text(
-                    category.label,
+                    context.l10n.transactionCategory(category.category),
                     style: const TextStyle(
                       color: finoraInk,
                       fontWeight: FontWeight.w700,
@@ -388,7 +404,9 @@ class RecurringPaymentsCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${analytics.recurringPayments.length} detected',
+                    context.l10n.detectedCount(
+                      analytics.recurringPayments.length,
+                    ),
                     style: const TextStyle(
                       color: finoraInk,
                       fontWeight: FontWeight.w800,
@@ -396,7 +414,7 @@ class RecurringPaymentsCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${formatMoney(analytics.recurringTotal)} / month',
+                  context.l10n.perMonth(formatMoney(analytics.recurringTotal)),
                   style: const TextStyle(
                     color: finoraBlueText,
                     fontWeight: FontWeight.w800,
@@ -423,12 +441,15 @@ class _RecurringPaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final icon = switch (payment.category) {
-      _ when payment.isInsurance => Icons.health_and_safety_outlined,
-      'Phone & internet' => Icons.wifi,
-      'Membership' => Icons.fitness_center,
-      'Electricity' => Icons.bolt_outlined,
-      _ => Icons.subscriptions_outlined,
+      BillCategory.healthInsurance ||
+      BillCategory.householdInsurance => Icons.health_and_safety_outlined,
+      BillCategory.phoneInternet => Icons.wifi,
+      BillCategory.membership => Icons.fitness_center,
+      BillCategory.electricity => Icons.bolt_outlined,
+      BillCategory.streaming ||
+      BillCategory.radioTvFee => Icons.subscriptions_outlined,
     };
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -442,7 +463,7 @@ class _RecurringPaymentTile extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        '${payment.category} · ${formatDueDate(payment.nextDueAt, now)}',
+        '${l10n.billCategory(payment.category)} · ${l10n.dueDate(payment.nextDueAt, now)}',
         style: const TextStyle(color: finoraMutedInk, fontSize: 12),
       ),
       trailing: Text(

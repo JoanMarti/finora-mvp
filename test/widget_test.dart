@@ -1,7 +1,8 @@
 import 'package:finora/app/app.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/user_session.dart';
-import 'package:finora/features/accounts/accounts_screens.dart';
+import 'package:finora/features/accounts/account_detail_screen.dart';
+import 'package:finora/features/accounts/accounts_screen.dart';
 import 'package:finora/features/activity/activity_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
 import 'package:flutter/material.dart';

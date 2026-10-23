@@ -1,5 +1,7 @@
 import 'package:finora/application/session_controller.dart';
-import 'package:finora/features/accounts/accounts_screens.dart';
+import 'package:finora/features/accounts/account_detail_screen.dart';
+import 'package:finora/features/accounts/accounts_screen.dart';
+import 'package:finora/features/accounts/institution_detail_screen.dart';
 import 'package:finora/features/activity/activity_screen.dart';
 import 'package:finora/features/connections/connection_screen.dart';
 import 'package:finora/features/onboarding/onboarding_screen.dart';

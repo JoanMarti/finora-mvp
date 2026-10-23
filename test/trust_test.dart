@@ -163,7 +163,12 @@ void main() {
 
     expect(find.text('Retirement scenarios'), findsOneWidget);
     final start = find.textContaining('Start Plus ·');
-    await tester.ensureVisible(start);
+    // The button sits below the fold of a lazily built list.
+    await tester.scrollUntilVisible(
+      start,
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(start);
     await tester.pumpAndSettle();

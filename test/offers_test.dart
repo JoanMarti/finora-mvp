@@ -180,6 +180,7 @@ void main() {
       300,
       scrollable: list,
     );
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Yes, show me'));
     await tester.pumpAndSettle();
     expect(find.text('Yes, show me'), findsNothing);

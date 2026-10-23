@@ -374,6 +374,23 @@ class WealthTargets {
   /// Maximum Pillar 3a contribution for employees with a pension fund
   /// (CHF 7,258 in 2025 and 2026).
   final Money pillar3aAnnualLimit;
+
+  WealthTargets copyWith({int? safetyBufferMonths, double? longTermShare}) =>
+      WealthTargets(
+        safetyBufferMonths: safetyBufferMonths ?? this.safetyBufferMonths,
+        longTermShare: longTermShare ?? this.longTermShare,
+        pillar3aAnnualLimit: pillar3aAnnualLimit,
+      );
+
+  Map<String, Object?> toJson() => {
+    'safetyBufferMonths': safetyBufferMonths,
+    'longTermShare': longTermShare,
+  };
+
+  static WealthTargets fromJson(Map<String, Object?> json) => WealthTargets(
+    safetyBufferMonths: (json['safetyBufferMonths'] as num?)?.toInt() ?? 6,
+    longTermShare: (json['longTermShare'] as num?)?.toDouble() ?? .45,
+  );
 }
 
 enum AlertSeverity { info, warning, critical }

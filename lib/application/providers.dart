@@ -2,6 +2,7 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/planning.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Current time. Overridable so tests and demos can freeze the clock.
@@ -22,8 +23,59 @@ final marketDataRepositoryProvider = Provider<MarketDataRepository>(
 );
 
 final wealthTargetsProvider = Provider<WealthTargets>(
-  (ref) => const WealthTargets(),
+  (ref) => ref.watch(sessionProvider.select((session) => session.targets)),
 );
+
+/// Progress of every savings goal against today's balances.
+final goalProgressProvider = FutureProvider<List<GoalProgress>>((ref) async {
+  final goals = ref.watch(sessionProvider.select((session) => session.goals));
+  final now = ref.watch(clockProvider)();
+  final accounts = await ref.watch(accountsProvider.future);
+  return [for (final goal in goals) GoalProgress.of(goal, accounts, now)];
+});
+
+/// The user's pension details, or the example profile until they add theirs.
+final retirementProfileProvider = Provider<RetirementProfile>(
+  (ref) =>
+      ref.watch(sessionProvider.select((session) => session.retirement)) ??
+      RetirementProfile.demo,
+);
+
+/// Whether the retirement figures are the user's own or the example.
+final hasOwnRetirementProfileProvider = Provider<bool>(
+  (ref) =>
+      ref.watch(sessionProvider.select((session) => session.retirement)) !=
+      null,
+);
+
+final retirementProjectionProvider = FutureProvider<RetirementProjection>((
+  ref,
+) async {
+  final profile = ref.watch(retirementProfileProvider);
+  final now = ref.watch(clockProvider)();
+  final accounts = await ref.watch(accountsProvider.future);
+  return RetirementProjection.of(
+    profile,
+    pillar3aBalance: Money.sum(
+      accounts
+          .where((account) => account.type.isRetirement)
+          .map((account) => account.balance),
+    ),
+    now: now,
+  );
+});
+
+/// Tax-return figures for a year, grouped like the Swiss forms.
+final taxSummaryProvider = FutureProvider.family<TaxYearSummary, int>((
+  ref,
+  year,
+) async {
+  final data = await ref.watch(financialRepositoryProvider).getTaxYearData(year);
+  return TaxYearSummary(
+    data,
+    pillar3aLimit: ref.watch(wealthTargetsProvider).pillar3aAnnualLimit,
+  );
+});
 
 final institutionsProvider = FutureProvider<List<Institution>>(
   (ref) => ref.watch(financialRepositoryProvider).getInstitutions(),
@@ -166,5 +218,6 @@ Future<void> refreshFinancialData(WidgetRef ref) async {
     ..invalidate(accountsProvider)
     ..invalidate(accountAnalyticsProvider)
     ..invalidate(transactionsProvider)
-    ..invalidate(overviewProvider);
+    ..invalidate(overviewProvider)
+    ..invalidate(taxSummaryProvider);
 }

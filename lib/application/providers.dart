@@ -51,19 +51,31 @@ final hasOwnRetirementProfileProvider = Provider<bool>(
 final retirementProjectionProvider = FutureProvider<RetirementProjection>((
   ref,
 ) async {
-  final profile = ref.watch(retirementProfileProvider);
-  final now = ref.watch(clockProvider)();
-  final accounts = await ref.watch(accountsProvider.future);
-  return RetirementProjection.of(
-    profile,
-    pillar3aBalance: Money.sum(
-      accounts
-          .where((account) => account.type.isRetirement)
-          .map((account) => account.balance),
-    ),
-    now: now,
-  );
+  final scenarios = await ref.watch(retirementScenariosProvider.future);
+  return scenarios[RetirementScenario.base]!;
 });
+
+/// The projection under every scenario. The base one is free; comparing it
+/// with the others is a Finora Plus feature.
+final retirementScenariosProvider =
+    FutureProvider<Map<RetirementScenario, RetirementProjection>>((ref) async {
+      final profile = ref.watch(retirementProfileProvider);
+      final now = ref.watch(clockProvider)();
+      final accounts = await ref.watch(accountsProvider.future);
+      final pillar3aBalance = Money.sum(
+        accounts
+            .where((account) => account.type.isRetirement)
+            .map((account) => account.balance),
+      );
+      return {
+        for (final scenario in RetirementScenario.values)
+          scenario: scenario.project(
+            profile,
+            pillar3aBalance: pillar3aBalance,
+            now: now,
+          ),
+      };
+    });
 
 /// Tax-return figures for a year, grouped like the Swiss forms.
 final taxSummaryProvider = FutureProvider.family<TaxYearSummary, int>((

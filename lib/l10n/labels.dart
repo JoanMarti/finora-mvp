@@ -113,7 +113,9 @@ bool _isSameDay(DateTime a, DateTime b) =>
 /// Texts for savings opportunities. Every sentence names the evidence it is
 /// based on, so the user can see why an offer appears.
 extension OpportunityLabels on AppLocalizations {
-  String opportunityTitle(Opportunity item) => switch (item.kind) {
+  String opportunityTitle(Opportunity item) => offerKindTitle(item.kind);
+
+  String offerKindTitle(OpportunityKind kind) => switch (kind) {
     OpportunityKind.healthInsuranceSwitch => offerHealthTitle,
     OpportunityKind.insuranceReview => offerInsuranceReviewTitle,
     OpportunityKind.idleCash => offerIdleCashTitle,

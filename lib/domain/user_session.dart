@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/trust.dart';
 
 /// Everything Finora needs to remember about the user between launches.
 class UserSession {
@@ -18,6 +19,10 @@ class UserSession {
     this.retirement,
     this.offersConsent,
     this.dismissedOpportunities = const {},
+    this.plan = FinoraPlan.free,
+    this.plusSince,
+    this.consentLog = const [],
+    this.funnel = const FunnelStats(),
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -62,6 +67,19 @@ class UserSession {
   /// Opportunity ids the user marked as not interesting.
   final Set<String> dismissedOpportunities;
 
+  final FinoraPlan plan;
+
+  /// When the current Plus subscription started; `null` on the free plan.
+  final DateTime? plusSince;
+
+  /// Every consent answer, oldest first (revised FADP accountability).
+  final List<ConsentRecord> consentLog;
+
+  /// Aggregated offer funnel for the pilot metrics.
+  final FunnelStats funnel;
+
+  bool get isPlus => plan == FinoraPlan.plus;
+
   static const _unset = Object();
 
   /// Display name derived from the e-mail, e.g. "anna.muster@…" → "Anna".
@@ -98,6 +116,10 @@ class UserSession {
     RetirementProfile? retirement,
     bool? offersConsent,
     Set<String>? dismissedOpportunities,
+    FinoraPlan? plan,
+    Object? plusSince = _unset,
+    List<ConsentRecord>? consentLog,
+    FunnelStats? funnel,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -115,6 +137,12 @@ class UserSession {
       offersConsent: offersConsent ?? this.offersConsent,
       dismissedOpportunities:
           dismissedOpportunities ?? this.dismissedOpportunities,
+      plan: plan ?? this.plan,
+      plusSince: identical(plusSince, _unset)
+          ? this.plusSince
+          : plusSince as DateTime?,
+      consentLog: consentLog ?? this.consentLog,
+      funnel: funnel ?? this.funnel,
     );
   }
 
@@ -131,6 +159,10 @@ class UserSession {
     'retirement': retirement?.toJson(),
     'offersConsent': offersConsent,
     'dismissedOpportunities': dismissedOpportunities.toList(),
+    'plan': plan.name,
+    'plusSince': plusSince?.toIso8601String(),
+    'consentLog': [for (final record in consentLog) record.toJson()],
+    'funnel': funnel.toJson(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -165,6 +197,16 @@ class UserSession {
       dismissedOpportunities: {
         ...?(json['dismissedOpportunities'] as List?)?.whereType<String>(),
       },
+      plan: FinoraPlan.values
+              .where((value) => value.name == json['plan'])
+              .firstOrNull ??
+          FinoraPlan.free,
+      plusSince: DateTime.tryParse('${json['plusSince']}'),
+      consentLog: [
+        for (final raw in (json['consentLog'] as List?) ?? const [])
+          ?ConsentRecord.fromJson(raw),
+      ],
+      funnel: FunnelStats.fromJson(json['funnel']),
     );
   }
 

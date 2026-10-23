@@ -242,3 +242,15 @@ class ValuePill extends StatelessWidget {
     );
   }
 }
+
+/// Full-screen message for a route whose item no longer exists.
+class NotFoundScreen extends StatelessWidget {
+  const NotFoundScreen({required this.label, super.key});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(backgroundColor: Colors.transparent),
+    body: Center(child: Text(label)),
+  );
+}

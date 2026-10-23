@@ -1,5 +1,6 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/planning.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -81,10 +82,18 @@ List<_PlanRowData> _planRows(
 }
 
 class WealthPlanCard extends StatelessWidget {
-  const WealthPlanCard({required this.overview, required this.targets, super.key});
+  const WealthPlanCard({
+    required this.overview,
+    required this.targets,
+    this.goals = const [],
+    super.key,
+  });
 
   final FinancialOverview overview;
   final WealthTargets targets;
+
+  /// Personal goals, shown under the plan rows.
+  final List<GoalProgress> goals;
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +168,25 @@ class WealthPlanCard extends StatelessWidget {
             for (var index = 0; index < rows.length; index++) ...[
               _PlanProgressRow(data: rows[index]),
               if (index != rows.length - 1) const SizedBox(height: 17),
+            ],
+            if (goals.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              const Divider(height: 1),
+              const SizedBox(height: 16),
+              for (var index = 0; index < goals.length; index++) ...[
+                _PlanProgressRow(
+                  data: _PlanRowData(
+                    label: goals[index].goal.name,
+                    value: l10n.planProgressOf(
+                      formatCompactMoney(goals[index].saved),
+                      formatCompactMoney(goals[index].goal.target),
+                    ),
+                    progress: goals[index].progress,
+                    color: finoraGreen,
+                  ),
+                ),
+                if (index != goals.length - 1) const SizedBox(height: 17),
+              ],
             ],
             const SizedBox(height: 18),
             Text(

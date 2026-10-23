@@ -25,6 +25,7 @@ Finora is a mobile-first, read-only wealth overview for people in Switzerland. T
 - Working transaction search, month grouping and CSV copy; notification centre fed by connection health and upcoming bills
 - Available in English, German, French and Italian, following the device language or a choice saved in Profile
 - Inter as the app font on every platform
+- Planning tools: editable plan targets and savings goals, a three-pillar retirement outlook (AHV with the 13th pension, pension fund, Pillar 3a) and a tax-return summary per year (bank accounts, securities, debts, 3a deduction) with CSV export
 
 Not included: real authentication, KYC, payments, trading, financial advice, real bLink/OpenWealth calls, analytics, or production security controls.
 
@@ -42,6 +43,7 @@ lib/
 │   ├── models.dart              # normalized financial entities (Money in Rappen, DateTime)
 │   ├── institution_catalogue.dart # single source of truth for supported institutions
 │   ├── user_session.dart        # session model and SessionStore contract
+│   ├── planning.dart            # goals, Swiss pension rules/projection, tax year
 │   ├── financial_repository.dart# banking data-source contract
 │   └── market_data_repository.dart # market-content contract
 ├── data/
@@ -56,6 +58,7 @@ lib/
 │   ├── onboarding/              # profile discovery and branching
 │   ├── connections/             # simulated consent/sync journey
 │   ├── overview/                # dashboard screen (+ widgets/ for its cards)
+│   ├── planning/                # goals, retirement outlook, tax summary
 │   ├── accounts/                # list, institution and account detail (+ widgets/)
 │   ├── activity/                # transaction feed
 │   ├── profile/                 # settings and data health

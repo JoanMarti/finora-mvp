@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/planning.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -76,6 +77,36 @@ class SessionController extends Notifier<UserSession> {
 
   void setDataHealthAlerts(bool enabled) =>
       _update(state.copyWith(dataHealthAlerts: enabled));
+
+  void setTargets(WealthTargets targets) =>
+      _update(state.copyWith(targets: targets));
+
+  /// Adds [goal], or replaces the goal with the same id.
+  void saveGoal(SavingsGoal goal) {
+    final exists = state.goals.any((item) => item.id == goal.id);
+    _update(
+      state.copyWith(
+        goals: exists
+            ? [
+                for (final item in state.goals)
+                  item.id == goal.id ? goal : item,
+              ]
+            : [...state.goals, goal],
+      ),
+    );
+  }
+
+  void deleteGoal(String id) => _update(
+    state.copyWith(
+      goals: [
+        for (final item in state.goals)
+          if (item.id != id) item,
+      ],
+    ),
+  );
+
+  void setRetirementProfile(RetirementProfile profile) =>
+      _update(state.copyWith(retirement: profile));
 
   /// `null` follows the device language.
   void setLanguage(String? languageCode) =>

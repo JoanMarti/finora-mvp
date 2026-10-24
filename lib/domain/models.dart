@@ -288,6 +288,7 @@ class FinancialOverview {
     required this.history,
     required this.monthlySpending,
     required this.pillar3aContributionsThisYear,
+    this.otherAssets = Money.zero,
   });
 
   factory FinancialOverview.fromAccounts(
@@ -295,6 +296,7 @@ class FinancialOverview {
     List<BalanceHistoryPoint> history = const [],
     Money monthlySpending = Money.zero,
     Money pillar3aContributionsThisYear = Money.zero,
+    Money otherAssets = Money.zero,
   }) {
     Money sumWhere(bool Function(FinancialProductType type) test) => Money.sum(
       accounts
@@ -310,6 +312,7 @@ class FinancialOverview {
       history: history,
       monthlySpending: monthlySpending,
       pillar3aContributionsThisYear: pillar3aContributionsThisYear,
+      otherAssets: otherAssets,
     );
   }
 
@@ -330,11 +333,17 @@ class FinancialOverview {
   final Money monthlySpending;
   final Money pillar3aContributionsThisYear;
 
-  Money get assets => cash + investments + retirement;
-  Money get total => assets - liabilities;
-  bool get isEmpty => assets.isZero && liabilities.isZero;
+  /// Property, vehicles, crypto and other assets the user entered.
+  final Money otherAssets;
 
-  /// Share of total assets represented by [part], between 0 and 1.
+  /// Financial assets only: allocation shares and targets are measured on
+  /// these, so a house does not distort the investment mix.
+  Money get assets => cash + investments + retirement;
+  Money get total => assets + otherAssets - liabilities;
+  bool get isEmpty =>
+      assets.isZero && otherAssets.isZero && liabilities.isZero;
+
+  /// Share of financial assets represented by [part], between 0 and 1.
   double share(Money part) =>
       assets.cents <= 0 ? 0.0 : part.cents / assets.cents;
 

@@ -1,4 +1,5 @@
 import 'package:finora/application/session_controller.dart';
+import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
@@ -139,10 +140,18 @@ final overviewProvider = FutureProvider<FinancialOverview>((ref) async {
           (totalsByMonth[point.month] ?? Money.zero) + point.balance;
     }
   }
+  // Manually valued assets have no history: their current value is
+  // carried through the whole series so the trend stays comparable.
+  final otherAssets = ref
+      .watch(sessionProvider.select((session) => session.manualAssets))
+      .total;
   final months = totalsByMonth.keys.toList()..sort();
   final history = [
     for (final month in months)
-      BalanceHistoryPoint(month: month, balance: totalsByMonth[month]!),
+      BalanceHistoryPoint(
+        month: month,
+        balance: totalsByMonth[month]! + otherAssets,
+      ),
   ];
 
   final monthlySpending = Money.sum([
@@ -158,6 +167,7 @@ final overviewProvider = FutureProvider<FinancialOverview>((ref) async {
     pillar3aContributionsThisYear: await repository.getPillar3aContributions(
       year: now.year,
     ),
+    otherAssets: otherAssets,
   );
 });
 

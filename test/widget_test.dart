@@ -110,7 +110,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('TOTAL WEALTH'), findsOneWidget);
+    expect(find.text('Financial health'), findsOneWidget);
     expect(find.text('Wealth evolution'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('YOUR WEALTH PLAN'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('YOUR WEALTH PLAN'), findsOneWidget);
     expect(tester.takeException(), isNull);
 

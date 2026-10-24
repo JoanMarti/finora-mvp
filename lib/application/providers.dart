@@ -206,6 +206,16 @@ final alertsProvider = FutureProvider<List<FinoraAlert>>((ref) async {
         ),
       );
     }
+    for (final asset in session.manualAssets) {
+      if (!asset.isOutdated(now)) continue;
+      alerts.add(
+        FinoraAlert(
+          kind: AlertKind.assetValueOutdated,
+          subject: asset.name,
+          route: '/assets',
+        ),
+      );
+    }
   }
 
   for (final account in accounts) {

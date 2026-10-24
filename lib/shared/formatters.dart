@@ -1,8 +1,18 @@
 import 'package:finora/domain/models.dart';
 import 'package:intl/intl.dart';
 
+/// "Hide amounts" mode: when on, every formatted amount is masked so the
+/// app can be shown in public. `FinoraApp` keeps it in sync with the
+/// session.
+abstract final class AmountPrivacy {
+  static bool hidden = false;
+}
+
+String _masked(Money money) => '${money.currency} •••';
+
 /// Swiss-formatted amount, e.g. `CHF 12'480.40`.
 String formatMoney(Money money, {bool signed = false}) {
+  if (AmountPrivacy.hidden) return _masked(money);
   final formatter = NumberFormat.currency(
     locale: 'de_CH',
     symbol: money.currency,
@@ -16,6 +26,7 @@ String formatMoney(Money money, {bool signed = false}) {
 /// Whole francs, e.g. `CHF 3'250`, for estimates that should not look
 /// more precise than they are.
 String formatMoneyWhole(Money money) {
+  if (AmountPrivacy.hidden) return _masked(money);
   final formatter = NumberFormat.currency(
     locale: 'de_CH',
     symbol: money.currency,
@@ -26,6 +37,7 @@ String formatMoneyWhole(Money money) {
 
 /// Short amount for tight layouts, e.g. `CHF 44.8k` or `CHF 1.2M`.
 String formatCompactMoney(Money money, {bool signed = false}) {
+  if (AmountPrivacy.hidden) return _masked(money);
   final absolute = money.amount.abs();
   final String number;
   if (absolute >= 1000000) {

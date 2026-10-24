@@ -1,6 +1,7 @@
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/analysis.dart';
+import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/domain/trust.dart';
@@ -47,6 +48,9 @@ final opportunitiesProvider = FutureProvider<List<Opportunity>>((ref) async {
       },
       pillar3aContributionsThisYear: overview.pillar3aContributionsThisYear,
       now: now,
+      propertyValue: ref
+          .watch(sessionProvider.select((session) => session.manualAssets))
+          .totalOf(ManualAssetKind.property),
     ),
   );
   return [

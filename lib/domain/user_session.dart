@@ -25,6 +25,7 @@ class UserSession {
     this.consentLog = const [],
     this.funnel = const FunnelStats(),
     this.manualAssets = const [],
+    this.hideAmounts = false,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -83,6 +84,9 @@ class UserSession {
   /// Property, vehicles, crypto and other assets entered by the user.
   final List<ManualAsset> manualAssets;
 
+  /// Masks every amount so the app can be used in public.
+  final bool hideAmounts;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -126,6 +130,7 @@ class UserSession {
     List<ConsentRecord>? consentLog,
     FunnelStats? funnel,
     List<ManualAsset>? manualAssets,
+    bool? hideAmounts,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -150,6 +155,7 @@ class UserSession {
       consentLog: consentLog ?? this.consentLog,
       funnel: funnel ?? this.funnel,
       manualAssets: manualAssets ?? this.manualAssets,
+      hideAmounts: hideAmounts ?? this.hideAmounts,
     );
   }
 
@@ -171,6 +177,7 @@ class UserSession {
     'consentLog': [for (final record in consentLog) record.toJson()],
     'funnel': funnel.toJson(),
     'manualAssets': [for (final asset in manualAssets) asset.toJson()],
+    'hideAmounts': hideAmounts,
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -219,6 +226,7 @@ class UserSession {
         for (final raw in (json['manualAssets'] as List?) ?? const [])
           ?ManualAsset.fromJson(raw),
       ],
+      hideAmounts: json['hideAmounts'] as bool? ?? false,
     );
   }
 

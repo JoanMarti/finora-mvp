@@ -238,6 +238,9 @@ class SessionController extends Notifier<UserSession> {
   void restoreOpportunities() =>
       _update(state.copyWith(dismissedOpportunities: const {}));
 
+  void setHideAmounts(bool hidden) =>
+      _update(state.copyWith(hideAmounts: hidden));
+
   /// `null` follows the device language.
   void setLanguage(String? languageCode) =>
       _update(state.copyWith(languageCode: languageCode));

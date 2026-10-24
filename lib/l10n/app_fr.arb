@@ -590,5 +590,16 @@
   "saveAsset": "Enregistrer",
   "deleteAsset": "Supprimer l’actif",
   "assetValuedOn": "estimé le {date}",
-  "assetOutdated": "Valeur peut-être dépassée : touchez pour mettre à jour"
+  "assetOutdated": "Valeur peut-être dépassée : touchez pour mettre à jour",
+  "alertAssetTitle": "Mettez à jour la valeur de {name}",
+  "alertAssetBody": "Une estimation non mise à jour fausse votre patrimoine net.",
+  "offerMortgageLtv": "Votre taux d’avance est de {percent} % ; les prêteurs accordent souvent de meilleurs taux aux ratios plus bas.",
+  "offerMortgageAmortisation": "Au-delà de 67 %, la deuxième hypothèque doit être amortie en 15 ans ; l’amortissement indirect via le pilier 3a permet aussi d’économiser des impôts.",
+  "hideAmounts": "Masquer les montants",
+  "showAmounts": "Afficher les montants",
+  "hideAmountsBody": "Masquer tous les montants lorsque vous utilisez Finora en public",
+  "taxOtherAssetsSection": "Actifs que vous avez saisis",
+  "taxOtherAssetsNote": "Ce sont vos estimations de marché actuelles ; la déclaration demande les valeurs au 31 décembre.",
+  "taxPropertyNote": "Pour l’immobilier, déclarez la valeur fiscale cantonale (souvent inférieure au prix du marché) et la valeur locative comme revenu ; intérêts hypothécaires et entretien sont déductibles.",
+  "taxCryptoNote": "Les cryptos sont une fortune imposable au cours de fin d’année publié par l’Administration fédérale des contributions."
 }

@@ -1535,5 +1535,30 @@
       }
     }
   },
-  "assetOutdated": "Value may be out of date: tap to update"
+  "assetOutdated": "Value may be out of date: tap to update",
+  "alertAssetTitle": "Update the value of {name}",
+  "@alertAssetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertAssetBody": "An estimate that is not kept up to date makes your net worth misleading.",
+  "offerMortgageLtv": "Your loan-to-value is {percent}%; lenders usually price lower ratios better.",
+  "@offerMortgageLtv": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "offerMortgageAmortisation": "Above 67% the second mortgage must be paid down within 15 years; indirect amortisation through Pillar 3a can also save tax.",
+  "hideAmounts": "Hide amounts",
+  "showAmounts": "Show amounts",
+  "hideAmountsBody": "Mask every amount when you use Finora in public",
+  "taxOtherAssetsSection": "Assets you entered",
+  "taxOtherAssetsNote": "These are your current market estimates; the tax return asks for values at 31 December.",
+  "taxPropertyNote": "For property, declare the cantonal tax value (usually below market value) and the imputed rental value as income; mortgage interest and upkeep are deductible.",
+  "taxCryptoNote": "Crypto is taxable wealth at the year-end rate published by the Federal Tax Administration."
 }

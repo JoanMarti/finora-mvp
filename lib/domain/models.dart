@@ -404,7 +404,13 @@ class WealthTargets {
 
 enum AlertSeverity { info, warning, critical }
 
-enum AlertKind { consentRequired, staleConnection, manualValueOutdated, billDue }
+enum AlertKind {
+  consentRequired,
+  staleConnection,
+  manualValueOutdated,
+  assetValueOutdated,
+  billDue,
+}
 
 /// Something the user should know about, derived from their own data.
 /// It carries facts only; the UI turns them into localized text.
@@ -431,6 +437,8 @@ class FinoraAlert {
   AlertSeverity get severity => switch (kind) {
     AlertKind.consentRequired => AlertSeverity.critical,
     AlertKind.staleConnection => AlertSeverity.warning,
-    AlertKind.manualValueOutdated || AlertKind.billDue => AlertSeverity.info,
+    AlertKind.manualValueOutdated ||
+    AlertKind.assetValueOutdated ||
+    AlertKind.billDue => AlertSeverity.info,
   };
 }

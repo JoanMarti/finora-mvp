@@ -108,6 +108,9 @@ class _FinoraHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final initials = ref.watch(sessionProvider).initials;
     final alerts = ref.watch(alertsProvider).value ?? const <FinoraAlert>[];
+    final hidden = ref.watch(
+      sessionProvider.select((session) => session.hideAmounts),
+    );
     return Row(
       children: [
         Container(
@@ -151,6 +154,15 @@ class _FinoraHeader extends ConsumerWidget {
                 style: const TextStyle(color: finoraMutedInk, fontSize: 12),
               ),
             ],
+          ),
+        ),
+        IconButton(
+          tooltip: hidden ? context.l10n.showAmounts : context.l10n.hideAmounts,
+          onPressed: () =>
+              ref.read(sessionProvider.notifier).setHideAmounts(!hidden),
+          icon: Icon(
+            hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+            color: finoraInk,
           ),
         ),
         IconButton(

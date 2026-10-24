@@ -590,5 +590,16 @@
   "saveAsset": "Speichern",
   "deleteAsset": "Vermögenswert löschen",
   "assetValuedOn": "bewertet am {date}",
-  "assetOutdated": "Wert evtl. veraltet: zum Aktualisieren tippen"
+  "assetOutdated": "Wert evtl. veraltet: zum Aktualisieren tippen",
+  "alertAssetTitle": "Wert von {name} aktualisieren",
+  "alertAssetBody": "Eine nicht aktualisierte Schätzung verfälscht Ihr Nettovermögen.",
+  "offerMortgageLtv": "Ihre Belehnung beträgt {percent} %; tiefere Belehnungen erhalten meist bessere Zinsen.",
+  "offerMortgageAmortisation": "Über 67 % muss die zweite Hypothek innert 15 Jahren amortisiert werden; die indirekte Amortisation über die Säule 3a spart zudem Steuern.",
+  "hideAmounts": "Beträge ausblenden",
+  "showAmounts": "Beträge anzeigen",
+  "hideAmountsBody": "Alle Beträge verbergen, wenn Sie Finora in der Öffentlichkeit nutzen",
+  "taxOtherAssetsSection": "Von Ihnen erfasste Vermögenswerte",
+  "taxOtherAssetsNote": "Dies sind Ihre aktuellen Marktschätzungen; die Steuererklärung verlangt Werte per 31. Dezember.",
+  "taxPropertyNote": "Für Immobilien deklarieren Sie den kantonalen Steuerwert (meist unter dem Marktwert) und den Eigenmietwert als Einkommen; Hypothekarzinsen und Unterhalt sind abziehbar.",
+  "taxCryptoNote": "Krypto ist steuerbares Vermögen zum Jahresendkurs der Eidgenössischen Steuerverwaltung."
 }

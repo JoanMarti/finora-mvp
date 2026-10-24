@@ -119,6 +119,12 @@ class BalanceOverviewCard extends StatelessWidget {
                   label: l10n.allocationPillar3a,
                   money: overview.retirement,
                 ),
+                if (!overview.otherAssets.isZero)
+                  _BalancePart(
+                    color: finoraGreen,
+                    label: l10n.allocationOther,
+                    money: overview.otherAssets,
+                  ),
                 if (hasDebt)
                   _BalancePart(
                     color: finoraDanger,

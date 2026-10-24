@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
@@ -103,6 +104,30 @@ class SessionController extends Notifier<UserSession> {
     state.copyWith(
       goals: [
         for (final item in state.goals)
+          if (item.id != id) item,
+      ],
+    ),
+  );
+
+  /// Adds [asset], or replaces the asset with the same id.
+  void saveAsset(ManualAsset asset) {
+    final exists = state.manualAssets.any((item) => item.id == asset.id);
+    _update(
+      state.copyWith(
+        manualAssets: exists
+            ? [
+                for (final item in state.manualAssets)
+                  item.id == asset.id ? asset : item,
+              ]
+            : [...state.manualAssets, asset],
+      ),
+    );
+  }
+
+  void deleteAsset(String id) => _update(
+    state.copyWith(
+      manualAssets: [
+        for (final item in state.manualAssets)
           if (item.id != id) item,
       ],
     ),

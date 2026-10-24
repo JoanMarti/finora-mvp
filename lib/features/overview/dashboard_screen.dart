@@ -2,6 +2,7 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/health/health_screen.dart';
 import 'package:finora/features/offers/widgets/opportunity_widgets.dart';
 import 'package:finora/features/overview/widgets/balance_overview_card.dart';
 import 'package:finora/features/overview/widgets/insights_carousel.dart';
@@ -53,6 +54,8 @@ class DashboardScreen extends ConsumerWidget {
                         ),
                 ),
                 if (overviewValue != null && !overviewValue.isEmpty) ...[
+                  const SizedBox(height: 12),
+                  const HealthScoreCard(),
                   if (overviewValue.history.length >= 2) ...[
                     const SizedBox(height: 12),
                     WealthTrajectoryCard(overview: overviewValue),

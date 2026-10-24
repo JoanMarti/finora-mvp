@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
@@ -23,6 +24,7 @@ class UserSession {
     this.plusSince,
     this.consentLog = const [],
     this.funnel = const FunnelStats(),
+    this.manualAssets = const [],
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -78,6 +80,9 @@ class UserSession {
   /// Aggregated offer funnel for the pilot metrics.
   final FunnelStats funnel;
 
+  /// Property, vehicles, crypto and other assets entered by the user.
+  final List<ManualAsset> manualAssets;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -120,6 +125,7 @@ class UserSession {
     Object? plusSince = _unset,
     List<ConsentRecord>? consentLog,
     FunnelStats? funnel,
+    List<ManualAsset>? manualAssets,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -143,6 +149,7 @@ class UserSession {
           : plusSince as DateTime?,
       consentLog: consentLog ?? this.consentLog,
       funnel: funnel ?? this.funnel,
+      manualAssets: manualAssets ?? this.manualAssets,
     );
   }
 
@@ -163,6 +170,7 @@ class UserSession {
     'plusSince': plusSince?.toIso8601String(),
     'consentLog': [for (final record in consentLog) record.toJson()],
     'funnel': funnel.toJson(),
+    'manualAssets': [for (final asset in manualAssets) asset.toJson()],
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -207,6 +215,10 @@ class UserSession {
           ?ConsentRecord.fromJson(raw),
       ],
       funnel: FunnelStats.fromJson(json['funnel']),
+      manualAssets: [
+        for (final raw in (json['manualAssets'] as List?) ?? const [])
+          ?ManualAsset.fromJson(raw),
+      ],
     );
   }
 

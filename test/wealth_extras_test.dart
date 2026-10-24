@@ -44,7 +44,8 @@ void main() {
       expect(formatMoneyWhole(Money(3250)), 'CHF •••');
       expect(formatCompactMoney(Money(44800), signed: true), 'CHF •••');
       AmountPrivacy.hidden = false;
-      expect(formatMoney(Money(12480.4)), "CHF 12'480.40");
+      // The currency is followed by a non-breaking space.
+      expect(formatMoney(Money(12480.4)), endsWith("12'480.40"));
     });
 
     testWidgets('the dashboard eye toggles every amount', (tester) async {

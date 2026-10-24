@@ -65,6 +65,14 @@ final _property = ManualAsset(
   valuedAt: testNow,
 );
 
+/// The demo profile plus Raiffeisen, which holds the demo mortgage.
+final _withMortgage = UserSession.demo().copyWith(
+  connectedInstitutionIds: {
+    ...UserSession.demo().connectedInstitutionIds,
+    'raiffeisen',
+  },
+);
+
 void main() {
   group('Financial health', () {
     test('a healthy profile scores 100 with no next step', () {
@@ -125,7 +133,7 @@ void main() {
     });
 
     test('demo profile is scored from the connected data', () async {
-      final container = createTestContainer();
+      final container = createTestContainer(session: _withMortgage);
       final health = await container.read(financialHealthProvider.future);
       expect(health.score, inInclusiveRange(1, 100));
       final kinds = health.factors.map((factor) => factor.kind);
@@ -141,7 +149,7 @@ void main() {
 
   group('Manual assets', () {
     test('count towards net worth and unlock the housing check', () async {
-      final container = createTestContainer();
+      final container = createTestContainer(session: _withMortgage);
       final before = await container.read(overviewProvider.future);
       container.read(sessionProvider.notifier).saveAsset(_property);
 
@@ -191,7 +199,9 @@ void main() {
 
   testWidgets('health screen explains every area', (tester) async {
     usePhoneViewport(tester);
-    await tester.pumpWidget(_screen(const HealthScreen()));
+    await tester.pumpWidget(
+      _screen(const HealthScreen(), session: _withMortgage),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Financial health'), findsOneWidget);

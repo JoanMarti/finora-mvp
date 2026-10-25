@@ -106,7 +106,8 @@ class OnboardingController extends Notifier<OnboardingState> {
       state = OnboardingState(
         email: email,
         skipAccountSteps: verified,
-        // Without confirmation, open the code step (after welcome, account).
+        // Verified: start with the plan. Otherwise open the code step
+        // (after welcome and account).
         stepIndex: verified ? 0 : 2,
       );
 

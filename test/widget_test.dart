@@ -62,6 +62,16 @@ void main() {
     await tester.enterText(find.byType(EditableText).first, '123456');
     await tester.pumpAndSettle();
 
+    // Free or Premium trial: start free.
+    expect(find.text('Choose how to start'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Start free'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Start free'));
+    await tester.pumpAndSettle();
+
     expect(find.text('What do you have?'), findsOneWidget);
     await tester.tap(find.text('Current account'));
     await tester.tap(find.text('Investments'));

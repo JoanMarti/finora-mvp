@@ -161,8 +161,8 @@ void main() {
     await tester.pumpWidget(_screen(const PlusScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Retirement scenarios'), findsOneWidget);
-    final start = find.textContaining('Start Plus ·');
+    expect(find.text('Retirement scenarios'), findsWidgets);
+    final start = find.textContaining('Subscribe ·');
     // The button sits below the fold of a lazily built list.
     await tester.scrollUntilVisible(
       start,
@@ -172,12 +172,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(start);
     await tester.pumpAndSettle();
-    expect(find.text('Start Finora Plus?'), findsOneWidget);
-    await tester.tap(find.widgetWithText(FilledButton, 'Start Plus'));
+    expect(find.text('Start Finora Premium?'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Start Premium'));
     await tester.pumpAndSettle();
 
     expect(_session(tester, PlusScreen).isPlus, isTrue);
-    expect(find.text('Finora Plus is active'), findsOneWidget);
+    expect(find.text('Finora Premium is active'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -192,7 +192,7 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('Unlock with Plus'), findsOneWidget);
+    expect(find.text('Unlock with Premium'), findsOneWidget);
     expect(find.text('Cautious'), findsNothing);
   });
 
@@ -216,11 +216,11 @@ void main() {
     await tester.pumpWidget(_screen(const TaxSummaryScreen()));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.text('Copy as CSV · Plus'),
+      find.text('Copy as CSV · Premium'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('Copy as CSV · Plus'), findsOneWidget);
+    expect(find.text('Copy as CSV · Premium'), findsOneWidget);
   });
 
   testWidgets('privacy screen shows the history and withdraws consent', (

@@ -2,6 +2,7 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/calendar/calendar_screen.dart';
 import 'package:finora/features/health/health_screen.dart';
 import 'package:finora/features/offers/widgets/opportunity_widgets.dart';
 import 'package:finora/features/overview/widgets/balance_overview_card.dart';
@@ -75,6 +76,7 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   const SavingsOpportunitiesSection(),
+                  const UpcomingEventsSection(),
                   const SizedBox(height: 12),
                   SectionTitle(l10n.planningToolsSection),
                   const _PlanningTools(),
@@ -322,6 +324,12 @@ class _PlanningTools extends ConsumerWidget {
         l10n.analysisTitle,
         l10n.analysisToolSubtitle,
         '/analysis',
+      ),
+      (
+        Icons.calendar_month_outlined,
+        l10n.calendarScreenTitle,
+        l10n.calendarToolSubtitle,
+        '/calendar',
       ),
       (
         Icons.flag_outlined,

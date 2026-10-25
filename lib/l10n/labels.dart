@@ -1,4 +1,5 @@
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/calendar.dart';
 import 'package:finora/domain/health.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
@@ -275,4 +276,32 @@ extension HealthLabels on AppLocalizations {
     ManualAssetKind.crypto => assetKindCrypto,
     ManualAssetKind.other => assetKindOther,
   };
+}
+
+/// Texts for the financial calendar.
+extension CalendarLabels on AppLocalizations {
+  String calendarTitle(CalendarEvent event) => switch (event.kind) {
+    CalendarEventKind.healthInsuranceSwitch => calendarHealthTitle,
+    CalendarEventKind.pillar3aDeposit => calendarPillarTitle,
+    CalendarEventKind.taxReturn => calendarTaxTitle(event.date.year - 1),
+    CalendarEventKind.bill => event.subject ?? '',
+    CalendarEventKind.goalDeadline => calendarGoalTitle(event.subject ?? ''),
+    CalendarEventKind.assetReview => calendarAssetTitle(event.subject ?? ''),
+    CalendarEventKind.plusRenewal => calendarPlusTitle,
+  };
+
+  String calendarDetail(CalendarEvent event) {
+    final amount = event.amount == null ? '' : formatMoney(event.amount!);
+    return switch (event.kind) {
+      CalendarEventKind.healthInsuranceSwitch => calendarHealthDetail(
+        event.subject ?? '',
+      ),
+      CalendarEventKind.pillar3aDeposit => calendarPillarDetail(amount),
+      CalendarEventKind.taxReturn => calendarTaxDetail,
+      CalendarEventKind.bill => calendarBillDetail(amount),
+      CalendarEventKind.goalDeadline => calendarGoalDetail(amount),
+      CalendarEventKind.assetReview => calendarAssetDetail,
+      CalendarEventKind.plusRenewal => calendarPlusDetail,
+    };
+  }
 }

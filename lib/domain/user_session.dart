@@ -40,6 +40,10 @@ class UserSession {
     this.debts,
     this.debtPayment,
     this.payoffStrategy = PayoffStrategy.avalanche,
+    this.firstName,
+    this.userId,
+    this.emailVerified = false,
+    this.marketingOptIn = false,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -128,6 +132,21 @@ class UserSession {
   final Money? debtPayment;
   final PayoffStrategy payoffStrategy;
 
+  /// Name given at sign-up; `null` for demo profiles and older sessions.
+  final String? firstName;
+
+  /// Account id from the [AuthService]; `null` until the user registers or
+  /// signs in (demo profiles have none).
+  final String? userId;
+
+  /// Whether the e-mail address was confirmed with the code sent to it.
+  final bool emailVerified;
+
+  /// Optional product news by e-mail, asked separately from the terms.
+  final bool marketingOptIn;
+
+  bool get hasAccount => userId != null;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -135,12 +154,18 @@ class UserSession {
   /// Display name derived from the e-mail, e.g. "anna.muster@…" → "Anna".
   /// `null` when there is no e-mail yet.
   String? get displayName {
+    final name = firstName?.trim() ?? '';
+    if (name.isNotEmpty) return name[0].toUpperCase() + name.substring(1);
     final local = email.split('@').first.split(RegExp(r'[._+-]')).first;
     if (local.isEmpty) return null;
     return local[0].toUpperCase() + local.substring(1);
   }
 
   String get initials {
+    final name = firstName?.trim() ?? '';
+    if (name.isNotEmpty) {
+      return name.substring(0, name.length.clamp(1, 2)).toUpperCase();
+    }
     final parts = email
         .split('@')
         .first
@@ -181,6 +206,10 @@ class UserSession {
     List<Debt>? debts,
     Money? debtPayment,
     PayoffStrategy? payoffStrategy,
+    Object? firstName = _unset,
+    Object? userId = _unset,
+    bool? emailVerified,
+    bool? marketingOptIn,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -218,6 +247,12 @@ class UserSession {
       debts: debts ?? this.debts,
       debtPayment: debtPayment ?? this.debtPayment,
       payoffStrategy: payoffStrategy ?? this.payoffStrategy,
+      firstName: identical(firstName, _unset)
+          ? this.firstName
+          : firstName as String?,
+      userId: identical(userId, _unset) ? this.userId : userId as String?,
+      emailVerified: emailVerified ?? this.emailVerified,
+      marketingOptIn: marketingOptIn ?? this.marketingOptIn,
     );
   }
 
@@ -254,6 +289,10 @@ class UserSession {
     'debts': debts == null ? null : [for (final debt in debts!) debt.toJson()],
     'debtPayment': debtPayment?.cents,
     'payoffStrategy': payoffStrategy.name,
+    'firstName': firstName,
+    'userId': userId,
+    'emailVerified': emailVerified,
+    'marketingOptIn': marketingOptIn,
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -333,6 +372,10 @@ class UserSession {
               .where((value) => value.name == json['payoffStrategy'])
               .firstOrNull ??
           PayoffStrategy.avalanche,
+      firstName: json['firstName'] as String?,
+      userId: json['userId'] as String?,
+      emailVerified: json['emailVerified'] as bool? ?? false,
+      marketingOptIn: json['marketingOptIn'] as bool? ?? false,
     );
   }
 

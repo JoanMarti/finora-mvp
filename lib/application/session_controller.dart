@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/auth.dart';
 import 'package:finora/domain/budgets.dart';
 import 'package:finora/domain/debts.dart';
 import 'package:finora/domain/household.dart';
@@ -307,6 +308,63 @@ class SessionController extends Notifier<UserSession> {
   /// `null` follows the device language.
   void setLanguage(String? languageCode) =>
       _update(state.copyWith(languageCode: languageCode));
+
+  /// Links the session to [account] after sign-up or sign-in. On sign-up,
+  /// [acceptedTerms] records the terms and the optional marketing answer
+  /// in the consent register.
+  void signedIn(
+    AuthAccount account, {
+    bool acceptedTerms = false,
+    bool marketingOptIn = false,
+  }) {
+    final now = _now;
+    _update(
+      state.copyWith(
+        email: account.email,
+        firstName: account.firstName.isEmpty ? null : account.firstName,
+        userId: account.id,
+        emailVerified: account.emailVerified,
+        marketingOptIn: acceptedTerms ? marketingOptIn : null,
+        consentLog: [
+          ...state.consentLog,
+          if (acceptedTerms) ...[
+            ConsentRecord(
+              purpose: ConsentPurpose.terms,
+              granted: true,
+              at: now,
+              textVersion: termsVersion,
+            ),
+            ConsentRecord(
+              purpose: ConsentPurpose.marketing,
+              granted: marketingOptIn,
+              at: now,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Product news by e-mail; every change is kept in the register.
+  void setMarketingOptIn(bool optIn) => _update(
+    state.copyWith(
+      marketingOptIn: optIn,
+      consentLog: [
+        ...state.consentLog,
+        ConsentRecord(
+          purpose: ConsentPurpose.marketing,
+          granted: optIn,
+          at: _now,
+        ),
+      ],
+    ),
+  );
+
+  void markEmailVerified() => _update(state.copyWith(emailVerified: true));
+
+  /// Ends the session on this device. Data shown in the app comes from the
+  /// banks and is fetched again after the next sign-in.
+  void signOut() => reset();
 
   /// Forgets everything and returns to the first onboarding screen.
   void reset() {

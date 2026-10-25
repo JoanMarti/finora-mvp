@@ -72,6 +72,21 @@ class PrivacyScreen extends ConsumerWidget {
                 subtitle: Text(l10n.offersSettingBody),
               ),
             ),
+            if (ref.watch(sessionProvider.select((s) => s.hasAccount))) ...[
+              const SizedBox(height: 10),
+              Card(
+                child: SwitchListTile(
+                  value: ref.watch(
+                    sessionProvider.select((s) => s.marketingOptIn),
+                  ),
+                  onChanged: ref
+                      .read(sessionProvider.notifier)
+                      .setMarketingOptIn,
+                  secondary: const Icon(Icons.mail_outline),
+                  title: Text(l10n.consentPurposeMarketing),
+                ),
+              ),
+            ],
             SectionTitle(l10n.consentHistorySection),
             if (log.isEmpty)
               Text(
@@ -150,6 +165,8 @@ class _ConsentTile extends StatelessWidget {
       ConsentPurpose.partnerSharing => l10n.consentPurposePartner(
         kind == null ? '' : l10n.offerKindTitle(kind),
       ),
+      ConsentPurpose.terms => l10n.consentPurposeTerms,
+      ConsentPurpose.marketing => l10n.consentPurposeMarketing,
     };
     final when = DateFormat.yMMMd(
       l10n.localeName,

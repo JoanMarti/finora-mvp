@@ -2,6 +2,7 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/onboarding/account_steps.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
@@ -13,6 +14,7 @@ import 'package:go_router/go_router.dart';
 enum _Step {
   welcome,
   account,
+  verify,
   products,
   banks,
   investments,
@@ -28,10 +30,14 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  List<_Step> _stepsFor(Set<FinancialProductType> products) {
+  List<_Step> _stepsFor(OnboardingState state) {
+    final products = state.products;
     return [
-      _Step.welcome,
-      _Step.account,
+      if (!state.skipAccountSteps) ...[
+        _Step.welcome,
+        _Step.account,
+        _Step.verify,
+      ],
       _Step.products,
       _Step.banks,
       if (products.contains(FinancialProductType.investments))
@@ -45,13 +51,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void next() {
     final state = ref.read(onboardingProvider);
-    final last = _stepsFor(state.products).length - 1;
+    final last = _stepsFor(state).length - 1;
     _controller.setStep((state.stepIndex + 1).clamp(0, last));
   }
 
   void back() {
     final state = ref.read(onboardingProvider);
-    final last = _stepsFor(state.products).length - 1;
+    final last = _stepsFor(state).length - 1;
     _controller.setStep((state.stepIndex - 1).clamp(0, last));
   }
 
@@ -65,9 +71,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingProvider);
-    final activeSteps = _stepsFor(state.products);
+    final activeSteps = _stepsFor(state);
     final index = state.stepIndex.clamp(0, activeSteps.length - 1);
     final step = activeSteps[index];
+    final first = index == 0;
 
     return Scaffold(
       body: SafeArea(
@@ -79,7 +86,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   children: [
                     IconButton(
                       tooltip: context.l10n.commonBack,
-                      onPressed: back,
+                      onPressed: first ? null : back,
                       icon: const Icon(Icons.arrow_back),
                     ),
                     const SizedBox(width: 8),
@@ -119,12 +126,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         onContinue: next,
         onUseDemoData: _useDemoData,
       ),
-      _Step.account => _AccountStep(
+      _Step.account => AccountStep(key: key, onCreated: next),
+      _Step.verify => VerifyEmailStep(
         key: key,
-        email: state.email,
-        onChanged: _controller.setEmail,
-        onContinue: state.hasValidEmail ? next : null,
-        showEmailError: state.email.isNotEmpty && !state.hasValidEmail,
+        onVerified: next,
+        onChangeEmail: back,
       ),
       _Step.products => _SelectionStep<FinancialProductType>(
         key: key,
@@ -224,6 +230,11 @@ class _Welcome extends StatelessWidget {
         _TrustLine(icon: Icons.lock_outline, text: l10n.trustControl),
         const Spacer(),
         FilledButton(onPressed: onContinue, child: Text(l10n.getStarted)),
+        const SizedBox(height: 8),
+        OutlinedButton(
+          onPressed: () => context.push('/sign-in'),
+          child: Text(l10n.haveAccount),
+        ),
         const SizedBox(height: 4),
         Center(
           child: TextButton(
@@ -257,65 +268,6 @@ class _TrustLine extends StatelessWidget {
       ],
     ),
   );
-}
-
-class _AccountStep extends StatelessWidget {
-  const _AccountStep({
-    required this.email,
-    required this.onChanged,
-    required this.onContinue,
-    required this.showEmailError,
-    super.key,
-  });
-  final String email;
-  final ValueChanged<String> onChanged;
-  final VoidCallback? onContinue;
-  final bool showEmailError;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.createAccountTitle,
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        const SizedBox(height: 10),
-        Text(
-          l10n.createAccountBody,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 30),
-        TextFormField(
-          initialValue: email,
-          keyboardType: TextInputType.emailAddress,
-          autofillHints: const [AutofillHints.email],
-          decoration: InputDecoration(
-            labelText: l10n.emailLabel,
-            prefixIcon: const Icon(Icons.mail_outline),
-            errorText: showEmailError ? l10n.emailInvalid : null,
-          ),
-          onChanged: onChanged,
-        ),
-        const SizedBox(height: 14),
-        TextField(
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: l10n.passwordLabel,
-            prefixIcon: const Icon(Icons.lock_outline),
-            helperText: l10n.passwordDemoHint,
-          ),
-        ),
-        const Spacer(),
-        FilledButton(
-          onPressed: onContinue,
-          child: Text(l10n.createMockAccount),
-        ),
-      ],
-    );
-  }
 }
 
 class _SelectionStep<T> extends StatelessWidget {

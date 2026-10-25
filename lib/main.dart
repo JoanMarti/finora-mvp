@@ -12,6 +12,7 @@ Future<void> main() async {
     ProviderScope(
       overrides: appOverrides(
         sessionStore: SharedPreferencesSessionStore(preferences),
+        accountStore: SharedPreferencesAccountStore(preferences),
       ),
       child: const FinoraApp(),
     ),

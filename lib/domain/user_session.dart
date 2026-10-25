@@ -11,6 +11,7 @@ class UserSession {
     this.connectedInstitutionIds = const {},
     this.onboardingCompleted = false,
     this.dataHealthAlerts = true,
+    this.languageCode,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -27,10 +28,17 @@ class UserSession {
   final bool onboardingCompleted;
   final bool dataHealthAlerts;
 
+  /// Preferred app language (`en`, `de`, `fr`, `it`); `null` follows the
+  /// device.
+  final String? languageCode;
+
+  static const _unset = Object();
+
   /// Display name derived from the e-mail, e.g. "anna.muster@…" → "Anna".
-  String get displayName {
+  /// `null` when there is no e-mail yet.
+  String? get displayName {
     final local = email.split('@').first.split(RegExp(r'[._+-]')).first;
-    if (local.isEmpty) return 'You';
+    if (local.isEmpty) return null;
     return local[0].toUpperCase() + local.substring(1);
   }
 
@@ -54,6 +62,7 @@ class UserSession {
     Set<String>? connectedInstitutionIds,
     bool? onboardingCompleted,
     bool? dataHealthAlerts,
+    Object? languageCode = _unset,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -62,6 +71,9 @@ class UserSession {
           connectedInstitutionIds ?? this.connectedInstitutionIds,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
       dataHealthAlerts: dataHealthAlerts ?? this.dataHealthAlerts,
+      languageCode: identical(languageCode, _unset)
+          ? this.languageCode
+          : languageCode as String?,
     );
   }
 
@@ -72,6 +84,7 @@ class UserSession {
     'connectedInstitutionIds': connectedInstitutionIds.toList(),
     'onboardingCompleted': onboardingCompleted,
     'dataHealthAlerts': dataHealthAlerts,
+    'languageCode': languageCode,
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -91,6 +104,7 @@ class UserSession {
           .toSet(),
       onboardingCompleted: json['onboardingCompleted'] as bool? ?? false,
       dataHealthAlerts: json['dataHealthAlerts'] as bool? ?? true,
+      languageCode: json['languageCode'] as String?,
     );
   }
 

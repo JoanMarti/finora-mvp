@@ -1,6 +1,8 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +22,10 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
     final query = _query.trim().toLowerCase();
     if (query.isEmpty) return true;
     return item.merchant.toLowerCase().contains(query) ||
-        item.category.label.toLowerCase().contains(query);
+        context.l10n
+            .transactionCategory(item.category)
+            .toLowerCase()
+            .contains(query);
   }
 
   Future<void> _copyCsv(List<FinancialTransaction> items) async {
@@ -30,7 +35,7 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
         [
           item.bookedAt.toIso8601String().substring(0, 10),
           _csvField(item.merchant),
-          item.category.label,
+          item.category.name,
           item.amount.amount.toStringAsFixed(2),
           item.amount.currency,
           item.accountId,
@@ -39,26 +44,25 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
     await Clipboard.setData(ClipboardData(text: rows.join('\n')));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${items.length} transactions copied as CSV.')),
+      SnackBar(content: Text(context.l10n.csvCopied(items.length))),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final transactions = ref.watch(transactionsProvider(null));
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Activity'),
+        title: Text(l10n.navActivity),
       ),
       body: SafeArea(
         top: false,
         child: FinoraPage(
           child: transactions.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, _) => const Center(
-              child: Text('Activity is temporarily unavailable.'),
-            ),
+            error: (_, _) => Center(child: Text(l10n.activityUnavailable)),
             data: (items) {
               final filtered = items.where(_matches).toList();
               final groups = <DateTime, List<FinancialTransaction>>{};
@@ -69,18 +73,18 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
               return ListView(
                 children: [
                   Text(
-                    'Recent transactions',
+                    l10n.recentTransactionsSection,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Across all connected accounts',
+                    l10n.acrossAllAccounts,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 20),
                   SearchBar(
                     leading: const Icon(Icons.search),
-                    hintText: 'Search merchant or category',
+                    hintText: l10n.searchHint,
                     onChanged: (value) => setState(() => _query = value),
                   ),
                   if (filtered.isEmpty)
@@ -89,8 +93,8 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
                       child: Center(
                         child: Text(
                           items.isEmpty
-                              ? 'No transactions yet.'
-                              : 'No transactions match "$_query".',
+                              ? l10n.noTransactionsYet
+                              : l10n.noTransactionsMatch(_query),
                           style: const TextStyle(color: finoraMutedInk),
                         ),
                       ),
@@ -112,7 +116,7 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
                         ? null
                         : () => _copyCsv(filtered),
                     icon: const Icon(Icons.copy_all_outlined),
-                    label: const Text('Copy as CSV'),
+                    label: Text(l10n.copyAsCsv),
                   ),
                 ],
               );

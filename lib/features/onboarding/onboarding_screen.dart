@@ -3,6 +3,8 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
+import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,7 +78,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 Row(
                   children: [
                     IconButton(
-                      tooltip: 'Back',
+                      tooltip: context.l10n.commonBack,
                       onPressed: back,
                       icon: const Icon(Icons.arrow_back),
                     ),
@@ -85,7 +87,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: LinearProgressIndicator(
-                          semanticsLabel: 'Onboarding progress',
+                          semanticsLabel: context.l10n.onboardingProgress,
                           value: index / (activeSteps.length - 1),
                           minHeight: 6,
                           backgroundColor: finoraBorder,
@@ -110,6 +112,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _content(_Step step, OnboardingState state, {required Key key}) {
+    final l10n = context.l10n;
     return switch (step) {
       _Step.welcome => _Welcome(
         key: key,
@@ -125,18 +128,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ),
       _Step.products => _SelectionStep<FinancialProductType>(
         key: key,
-        title: 'What do you have?',
-        subtitle: 'Select the products you want to see in your overview.',
+        title: l10n.productsTitle,
+        subtitle: l10n.productsSubtitle,
         options: FinancialProductType.values,
         selected: state.products,
-        label: (item) => item.label,
+        label: l10n.productType,
         onToggle: _controller.toggleProduct,
         onContinue: state.products.isNotEmpty ? next : null,
       ),
       _Step.banks => _SelectionStep<String>(
         key: key,
-        title: 'Where do you bank?',
-        subtitle: 'Choose every banking relationship you use.',
+        title: l10n.banksTitle,
+        subtitle: l10n.banksSubtitle,
         options: _idsOffering({
           FinancialProductType.currentAccount,
           FinancialProductType.savings,
@@ -148,8 +151,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ),
       _Step.investments => _SelectionStep<String>(
         key: key,
-        title: 'Where do you invest?',
-        subtitle: 'We kept banks you already selected. Add any other provider.',
+        title: l10n.investTitle,
+        subtitle: l10n.investSubtitle,
         options: _idsOffering({FinancialProductType.investments}),
         selected: state.institutionIds,
         label: InstitutionCatalogue.nameOf,
@@ -159,8 +162,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ),
       _Step.retirement => _SelectionStep<String>(
         key: key,
-        title: 'Where is your Pillar 3a?',
-        subtitle: 'Connected and manually entered providers can live together.',
+        title: l10n.pillarTitle,
+        subtitle: l10n.pillarSubtitle,
         options: _idsOffering({FinancialProductType.pillar3a}),
         selected: state.institutionIds,
         label: InstitutionCatalogue.nameOf,
@@ -188,6 +191,7 @@ class _Welcome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -207,33 +211,30 @@ class _Welcome extends StatelessWidget {
         ),
         const SizedBox(height: 30),
         Text(
-          'Your finances.\nOne clear view.',
+          l10n.welcomeTitle,
           style: Theme.of(context).textTheme.displaySmall,
         ),
         const SizedBox(height: 18),
         Text(
-          'Bring your Swiss bank accounts, investments and Pillar 3a together—without giving us permission to move your money.',
+          l10n.welcomeBody,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 24),
-        const _TrustLine(
-          icon: Icons.visibility_outlined,
-          text: 'Read-only by design',
-        ),
-        const _TrustLine(icon: Icons.lock_outline, text: 'You stay in control'),
+        _TrustLine(icon: Icons.visibility_outlined, text: l10n.trustReadOnly),
+        _TrustLine(icon: Icons.lock_outline, text: l10n.trustControl),
         const Spacer(),
-        FilledButton(onPressed: onContinue, child: const Text('Get started')),
+        FilledButton(onPressed: onContinue, child: Text(l10n.getStarted)),
         const SizedBox(height: 4),
         Center(
           child: TextButton(
             onPressed: onUseDemoData,
-            child: const Text('Explore with demo data'),
+            child: Text(l10n.exploreDemoData),
           ),
         ),
-        const Center(
+        Center(
           child: Text(
-            'Private demo · no real bank data',
-            style: TextStyle(color: finoraMutedInk),
+            l10n.privateDemoNote,
+            style: const TextStyle(color: finoraMutedInk),
           ),
         ),
       ],
@@ -273,16 +274,17 @@ class _AccountStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Create your account',
+          l10n.createAccountTitle,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 10),
         Text(
-          'This is a mock sign-up. Nothing leaves this device.',
+          l10n.createAccountBody,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 30),
@@ -291,25 +293,25 @@ class _AccountStep extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           autofillHints: const [AutofillHints.email],
           decoration: InputDecoration(
-            labelText: 'Email',
+            labelText: l10n.emailLabel,
             prefixIcon: const Icon(Icons.mail_outline),
-            errorText: showEmailError ? 'Enter a valid e-mail address' : null,
+            errorText: showEmailError ? l10n.emailInvalid : null,
           ),
           onChanged: onChanged,
         ),
         const SizedBox(height: 14),
-        const TextField(
+        TextField(
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'Password',
-            prefixIcon: Icon(Icons.lock_outline),
-            helperText: 'Use any password for this demo',
+            labelText: l10n.passwordLabel,
+            prefixIcon: const Icon(Icons.lock_outline),
+            helperText: l10n.passwordDemoHint,
           ),
         ),
         const Spacer(),
         FilledButton(
           onPressed: onContinue,
-          child: const Text('Create mock account'),
+          child: Text(l10n.createMockAccount),
         ),
       ],
     );
@@ -398,12 +400,15 @@ class _SelectionStep<T> extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        FilledButton(onPressed: onContinue, child: const Text('Continue')),
+        FilledButton(
+          onPressed: onContinue,
+          child: Text(context.l10n.commonContinue),
+        ),
         if (canSkip)
           Center(
             child: TextButton(
               onPressed: onContinue,
-              child: const Text("I'll add this later"),
+              child: Text(context.l10n.addLater),
             ),
           ),
       ],
@@ -418,16 +423,20 @@ class _ReviewStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final institutions = state.institutionIds.toList()..sort();
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your financial setup',
+          l10n.reviewTitle,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 10),
         Text(
-          "We've found ${state.products.length} products across ${institutions.length} institutions.",
+          l10n.reviewSummary(
+            l10n.productCount(state.products.length),
+            l10n.institutionCount(institutions.length),
+          ),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 24),
@@ -441,12 +450,12 @@ class _ReviewStep extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: state.products
-                        .map((item) => Chip(label: Text(item.label)))
+                        .map((item) => Chip(label: Text(l10n.productType(item))))
                         .toList(),
                   ),
                 ),
               ),
-              const SectionTitle('Institutions'),
+              SectionTitle(l10n.institutionsSection),
               ...institutions.map(
                 (id) => Card(
                   child: ListTile(
@@ -463,8 +472,8 @@ class _ReviewStep extends StatelessWidget {
                     ),
                     subtitle: Text(
                       InstitutionCatalogue.byId(id)?.isManual ?? false
-                          ? 'Manual connection available'
-                          : 'Secure connection available',
+                          ? l10n.manualConnectionAvailable
+                          : l10n.secureConnectionAvailable,
                     ),
                     trailing: const Icon(
                       Icons.check_circle,
@@ -474,19 +483,19 @@ class _ReviewStep extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Card(
+              Card(
                 color: finoraSoftBlue,
                 child: Padding(
-                  padding: EdgeInsets.all(18),
+                  padding: const EdgeInsets.all(18),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.shield_outlined, color: finoraBlue),
-                      SizedBox(width: 12),
+                      const Icon(Icons.shield_outlined, color: finoraBlue),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          "Finora can read balances and transactions. It can't pay, transfer or trade.",
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                          l10n.readOnlyPromise,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
@@ -499,7 +508,7 @@ class _ReviewStep extends StatelessWidget {
         const SizedBox(height: 14),
         FilledButton(
           onPressed: () => context.go('/connect'),
-          child: const Text('Continue to connections'),
+          child: Text(l10n.continueToConnections),
         ),
       ],
     );

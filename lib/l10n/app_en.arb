@@ -1,0 +1,811 @@
+{
+  "@@locale": "en",
+  "appTitle": "Finora",
+  "navWealth": "Wealth",
+  "navAccounts": "Accounts",
+  "navActivity": "Activity",
+  "navProfile": "Profile",
+  "commonBack": "Back",
+  "commonCancel": "Cancel",
+  "commonContinue": "Continue",
+  "commonUndo": "Undo",
+  "commonDone": "Done",
+  "pageNotFound": "We could not find that page.",
+  "goToOverview": "Go to overview",
+  "institutionLogo": "{name} institution logo",
+  "@institutionLogo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "productCurrentAccount": "Current account",
+  "productSavings": "Savings",
+  "productInvestments": "Investments",
+  "productPillar3a": "Pillar 3a",
+  "productCreditCard": "Credit card",
+  "productMortgage": "Mortgage",
+  "categoryIncome": "Income",
+  "categoryGroceries": "Groceries",
+  "categoryTransport": "Transport",
+  "categoryUtilities": "Utilities",
+  "categoryShopping": "Shopping",
+  "categoryInsurance": "Insurance",
+  "categoryDining": "Dining",
+  "categoryHousing": "Housing",
+  "categoryOther": "Other",
+  "billHealthInsurance": "Health insurance",
+  "billHouseholdInsurance": "Household insurance",
+  "billPhoneInternet": "Phone & internet",
+  "billMembership": "Membership",
+  "billStreaming": "Streaming",
+  "billElectricity": "Electricity",
+  "billRadioTvFee": "Radio & TV fee",
+  "cadenceMonthly": "Monthly",
+  "cadenceMonthlyEquivalent": "Monthly equivalent",
+  "statusHealthy": "Healthy",
+  "statusNeedsRefresh": "Needs refresh",
+  "statusActionNeeded": "Action needed",
+  "statusManual": "Manual",
+  "statusSynced": "Synced",
+  "statusStale": "Stale",
+  "connectionStatusLabel": "Connection status: {status}",
+  "@connectionStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "dateToday": "Today",
+  "dateYesterday": "Yesterday",
+  "dueToday": "Due today",
+  "dueTomorrow": "Due tomorrow",
+  "dueOn": "Due {date}",
+  "@dueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "syncJustNow": "Updated just now",
+  "syncMinutesAgo": "Updated {minutes} min ago",
+  "@syncMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "syncHoursAgo": "Updated {hours} h ago",
+  "@syncHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "syncYesterday": "Updated yesterday",
+  "syncDaysAgo": "Updated {days} days ago",
+  "@syncDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "connectionUnavailable": "Connection unavailable",
+  "onboardingProgress": "Onboarding progress",
+  "welcomeTitle": "Your finances.\nOne clear view.",
+  "welcomeBody": "Bring your Swiss bank accounts, investments and Pillar 3a together—without giving us permission to move your money.",
+  "trustReadOnly": "Read-only by design",
+  "trustControl": "You stay in control",
+  "getStarted": "Get started",
+  "exploreDemoData": "Explore with demo data",
+  "privateDemoNote": "Private demo · no real bank data",
+  "createAccountTitle": "Create your account",
+  "createAccountBody": "This is a mock sign-up. Nothing leaves this device.",
+  "emailLabel": "Email",
+  "emailInvalid": "Enter a valid e-mail address",
+  "passwordLabel": "Password",
+  "passwordDemoHint": "Use any password for this demo",
+  "createMockAccount": "Create mock account",
+  "productsTitle": "What do you have?",
+  "productsSubtitle": "Select the products you want to see in your overview.",
+  "banksTitle": "Where do you bank?",
+  "banksSubtitle": "Choose every banking relationship you use.",
+  "investTitle": "Where do you invest?",
+  "investSubtitle": "We kept banks you already selected. Add any other provider.",
+  "pillarTitle": "Where is your Pillar 3a?",
+  "pillarSubtitle": "Connected and manually entered providers can live together.",
+  "addLater": "I'll add this later",
+  "reviewTitle": "Your financial setup",
+  "reviewSummary": "We've found {products} across {institutions}.",
+  "@reviewSummary": {
+    "placeholders": {
+      "products": {
+        "type": "String"
+      },
+      "institutions": {
+        "type": "String"
+      }
+    }
+  },
+  "productCount": "{count, plural, =1{1 product} other{{count} products}}",
+  "@productCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "institutionCount": "{count, plural, =1{1 institution} other{{count} institutions}}",
+  "@institutionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "institutionsSection": "Institutions",
+  "manualConnectionAvailable": "Manual connection available",
+  "secureConnectionAvailable": "Secure connection available",
+  "readOnlyPromise": "Finora can read balances and transactions. It can't pay, transfer or trade.",
+  "continueToConnections": "Continue to connections",
+  "addInstitutionTitle": "Add an institution",
+  "connectInstitutionsTitle": "Connect institutions",
+  "bringAnotherInstitution": "Bring in another institution",
+  "bringAccountsTogether": "Bring your accounts together",
+  "connectionDemoNote": "This demo simulates the bank hand-off, consent and first synchronisation.",
+  "allInstitutionsConnected": "Every supported institution is already connected.",
+  "readyCount": "{ready} of {total} ready · read-only access",
+  "@readyCount": {
+    "placeholders": {
+      "ready": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "viewMyOverview": "View my overview",
+  "connectAndContinue": "Connect and continue",
+  "useDemoDataInstead": "Use demo data instead",
+  "ready": "Ready",
+  "add": "Add",
+  "connect": "Connect",
+  "enterValueManually": "Enter the value manually",
+  "secureRedirectAvailable": "Secure bank redirect available",
+  "synchronisingAccounts": "Synchronising accounts…",
+  "connectedConsentActive": "Connected · consent active",
+  "manualValueReady": "Manual value ready",
+  "overviewUnavailable": "Your overview is temporarily unavailable.",
+  "wealthPlanSection": "Your wealth plan",
+  "ideasSection": "Ideas for you",
+  "headerTagline": "Your wealth at a glance",
+  "notifications": "Notifications",
+  "notificationsNew": "Notifications, {count} new",
+  "@notificationsNew": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allCaughtUp": "You're all caught up. Connections are healthy and no bills are due this week.",
+  "noAccountsTitle": "No accounts connected yet",
+  "noAccountsBody": "Connect a bank, investment or Pillar 3a provider to see your net worth here.",
+  "alertConsentTitle": "{name} needs your attention",
+  "@alertConsentTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertConsentBody": "Renew your consent to keep balances up to date.",
+  "alertStaleTitle": "{name} data is out of date",
+  "@alertStaleTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertStaleBody": "Pull down on the overview to refresh it.",
+  "alertManualTitle": "Update your {name} value",
+  "@alertManualTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertManualBody": "Manual values older than a month can mislead.",
+  "alertBillTitle": "{name} is due soon",
+  "@alertBillTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertBillBody": "{category} · {amount} {when}",
+  "@alertBillBody": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "inDays": "{days, plural, =0{today} =1{tomorrow} other{in {days} days}}",
+  "@inDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "totalWealth": "Total wealth",
+  "wealthComponents": "Cash · Investments · Retirement",
+  "wealthComponentsWithDebt": "Cash · Investments · Retirement · Debt",
+  "refreshAllConnections": "Refresh all connections",
+  "netWorth": "Net worth",
+  "netWorthChangedThisMonth": "Net worth changed {change} this month",
+  "@netWorthChangedThisMonth": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      }
+    }
+  },
+  "allocationCash": "Cash",
+  "allocationInvestments": "Investments",
+  "allocationPillar3a": "Pillar 3a",
+  "allocationDebt": "Debt",
+  "wealthEvolution": "Wealth evolution",
+  "wealthEvolutionSubtitle": "Your unified net worth over time",
+  "monthsCount": "{count, plural, =1{1 month} other{{count} months}}",
+  "@monthsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contributionsAndPerformance": "Net contributions and market performance",
+  "netWorthTrendGrew": "Net worth grew by {amount} over {period}, ending at {end}.",
+  "@netWorthTrendGrew": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "netWorthTrendFell": "Net worth fell by {amount} over {period}, ending at {end}.",
+  "@netWorthTrendFell": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "planSafetyBuffer": "Safety buffer",
+  "planProgressOf": "{current} of {target}",
+  "@planProgressOf": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "planLongTerm": "Long-term allocation",
+  "planShareOfTarget": "{share}% of {target}% target",
+  "@planShareOfTarget": {
+    "placeholders": {
+      "share": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "planPillar3aYear": "Pillar 3a this year",
+  "planNoPillar3a": "No Pillar 3a connected",
+  "planTitle": "Are you on track?",
+  "planSubtitle": "Progress against your personal targets",
+  "planOnTrack": "On track",
+  "planNeedsAttention": "Needs attention",
+  "planFootnote": "Buffer target: {months} months of spending. Pillar 3a limit for employees with a pension fund. Personal targets are coming in a later step.",
+  "@planFootnote": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "planRowSemantics": "{label}: {value}, {percent} percent",
+  "@planRowSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightAllocationEyebrow": "ALLOCATION",
+  "insightLargestAllocation": "{name} is your largest allocation",
+  "@insightLargestAllocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "insightCashLargestBody": "Set a personal liquidity target before deciding what could support longer-term goals.",
+  "insightOtherLargestBody": "Check that your cash buffer still covers unexpected costs before adding more.",
+  "insightMomentumEyebrow": "MOMENTUM",
+  "insightChangeThisMonth": "{change} this month",
+  "@insightChangeThisMonth": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      }
+    }
+  },
+  "insightWealthDipped": "Your wealth dipped this month",
+  "insightWealthUp": "Your wealth is moving upward",
+  "insightMomentumBody": "Compare new contributions with market performance before changing your strategy.",
+  "insightRetirementEyebrow": "RETIREMENT",
+  "insightPillarRoomMetric": "{amount} left this year",
+  "@insightPillarRoomMetric": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightPillarLimitReached": "Annual limit reached",
+  "insightPillarRoomTitle": "Room left in your Pillar 3a",
+  "insightPillarMaxedTitle": "Pillar 3a maxed out this year",
+  "insightPillarRoomBody": "Contributions up to the annual limit reduce taxable income if they are booked before the year ends.",
+  "insightPillarMaxedBody": "Keep contributions, fees and equity allocation visible across every 3a provider.",
+  "insightDebtEyebrow": "DEBT",
+  "insightDebtMetric": "{amount} outstanding",
+  "@insightDebtMetric": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightDebtTitle": "Keep debt next to your savings",
+  "insightDebtBody": "Seeing balances and rates together makes it easier to decide what to repay first.",
+  "themeBondsMetric": "Because cash represents {percent}%",
+  "@themeBondsMetric": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "themeEquitiesMetric": "Long-term allocation idea",
+  "themeRetirementMetric": "Across every 3a provider",
+  "ideaPosition": "Idea {current} of {total}",
+  "@ideaPosition": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "marketDataNote": "Illustrative targets and ideas, not investment advice. Live prices and product data are not connected yet.",
+  "accountsUnavailable": "Accounts are temporarily unavailable.",
+  "accountsTitle": "Your accounts, clearly organised",
+  "accountsSubtitle": "Compare balances, check data health and manage each connection.",
+  "filterAccountsLabel": "Filter accounts by product type",
+  "filterAll": "All",
+  "filterCash": "Cash",
+  "filterInvesting": "Investing",
+  "connectedInstitutionsSection": "Connected institutions",
+  "noInstitutionsConnected": "No institutions connected yet.",
+  "noAccountsMatchFilter": "No accounts match this filter.",
+  "openBankMessage": "A production version would securely open {name}.",
+  "@openBankMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "upToDateMessage": "{name} is up to date.",
+  "@upToDateMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnectTitle": "Disconnect {name}?",
+  "@disconnectTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnectBody": "All {name} accounts will disappear from Finora. Your accounts at the bank are not affected.",
+  "@disconnectBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnect": "Disconnect",
+  "disconnectedMessage": "{name} disconnected.",
+  "@disconnectedMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "portfolioSemantics": "Portfolio total {total}. Available cash {cash}. {accounts} connected.",
+  "@portfolioSemantics": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "cash": {
+        "type": "String"
+      },
+      "accounts": {
+        "type": "String"
+      }
+    }
+  },
+  "portfolioTotal": "Portfolio total",
+  "availableCash": "Available cash",
+  "connectedLabel": "Connected",
+  "accountCount": "{count, plural, =1{1 account} other{{count} accounts}}",
+  "@accountCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openInstitutionDetails": "Open {name} details",
+  "@openInstitutionDetails": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "changeUp": "up {amount}",
+  "@changeUp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "changeDown": "down {amount}",
+  "@changeDown": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "accountRowSemantics": "{name}, {type}, {balance}, {change} this month",
+  "@accountRowSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "type": {
+        "type": "String"
+      },
+      "balance": {
+        "type": "String"
+      },
+      "change": {
+        "type": "String"
+      }
+    }
+  },
+  "moreActionsFor": "More actions for {name}",
+  "@moreActionsFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actionViewInsights": "View account insights",
+  "actionOpenBank": "Open {name}",
+  "@actionOpenBank": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actionRefreshAccount": "Refresh account",
+  "actionDisconnectInstitution": "Disconnect institution",
+  "institutionNotFound": "Institution not found",
+  "accountNotFound": "Account not found",
+  "accountsSection": "Accounts",
+  "connectionSection": "Connection",
+  "readOnlyAccess": "Read-only access",
+  "balancesAndTransactionsOnly": "Balances and transactions only",
+  "refreshData": "Refresh data",
+  "accountInsightTitle": "Account insight",
+  "accountHealthSection": "Account health",
+  "moreHistoryNeeded": "More history is needed before Finora can explain this account.",
+  "cashFlowSection": "Cash flow",
+  "spendingSection": "Spending",
+  "recurringPaymentsSection": "Recurring payments",
+  "showLess": "Show less",
+  "seeAll": "See all",
+  "improvementsSection": "Potential improvements",
+  "coverageEyebrow": "COVERAGE CHECK · PARTNER OPTION",
+  "coverageTitle": "Review insurance in one place",
+  "coverageBody": "{count} insurance payments were detected ({amount} a month). A guided comparison could reveal duplicated cover or a better deductible setup.",
+  "@coverageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "coverageValue": "Illustrative potential: CHF 35–70 / month",
+  "coverageAction": "Explore a coverage check",
+  "coverageConsentMessage": "Coverage comparison would open only with your consent.",
+  "debtEyebrow": "DEBT VIEW · OPTIONAL",
+  "debtTitle": "See the true cost of your debt",
+  "debtBodyNone": "No cards or loans are connected yet. Add them to compare rates and see whether consolidation deserves a closer look.",
+  "debtBodySome": "{accounts} connected, totalling {amount}. Compare their rates before deciding what to repay first.",
+  "@debtBodySome": {
+    "placeholders": {
+      "accounts": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "debtAccountCount": "{count, plural, =1{1 debt account} other{{count} debt accounts}}",
+  "@debtAccountCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "debtValueNone": "No savings estimate until debt data is available",
+  "debtValueSome": "Rates are not available from the demo data yet",
+  "connectDebtAccounts": "Connect debt accounts",
+  "openAccount": "Open {name}",
+  "@openAccount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "monitoringSection": "Monitoring",
+  "recurringChangesTitle": "Recurring payment changes",
+  "recurringChangesBody": "Alert me when a regular bill changes",
+  "lowBalanceTitle": "Low balance forecast",
+  "lowBalanceBody": "Warn me before planned bills put cash at risk",
+  "recentTransactionsSection": "Recent transactions",
+  "viewAll": "View all",
+  "noRecentTransactions": "No recent transactions",
+  "insightsDisclaimer": "Insights use mock transaction patterns and are not financial advice. Finora never applies for or switches a product without explicit consent.",
+  "useInstitutionMenuToDisconnect": "Use the institution menu to review and confirm disconnection.",
+  "changeInMonth": "{change} in {month}",
+  "@changeInMonth": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "selectPeriod": "Select account analysis period",
+  "balanceEvolution": "Balance evolution",
+  "balanceEvolutionSubtitle": "Closing balance for the selected period",
+  "balanceTrendUp": "Balance increased by {amount} over {period}, ending at {end}.",
+  "@balanceTrendUp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "balanceTrendDown": "Balance decreased by {amount} over {period}, ending at {end}.",
+  "@balanceTrendDown": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "incomeVsSpending": "Income vs spending",
+  "keptPercent": "{percent}% kept",
+  "@keptPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "incomeLabel": "Income",
+  "spendingLabel": "Spending",
+  "cashFlowSemantics": "Income and spending comparison for {period}. Current income {income}, spending {spending}.",
+  "@cashFlowSemantics": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      },
+      "income": {
+        "type": "String"
+      },
+      "spending": {
+        "type": "String"
+      }
+    }
+  },
+  "overspentThisMonth": "{amount} more spent than earned this month",
+  "@overspentThisMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "availableAfterSpending": "{amount} available after spending this month",
+  "@availableAfterSpending": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "whereMoneyWent": "Where your money went",
+  "categorisedThisMonth": "{amount} categorised this month",
+  "@categorisedThisMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "categorySemantics": "{category}, {amount}, {percent} percent of spending",
+  "@categorySemantics": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "detectedCount": "{count} detected",
+  "@detectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "perMonth": "{amount} / month",
+  "@perMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activityUnavailable": "Activity is temporarily unavailable.",
+  "acrossAllAccounts": "Across all connected accounts",
+  "searchHint": "Search merchant or category",
+  "noTransactionsYet": "No transactions yet.",
+  "noTransactionsMatch": "No transactions match \"{query}\".",
+  "@noTransactionsMatch": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "copyAsCsv": "Copy as CSV",
+  "csvCopied": "{count, plural, =1{1 transaction copied as CSV.} other{{count} transactions copied as CSV.}}",
+  "@csvCopied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "you": "You",
+  "demoProfile": "Demo profile",
+  "connectionsSection": "Connections",
+  "addConnection": "Add connection",
+  "preferencesSection": "Preferences",
+  "language": "Language",
+  "languageSystem": "Device language",
+  "displayCurrency": "Display currency",
+  "moreCurrenciesSoon": "More currencies are coming soon",
+  "dataHealthAlerts": "Data health alerts",
+  "dataHealthAlertsBody": "Tell me when a connection is stale or needs consent",
+  "privacySecurity": "Privacy & security",
+  "aboutDemoSection": "About this demo",
+  "aboutDemoBody": "All balances and transactions are fictional. No credentials, consent tokens or personal financial data are stored.",
+  "restartOnboarding": "Restart onboarding",
+  "privacyReadOnly": "Read-only: Finora can never pay, transfer or trade.",
+  "privacyDeviceOnly": "This demo stores only your onboarding choices on this device.",
+  "privacyNoCredentials": "No bank credentials or consent tokens are collected.",
+  "restartOnboardingTitle": "Restart onboarding?",
+  "restartOnboardingBody": "Your demo profile and connections on this device will be cleared.",
+  "restart": "Restart"
+}

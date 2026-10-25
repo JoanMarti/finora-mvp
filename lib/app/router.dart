@@ -1,11 +1,14 @@
 import 'package:finora/application/session_controller.dart';
-import 'package:finora/features/accounts/accounts_screens.dart';
+import 'package:finora/features/accounts/account_detail_screen.dart';
+import 'package:finora/features/accounts/accounts_screen.dart';
+import 'package:finora/features/accounts/institution_detail_screen.dart';
 import 'package:finora/features/activity/activity_screen.dart';
 import 'package:finora/features/connections/connection_screen.dart';
 import 'package:finora/features/onboarding/onboarding_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
 import 'package:finora/features/profile/profile_screen.dart';
 import 'package:finora/features/shell/app_shell.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -69,10 +72,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           children: [
             const Icon(Icons.explore_off_outlined, size: 42),
             const SizedBox(height: 12),
-            const Text('We could not find that page.'),
+            Text(context.l10n.pageNotFound),
             TextButton(
               onPressed: () => context.go('/home'),
-              child: const Text('Go to overview'),
+              child: Text(context.l10n.goToOverview),
             ),
           ],
         ),

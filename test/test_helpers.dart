@@ -1,5 +1,7 @@
 import 'package:finora/app/bootstrap.dart';
+import 'package:finora/application/app_lock.dart';
 import 'package:finora/application/providers.dart';
+import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +16,8 @@ List<Override> testOverrides({UserSession? session, SessionStore? store}) => [
     sessionStore: store ?? InMemorySessionStore(session ?? UserSession.demo()),
   ),
   clockProvider.overrideWithValue(() => testNow),
+  // No platform plugin in tests: fingerprint and face are unavailable.
+  biometricAuthProvider.overrideWithValue(const NoBiometrics()),
 ];
 
 ProviderContainer createTestContainer({

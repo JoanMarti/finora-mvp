@@ -1092,5 +1092,12 @@
   "priceAlertSince": "Seit {date}",
   "alertPriceTitle": "{merchant} kostet mehr",
   "alertPriceBody": "Von {before} auf {after}: {yearly} mehr pro Jahr.",
-  "featurePriceAlerts": "Alarme bei Preiserhöhungen"
+  "featurePriceAlerts": "Alarme bei Preiserhöhungen",
+  "biometricSetting": "Mit Fingerabdruck oder Gesicht entsperren",
+  "biometricSettingBody": "Ihre PIN funktioniert weiterhin, falls die Erkennung scheitert.",
+  "biometricReason": "Finora entsperren",
+  "biometricEnableReason": "Bestätigen, um das Entsperren mit Fingerabdruck oder Gesicht einzuschalten",
+  "biometricButton": "Fingerabdruck oder Gesicht verwenden",
+  "biometricOn": "Entsperren mit Fingerabdruck oder Gesicht ist eingeschaltet.",
+  "biometricNotRecognised": "Nicht erkannt. Geben Sie Ihre PIN ein."
 }

@@ -6,16 +6,34 @@ import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
-class WealthTrajectoryCard extends StatelessWidget {
+class WealthTrajectoryCard extends StatefulWidget {
   const WealthTrajectoryCard({required this.overview, super.key});
 
   final FinancialOverview overview;
 
   @override
+  State<WealthTrajectoryCard> createState() => _WealthTrajectoryCardState();
+}
+
+class _WealthTrajectoryCardState extends State<WealthTrajectoryCard> {
+  int _months = 6;
+
+  @override
   Widget build(BuildContext context) {
-    final history = overview.history;
-    final change = overview.periodChange;
-    final changeRate = overview.periodChangeRate;
+    final full = widget.overview.history;
+    // Longer periods appear only when there is that much history (Plus).
+    final periods = [
+      for (final months in const [6, 12, 24])
+        if (months == 6 || full.length >= months) months,
+    ];
+    final months = periods.contains(_months) ? _months : periods.first;
+    final history = full.length <= months
+        ? full
+        : full.sublist(full.length - months);
+    final change = history.last.balance - history.first.balance;
+    final changeRate = history.first.balance.isZero
+        ? null
+        : change.cents / history.first.balance.cents.abs();
     final values = [for (final point in history) point.balance.amount];
     final positive = !change.isNegative;
     final l10n = context.l10n;
@@ -112,36 +130,27 @@ class WealthTrajectoryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (final point in history)
-                  Text(
-                    formatMonthShort(point.month),
-                    style: point == history.last
-                        ? _activeMonthStyle
-                        : _monthStyle,
-                  ),
-              ],
-            ),
+            MonthAxis(months: [for (final point in history) point.month]),
+            if (periods.length > 1) ...[
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final option in periods)
+                    ChoiceChip(
+                      label: Text(l10n.monthsShort(option)),
+                      selected: option == months,
+                      onSelected: (_) => setState(() => _months = option),
+                    ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 }
-
-const _monthStyle = TextStyle(
-  color: finoraMutedInk,
-  fontSize: 10,
-  fontWeight: FontWeight.w700,
-);
-
-const _activeMonthStyle = TextStyle(
-  color: finoraBlueText,
-  fontSize: 10,
-  fontWeight: FontWeight.w800,
-);
 
 class _WealthTrendPainter extends CustomPainter {
   const _WealthTrendPainter({required this.values});

@@ -44,7 +44,7 @@ class PlusScreen extends ConsumerWidget {
         Icons.history,
         l10n.plusFeatureHistoryTitle,
         l10n.plusFeatureHistoryBody,
-        true,
+        false,
       ),
     ];
 

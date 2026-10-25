@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
@@ -29,6 +30,7 @@ class UserSession {
     this.hideAmounts = false,
     this.household,
     this.installationId,
+    this.appLock,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -97,6 +99,9 @@ class UserSession {
   /// sent to the backend. Created when a backend is first used.
   final String? installationId;
 
+  /// PIN lock; `null` when the app is not locked.
+  final AppLock? appLock;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -143,6 +148,7 @@ class UserSession {
     bool? hideAmounts,
     Object? household = _unset,
     String? installationId,
+    Object? appLock = _unset,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -172,6 +178,7 @@ class UserSession {
           ? this.household
           : household as Household?,
       installationId: installationId ?? this.installationId,
+      appLock: identical(appLock, _unset) ? this.appLock : appLock as AppLock?,
     );
   }
 
@@ -196,6 +203,7 @@ class UserSession {
     'hideAmounts': hideAmounts,
     'household': household?.toJson(),
     'installationId': installationId,
+    'appLock': appLock?.toJson(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -247,6 +255,7 @@ class UserSession {
       hideAmounts: json['hideAmounts'] as bool? ?? false,
       household: Household.fromJson(json['household']),
       installationId: json['installationId'] as String?,
+      appLock: AppLock.fromJson(json['appLock']),
     );
   }
 

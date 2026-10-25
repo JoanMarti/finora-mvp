@@ -102,9 +102,20 @@ final accountsProvider = FutureProvider<List<FinancialAccount>>(
   (ref) => ref.watch(financialRepositoryProvider).getAccounts(),
 );
 
+/// Months of balance history: 6, or 24 with Finora Plus.
+final historyMonthsProvider = Provider<int>(
+  (ref) => ref.watch(sessionProvider.select((session) => session.isPlus))
+      ? 24
+      : 6,
+);
+
 final accountAnalyticsProvider = FutureProvider.family<AccountAnalytics, String>(
-  (ref, accountId) =>
-      ref.watch(financialRepositoryProvider).getAccountAnalytics(accountId),
+  (ref, accountId) => ref
+      .watch(financialRepositoryProvider)
+      .getAccountAnalytics(
+        accountId,
+        historyMonths: ref.watch(historyMonthsProvider),
+      ),
 );
 
 final transactionsProvider =

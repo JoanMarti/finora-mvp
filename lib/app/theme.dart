@@ -1,40 +1,57 @@
 import 'package:flutter/material.dart';
 
-// Finora design tokens: neutral greys (zinc), one calm accent blue and
-// semantic colours with AA contrast on white. Kept deliberately sober so the
-// same tokens work in other contexts (web, documents, partner screens).
+// Finora design tokens, built on the brand palette
+//   #014164 navy · #027DB9 blue · #EFEDEC warm grey · #8899A2 slate · #FFFFFF
+// in a light, fresh direction: warm off-white canvas, white cards, navy
+// text and one bright blue accent. Derived shades keep AA contrast.
 const finoraWhite = Color(0xFFFFFFFF);
-const finoraSilver = Color(0xFFD4D4D8);
-const finoraSlate = Color(0xFFA1A1AA);
-const finoraInk = Color(0xFF18181B);
-const finoraBlue = Color(0xFF2B59C3);
+const finoraNavy = Color(0xFF014164);
+const finoraWarmGrey = Color(0xFFEFEDEC);
 
-const finoraCanvas = Color(0xFFF7F7F8);
-const finoraBorder = Color(0xFFE4E4E7);
-const finoraSoftBlue = Color(0xFFEEF2FA);
-const finoraMutedInk = Color(0xFF52525B);
-const finoraBlueText = Color(0xFF2450B5);
-const finoraGreen = Color(0xFF15803D);
-const finoraMint = Color(0xFFF0F7F2);
-const finoraWarning = Color(0xFFA16207);
-const finoraDanger = Color(0xFFB91C1C);
+/// Light text on blue and navy surfaces.
+const finoraSilver = Color(0xFFCFE3EE);
 
-/// Fill for inputs, chips and quiet surfaces.
-const finoraFill = Color(0xFFF1F1F3);
+/// Brand slate, for icons, dividers and decoration (not for small text).
+const finoraSlate = Color(0xFF8899A2);
 
-/// Graphite for the main hero (net worth): a barely visible gradient.
+/// Main text colour: the brand navy.
+const finoraInk = finoraNavy;
+
+/// Accent: the brand blue (4.6:1 on white).
+const finoraBlue = Color(0xFF027DB9);
+
+const finoraCanvas = Color(0xFFF7F6F5);
+const finoraBorder = Color(0xFFE4E1DF);
+const finoraSoftBlue = Color(0xFFE6F2F8);
+
+/// Secondary text: a darker slate that stays readable on white.
+const finoraMutedInk = Color(0xFF55666F);
+const finoraBlueText = Color(0xFF026A9E);
+const finoraGreen = Color(0xFF12805C);
+const finoraMint = Color(0xFFE7F5EF);
+const finoraWarning = Color(0xFFA15C07);
+const finoraDanger = Color(0xFFC0392B);
+
+/// Fill for inputs, chips and quiet surfaces: the brand warm grey.
+const finoraFill = finoraWarmGrey;
+
+/// Bright blue for the main hero (net worth).
 const finoraBrandGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [Color(0xFF18181B), Color(0xFF2E2E33)],
+  colors: [Color(0xFF027DB9), Color(0xFF1597D3)],
 );
 
-/// Same graphite for summary cards on detail screens.
-const finoraInkGradient = finoraBrandGradient;
+/// Navy to blue for summary cards on detail screens.
+const finoraInkGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFF014164), Color(0xFF02608F)],
+);
 
 /// Subtle neutral shadow for raised elements.
 const finoraShadow = [
-  BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
+  BoxShadow(color: Color(0x1A014164), blurRadius: 16, offset: Offset(0, 6)),
 ];
 
 /// Corner radii: cards and sheets, controls, and small tags.
@@ -182,7 +199,7 @@ ThemeData buildFinoraTheme() {
     ),
     chipTheme: const ChipThemeData(
       backgroundColor: finoraWhite,
-      selectedColor: finoraInk,
+      selectedColor: finoraBlue,
       secondaryLabelStyle: TextStyle(
         fontFamily: 'Inter',
         color: finoraWhite,
@@ -205,7 +222,7 @@ ThemeData buildFinoraTheme() {
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith(
           (states) => states.contains(WidgetState.selected)
-              ? finoraInk
+              ? finoraBlue
               : finoraWhite,
         ),
         foregroundColor: WidgetStateProperty.resolveWith(
@@ -301,14 +318,14 @@ ThemeData buildFinoraTheme() {
       backgroundColor: finoraWhite,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
-      indicatorColor: finoraFill,
+      indicatorColor: finoraSoftBlue,
       indicatorShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(finoraRadiusControl)),
       ),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         return IconThemeData(
           color: states.contains(WidgetState.selected)
-              ? finoraInk
+              ? finoraBlue
               : finoraMutedInk,
           size: 24,
         );

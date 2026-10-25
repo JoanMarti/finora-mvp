@@ -8,7 +8,12 @@ abstract interface class FinancialRepository {
   Future<List<Institution>> getInstitutions();
   Future<List<InstitutionConnection>> getConnections();
   Future<List<FinancialAccount>> getAccounts();
-  Future<AccountAnalytics> getAccountAnalytics(String accountId);
+  /// Analytics for one account. [historyMonths] is how many monthly
+  /// balance points to return (6 by default, up to 24 with Finora Plus).
+  Future<AccountAnalytics> getAccountAnalytics(
+    String accountId, {
+    int historyMonths = 6,
+  });
 
   /// Transactions sorted from newest to oldest.
   Future<List<FinancialTransaction>> getTransactions({String? accountId});

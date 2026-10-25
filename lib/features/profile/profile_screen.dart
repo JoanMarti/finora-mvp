@@ -2,7 +2,9 @@ import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
+import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/lock/lock_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -172,6 +174,47 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const Divider(height: 1),
                     SwitchListTile(
+                      value: session.appLock != null,
+                      onChanged: (enabled) =>
+                          _toggleAppLock(context, ref, enabled: enabled),
+                      secondary: const Icon(Icons.pin_outlined),
+                      title: Text(l10n.appLockSetting),
+                      subtitle: Text(l10n.appLockSettingBody),
+                    ),
+                    if (session.appLock != null) ...[
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.timer_outlined),
+                        title: Text(l10n.autoLockSetting),
+                        trailing: DropdownButton<int>(
+                          value: session.appLock!.autoLockAfter.inSeconds,
+                          underline: const SizedBox.shrink(),
+                          items: [
+                            for (final seconds in const [0, 60, 300, 900])
+                              DropdownMenuItem(
+                                value: seconds,
+                                child: Text(
+                                  seconds == 0
+                                      ? l10n.autoLockImmediately
+                                      : l10n.autoLockAfterMinutes(seconds ~/ 60),
+                                ),
+                              ),
+                          ],
+                          onChanged: (seconds) {
+                            if (seconds == null) return;
+                            ref
+                                .read(sessionProvider.notifier)
+                                .setAppLock(
+                                  session.appLock!.copyWith(
+                                    autoLockAfter: Duration(seconds: seconds),
+                                  ),
+                                );
+                          },
+                        ),
+                      ),
+                    ],
+                    const Divider(height: 1),
+                    SwitchListTile(
                       value: session.dataHealthAlerts,
                       onChanged: ref
                           .read(sessionProvider.notifier)
@@ -249,6 +292,33 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> _toggleAppLock(
+  BuildContext context,
+  WidgetRef ref, {
+  required bool enabled,
+}) async {
+  final session = ref.read(sessionProvider.notifier);
+  final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
+  if (enabled) {
+    final pin = await showSetPinDialog(context);
+    if (pin == null) return;
+    session.setAppLock(AppLock.create(pin));
+    messenger.showSnackBar(SnackBar(content: Text(l10n.appLockOn)));
+    return;
+  }
+  final lock = ref.read(sessionProvider).appLock;
+  if (lock == null) return;
+  final pin = await showCurrentPinDialog(context);
+  if (pin == null) return;
+  if (!lock.verify(pin)) {
+    messenger.showSnackBar(SnackBar(content: Text(l10n.lockWrongPinShort)));
+    return;
+  }
+  session.setAppLock(null);
+  messenger.showSnackBar(SnackBar(content: Text(l10n.appLockOff)));
 }
 
 Future<void> _confirmRestart(BuildContext context, WidgetRef ref) async {

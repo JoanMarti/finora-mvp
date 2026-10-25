@@ -2,6 +2,7 @@ import 'package:finora/app/router.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/backend.dart';
 import 'package:finora/application/session_controller.dart';
+import 'package:finora/features/lock/lock_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/formatters.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,11 @@ class FinoraApp extends ConsumerWidget {
         // Amounts are formatted by plain functions, so switching the mode
         // rebuilds the whole tree; the router keeps the current location.
         AmountPrivacy.hidden = hideAmounts;
-        return KeyedSubtree(
-          key: ValueKey(hideAmounts),
-          child: child ?? const SizedBox.shrink(),
+        return AppLockGate(
+          child: KeyedSubtree(
+            key: ValueKey(hideAmounts),
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
       routerConfig: ref.watch(routerProvider),

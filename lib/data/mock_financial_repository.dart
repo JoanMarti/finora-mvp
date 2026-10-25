@@ -85,13 +85,16 @@ class MockFinancialRepository implements FinancialRepository {
   ];
 
   @override
-  Future<AccountAnalytics> getAccountAnalytics(String accountId) async {
+  Future<AccountAnalytics> getAccountAnalytics(
+    String accountId, {
+    int historyMonths = 6,
+  }) async {
     final template = _activeTemplates
         .where((item) => item.id == accountId)
         .firstOrNull;
     if (template == null) return const AccountAnalytics.empty();
 
-    final history = _balanceHistory(template);
+    final history = _balanceHistory(template, historyMonths);
     return switch (template.activity) {
       _Activity.salary => _salaryAnalytics(history),
       _Activity.household => _householdAnalytics(history),
@@ -206,12 +209,15 @@ class MockFinancialRepository implements FinancialRepository {
     return DateTime(now.year, now.month - monthsAgo);
   }
 
-  List<BalanceHistoryPoint> _balanceHistory(_AccountTemplate template) {
+  List<BalanceHistoryPoint> _balanceHistory(
+    _AccountTemplate template,
+    int months,
+  ) {
     final seed = template.id.codeUnits.fold<int>(0, (sum, unit) => sum + unit);
     final step = template.monthlyChangeCents;
     final wiggleUnit = math.max(step.abs(), template.balanceCents.abs() ~/ 200);
     return [
-      for (var monthsAgo = 5; monthsAgo >= 0; monthsAgo--)
+      for (var monthsAgo = months - 1; monthsAgo >= 0; monthsAgo--)
         BalanceHistoryPoint(
           month: _monthStart(monthsAgo),
           balance: Money.cents(

@@ -318,6 +318,9 @@ class _PlanningTools extends ConsumerWidget {
     final goals = ref.watch(goalProgressProvider).value ?? const [];
     final projection = ref.watch(retirementProjectionProvider).value;
     final lastYear = ref.watch(clockProvider)().year - 1;
+    final household = ref.watch(
+      sessionProvider.select((session) => session.household),
+    );
     final tools = [
       (
         Icons.donut_small_outlined,
@@ -347,6 +350,14 @@ class _PlanningTools extends ConsumerWidget {
                 '${projection.retirementYear}',
               ),
         '/retirement',
+      ),
+      (
+        Icons.family_restroom,
+        l10n.householdTitle,
+        household == null
+            ? l10n.householdToolSubtitle
+            : l10n.householdToolWith(household.partnerName),
+        '/household',
       ),
       (
         Icons.receipt_long_outlined,

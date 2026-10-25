@@ -42,7 +42,12 @@ http.Client _fakeBackend(Map<String, Object?> fixture) => MockClient((request) a
   final tax = RegExp(r'^/v1/tax/(\d+)$').firstMatch(path);
   if (tax != null) body = (fixture['tax']! as Map)[tax.group(1)];
   if (body == null) return http.Response('not found', 404);
-  return http.Response(jsonEncode(body), 200);
+  // Bytes, not a string: the demo data contains non-Latin-1 characters.
+  return http.Response.bytes(
+    utf8.encode(jsonEncode(body)),
+    200,
+    headers: {'content-type': 'application/json; charset=utf-8'},
+  );
 });
 
 void main() {
@@ -55,6 +60,7 @@ void main() {
   test('the committed fixture matches the demo data', () async {
     final encoded = '${const JsonEncoder.withIndent('  ').convert(fixture)}\n';
     if (Platform.environment['UPDATE_FIXTURES'] == '1') {
+      await _fixtureFile.parent.create(recursive: true);
       await _fixtureFile.writeAsString(encoded);
       return;
     }

@@ -47,9 +47,8 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
         backgroundColor: Colors.transparent,
         title: Text(l10n.taxSavingsTitle),
       ),
-      body: FinoraPage(
-        child: ListView(
-          children: [
+      body: SimulatorLayout(
+        summary: [
             Card(
               color: finoraMint,
               child: Padding(
@@ -88,6 +87,8 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
                 ),
               ),
             ),
+        ],
+        inputs: [
             SectionTitle(l10n.productPillar3a),
             MoneyField(
               label: l10n.taxSavingsPillarLabel,
@@ -117,6 +118,8 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
               onChanged: (value) => setState(() => _rate = value),
             ),
             SimulatorNote(l10n.taxSavingsRateHelp),
+        ],
+        details: [
             const SizedBox(height: 16),
             FilledButton.icon(
               onPressed: () => context.push('/offers'),
@@ -125,8 +128,7 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
             ),
             SimulatorNote(l10n.taxSavingsBuyInLock(TaxSavings.buyInLockYears)),
             SimulatorNote(l10n.taxSavingsDisclaimer),
-          ],
-        ),
+        ],
       ),
     );
   }

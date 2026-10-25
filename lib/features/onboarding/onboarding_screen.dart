@@ -4,6 +4,7 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/onboarding/account_steps.dart';
+import 'package:finora/features/onboarding/auth_frame.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/features/onboarding/plan_step.dart';
 import 'package:finora/features/plus/plus_screen.dart';
@@ -101,7 +102,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: FinoraPage(
+        child: AuthFrame(
+          child: FinoraPage(
           child: Column(
             children: [
               if (step != _Step.welcome) ...[
@@ -135,6 +137,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),
@@ -258,9 +261,13 @@ class _Welcome extends StatelessWidget {
         const Spacer(),
         FilledButton(onPressed: onContinue, child: Text(l10n.getStarted)),
         const SizedBox(height: 8),
-        OutlinedButton(
-          onPressed: () => context.push('/sign-in'),
-          child: Text(l10n.haveAccount),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(minimumSize: const Size(64, 50)),
+            onPressed: () => context.push('/sign-in'),
+            child: Text(l10n.haveAccount),
+          ),
         ),
         const SizedBox(height: 4),
         Center(

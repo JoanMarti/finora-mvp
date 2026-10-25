@@ -293,32 +293,32 @@ class MockFinancialRepository implements FinancialRepository {
         SpendingCategory(
           category: TransactionCategory.housing,
           amount: Money.cents(145000),
-          colorValue: 0xFF3C94FF,
+          colorValue: 0xFF027DB9,
         ),
         SpendingCategory(
           category: TransactionCategory.groceries,
           amount: Money.cents(74000),
-          colorValue: 0xFF272829,
+          colorValue: 0xFF014164,
         ),
         SpendingCategory(
           category: TransactionCategory.utilities,
           amount: Money.cents(67240),
-          colorValue: 0xFF7C8182,
+          colorValue: 0xFF8899A2,
         ),
         SpendingCategory(
           category: TransactionCategory.shopping,
           amount: Money.cents(46500),
-          colorValue: 0xFF78B6FF,
+          colorValue: 0xFF5FB3DE,
         ),
         SpendingCategory(
           category: TransactionCategory.insurance,
           amount: Money.cents(42060),
-          colorValue: 0xFFA2AAAC,
+          colorValue: 0xFFB7C4CB,
         ),
         SpendingCategory(
           category: TransactionCategory.transport,
           amount: Money.cents(38000),
-          colorValue: 0xFFC2CACC,
+          colorValue: 0xFFD9D4D1,
         ),
       ],
     );
@@ -353,22 +353,22 @@ class MockFinancialRepository implements FinancialRepository {
         SpendingCategory(
           category: TransactionCategory.groceries,
           amount: Money.cents(98000),
-          colorValue: 0xFF272829,
+          colorValue: 0xFF014164,
         ),
         SpendingCategory(
           category: TransactionCategory.dining,
           amount: Money.cents(61500),
-          colorValue: 0xFF3C94FF,
+          colorValue: 0xFF027DB9,
         ),
         SpendingCategory(
           category: TransactionCategory.utilities,
           amount: Money.cents(39100),
-          colorValue: 0xFF7C8182,
+          colorValue: 0xFF8899A2,
         ),
         SpendingCategory(
           category: TransactionCategory.other,
           amount: Money.cents(31200),
-          colorValue: 0xFFC2CACC,
+          colorValue: 0xFFD9D4D1,
         ),
       ],
     );
@@ -393,17 +393,17 @@ class MockFinancialRepository implements FinancialRepository {
         SpendingCategory(
           category: TransactionCategory.shopping,
           amount: Money.cents(96400),
-          colorValue: 0xFF78B6FF,
+          colorValue: 0xFF5FB3DE,
         ),
         SpendingCategory(
           category: TransactionCategory.dining,
           amount: Money.cents(52150),
-          colorValue: 0xFF3C94FF,
+          colorValue: 0xFF027DB9,
         ),
         SpendingCategory(
           category: TransactionCategory.transport,
           amount: Money.cents(36000),
-          colorValue: 0xFFC2CACC,
+          colorValue: 0xFFD9D4D1,
         ),
       ],
     );

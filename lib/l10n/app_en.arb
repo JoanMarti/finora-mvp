@@ -1297,10 +1297,10 @@
     }
   },
   "plusManage": "Manage your subscription",
-  "plusTeaser": "Retirement scenarios and tax export",
+  "plusTeaser": "Retirement scenarios, household view and tax export",
   "plusCancel": "Cancel Plus",
   "plusCancelTitle": "Cancel Finora Plus?",
-  "plusCancelBody": "Scenarios and the tax export will be locked again. Everything else stays as it is.",
+  "plusCancelBody": "Scenarios, the household view and the tax export will be locked again. Your partner’s figures are kept. Everything else stays as it is.",
   "plusKeep": "Keep Plus",
   "plusUnlock": "Unlock with Plus",
   "copyAsCsvPlus": "Copy as CSV · Plus",
@@ -1636,5 +1636,81 @@
   },
   "calendarAssetDetail": "Keeps your net worth realistic.",
   "calendarPlusTitle": "Finora Plus renews",
-  "calendarPlusDetail": "Cancel before this date if you no longer need it."
+  "calendarPlusDetail": "Cancel before this date if you no longer need it.",
+  "householdTitle": "Household",
+  "householdToolSubtitle": "Combine your finances with your partner",
+  "householdToolWith": "Together with {name}",
+  "@householdToolWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdLockedTitle": "See your household together",
+  "householdLockedBody": "Combined net worth, a fair split of shared bills and your retirement as a couple, including the AHV cap for married couples.",
+  "householdIntroTitle": "Plan together",
+  "householdIntroBody": "Add your partner’s main figures to see your combined net worth, split shared bills fairly and project your retirement as a couple. Your partner will be able to connect their own banks in a later version.",
+  "householdAddPartner": "Add partner",
+  "householdEdit": "Edit partner",
+  "householdRemove": "Remove partner",
+  "householdNetWorth": "Household net worth",
+  "householdBillsSection": "Shared bills",
+  "householdBillsTotal": "{amount} a month in recurring bills",
+  "@householdBillsTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "householdBillsSource": "Detected in your everyday accounts.",
+  "splitByIncome": "By income",
+  "splitEqual": "50 / 50",
+  "householdRetirementSection": "Retirement as a couple",
+  "householdAddPension": "Add your partner’s pension details",
+  "householdAddPensionBody": "Birth year, salary and pension fund certificate figures.",
+  "householdRetirementCoverage": "{percent}% of your combined target of {target}",
+  "@householdRetirementCoverage": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "householdAhv": "AHV (both)",
+  "householdOccupational": "Pension funds (both)",
+  "householdPillar3a": "Pillar 3a (both)",
+  "householdAhvCapped": "As a married couple your two AHV pensions are capped at 150% of the maximum pension: {amount} a month less than two single pensions.",
+  "@householdAhvCapped": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "householdJointTaxNote": "Married couples file one joint tax return: income and wealth are added together, and Pillar 3a deductions apply to each spouse.",
+  "householdEstimateNote": "{name}’s figures are estimates you entered. They stay on this device.",
+  "@householdEstimateNote": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdEditorTitle": "Your partner",
+  "partnerNameLabel": "Partner’s first name",
+  "partnerNameRequired": "Enter a name",
+  "relationshipMarried": "Married / registered",
+  "relationshipCohabiting": "Living together",
+  "partnerIncomeLabel": "Net income per month",
+  "partnerCashLabel": "Bank accounts",
+  "partnerInvestmentsLabel": "Investments",
+  "partnerPillar3aLabel": "Pillar 3a",
+  "partnerDebtsLabel": "Debts",
+  "partnerPensionSection": "Pension (optional)",
+  "partnerPensionInvalid": "Enter a plausible birth year and a salary"
 }

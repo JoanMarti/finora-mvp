@@ -8,6 +8,7 @@ import 'package:finora/features/assets/assets_screen.dart';
 import 'package:finora/features/calendar/calendar_screen.dart';
 import 'package:finora/features/connections/connection_screen.dart';
 import 'package:finora/features/health/health_screen.dart';
+import 'package:finora/features/household/household_screen.dart';
 import 'package:finora/features/onboarding/onboarding_screen.dart';
 import 'package:finora/features/offers/opportunities_screen.dart';
 import 'package:finora/features/offers/pilot_metrics_screen.dart';
@@ -77,6 +78,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/health', builder: (_, _) => const HealthScreen()),
       GoRoute(path: '/calendar', builder: (_, _) => const CalendarScreen()),
+      GoRoute(
+        path: '/household',
+        builder: (_, _) => const HouseholdScreen(),
+      ),
       GoRoute(path: '/assets', builder: (_, _) => const AssetsScreen()),
       GoRoute(path: '/plus', builder: (_, _) => const PlusScreen()),
       GoRoute(path: '/privacy', builder: (_, _) => const PrivacyScreen()),

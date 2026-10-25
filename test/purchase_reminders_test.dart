@@ -111,7 +111,8 @@ void main() {
         ],
       );
       addTearDown(container.dispose);
-      container.read(backendSyncProvider);
+      // Like FinoraApp, keep the sync active (unlistened providers pause).
+      container.listen(backendSyncProvider, (_, _) {});
       await container.read(overviewProvider.future);
       for (var i = 0; i < 20; i++) {
         await Future<void>.delayed(Duration.zero);
@@ -151,7 +152,11 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.textContaining('App Store or Google Play'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.textContaining('App Store or Google Play'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
 
       final start = find.textContaining('Start Plus ·');
       await tester.scrollUntilVisible(

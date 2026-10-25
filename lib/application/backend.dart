@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:finora/application/calendar.dart';
 import 'package:finora/application/offers.dart';
+import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/backend_services.dart';
+import 'package:finora/domain/purchases.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Whether a Finora backend is configured. `false` in the demo.
@@ -37,8 +39,10 @@ final backendSyncProvider = Provider<void>((ref) {
 
   ref
     ..listen(calendarProvider, (_, next) {
-      final events = next.value;
-      if (events == null) return;
+      final all = next.value;
+      if (all == null) return;
+      // Only what the user opted into; an empty list clears the server.
+      final events = ref.read(sessionProvider).reminders.filter(all);
       final language = ref.read(sessionProvider).languageCode ?? 'en';
       unawaited(
         quietly(
@@ -56,3 +60,11 @@ final backendSyncProvider = Provider<void>((ref) {
       );
     });
 });
+
+final purchaseServiceProvider = Provider<PurchaseService>(
+  (ref) => DemoPurchaseService(ref.watch(clockProvider)),
+);
+
+final notificationPermissionsProvider = Provider<NotificationPermissions>(
+  (ref) => const DemoNotificationPermissions(),
+);

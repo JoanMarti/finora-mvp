@@ -48,6 +48,15 @@ These are keyed by an anonymous `installationId`, 16 random bytes created on the
 | `PUT /v1/installations/{id}/funnel` | `{counts: {<offerKind>: {viewed, partnerClicked, dismissed}}, pursuedSavingLow, pursuedSavingHigh}`. Amounts are cents; the empty state is sent after the user withdraws consent, so the backend deletes its copy. |
 | `PUT /v1/installations/{id}/reminders` | `{language, reminders: [{id, kind, date}]}` for push notifications. Goal and asset names are replaced by a hash in `id`; bills are not sent. |
 
+## Purchases and devices
+
+| Method and path | Body and response |
+| --- | --- |
+| `POST /v1/purchases/verify` | `{platform: "ios" \| "android", receipt}` returns `{active, since, expiresAt}`. The app unlocks Plus from the store result right away; the backend's answer is authoritative and is checked again on start-up. |
+| `PUT /v1/installations/{id}/device` | `{platform, pushToken}`, sent after the user allows notifications. Calling it again replaces the token. |
+
+Reminders are only sent when the user turned them on in the calendar. Kinds they switched off are left out, and turning reminders off sends an empty list.
+
 ## Still to build on the backend side
 
 - OIDC sign-in, and the bLink and OpenWealth consent redirect for connecting an institution. In the app this is still the demo connection flow.

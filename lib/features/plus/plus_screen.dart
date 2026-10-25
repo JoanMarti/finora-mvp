@@ -1,6 +1,8 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/backend.dart';
 import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
+import 'package:finora/domain/purchases.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
@@ -159,9 +161,16 @@ class PlusScreen extends ConsumerWidget {
                 onPressed: () => _confirmStart(context, ref),
                 child: Text(l10n.plusStart(price)),
               ),
+            if (!isPlus)
+              TextButton(
+                onPressed: () => _restore(context, ref),
+                child: Text(l10n.plusRestore),
+              ),
             const SizedBox(height: 12),
             Text(
-              l10n.plusDemoNote,
+              ref.watch(purchaseServiceProvider).isStore
+                  ? l10n.plusStoreNote
+                  : l10n.plusDemoNote,
               textAlign: TextAlign.center,
               style: const TextStyle(color: finoraMutedInk, fontSize: 11),
             ),
@@ -176,7 +185,13 @@ class PlusScreen extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(dialogContext.l10n.plusConfirmTitle),
-        content: Text(dialogContext.l10n.plusConfirmBody),
+        content: Text(
+          ref.read(purchaseServiceProvider).isStore
+              ? dialogContext.l10n.plusConfirmBodyStore(
+                  formatMoneyWhole(PlusPricing.yearly),
+                )
+              : dialogContext.l10n.plusConfirmBody,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
@@ -190,12 +205,31 @@ class PlusScreen extends ConsumerWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    ref.read(sessionProvider.notifier).startPlus();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(context.l10n.plusWelcome)));
+    final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    final l10n = context.l10n;
+    final result = await ref.read(purchaseServiceProvider).buyPlus();
+    if (!result.isActive) {
+      if (result.status == PurchaseStatus.failed) {
+        messenger.showSnackBar(SnackBar(content: Text(l10n.plusPurchaseFailed)));
+      }
+      return;
+    }
+    ref.read(sessionProvider.notifier).startPlus(since: result.since);
+    messenger.showSnackBar(SnackBar(content: Text(l10n.plusWelcome)));
     if (navigator.canPop()) navigator.pop();
+  }
+
+  Future<void> _restore(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    final result = await ref.read(purchaseServiceProvider).restore();
+    if (result.isActive) {
+      ref.read(sessionProvider.notifier).startPlus(since: result.since);
+      messenger.showSnackBar(SnackBar(content: Text(l10n.plusRestored)));
+    } else {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.plusNothingToRestore)));
+    }
   }
 
   Future<void> _confirmCancel(BuildContext context, WidgetRef ref) async {

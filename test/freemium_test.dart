@@ -183,12 +183,17 @@ void main() {
     expect(find.textContaining('6.90'), findsWidgets);
     expect(find.textContaining('4.92'), findsNothing);
 
+    // The list is built lazily: check each section as it scrolls past.
+    await tester.scrollUntilVisible(
+      find.text('Compare plans'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.scrollUntilVisible(
       find.text('Coming to Premium'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('Compare plans'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('Finora Coach'),
       300,

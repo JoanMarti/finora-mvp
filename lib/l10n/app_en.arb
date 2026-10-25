@@ -1249,10 +1249,10 @@
   "offerBankFeesAction": "Compare bank accounts",
   "planSection": "Your plan",
   "planFree": "Free",
-  "plusTitle": "Finora Plus",
-  "plusBadge": "Plus",
-  "plusHeadline": "Plan further ahead with Finora Plus",
-  "plusSubtitle": "Deeper retirement planning and tax exports, on top of everything that is already free.",
+  "plusTitle": "Finora Premium",
+  "plusBadge": "Premium",
+  "plusHeadline": "Plan further ahead with Finora Premium",
+  "plusSubtitle": "Unlimited banks and goals, 24 months of history and deeper planning, on top of everything that is free.",
   "plusPricePerYear": "{price} a year",
   "@plusPricePerYear": {
     "placeholders": {
@@ -1261,7 +1261,7 @@
       }
     }
   },
-  "plusIncludedSection": "What Plus adds",
+  "plusIncludedSection": "What Premium adds",
   "plusFeatureScenariosTitle": "Retirement scenarios",
   "plusFeatureScenariosBody": "Compare cautious, base and favourable assumptions for your pension.",
   "plusFeatureTaxTitle": "Tax export",
@@ -1271,10 +1271,10 @@
   "plusFeatureHistoryTitle": "24 months of history",
   "plusFeatureHistoryBody": "Longer trends for your net worth and every account.",
   "comingSoon": "Soon",
-  "plusFreeForever": "Your overview, spending analysis, goals, alerts and savings ideas stay free.",
-  "plusNoOfferInfluence": "Plus never changes which offers you see or their order.",
+  "plusFreeForever": "Your overview, spending analysis, budgets, alerts and savings ideas stay free.",
+  "plusNoOfferInfluence": "Premium never changes which offers you see or their order.",
   "plusCancelAnytime": "Cancel at any time; your data stays where it is.",
-  "plusStart": "Start Plus · {price} a year",
+  "plusStart": "Start Premium · {price} a year",
   "@plusStart": {
     "placeholders": {
       "price": {
@@ -1283,11 +1283,11 @@
     }
   },
   "plusDemoNote": "Demo: no payment is taken.",
-  "plusConfirmTitle": "Start Finora Plus?",
+  "plusConfirmTitle": "Start Finora Premium?",
   "plusConfirmBody": "This is a demo, so no payment is taken. In the store version you would confirm the subscription with Apple or Google.",
-  "plusConfirmAction": "Start Plus",
-  "plusWelcome": "Welcome to Finora Plus.",
-  "plusActive": "Finora Plus is active",
+  "plusConfirmAction": "Start Premium",
+  "plusWelcome": "Welcome to Finora Premium.",
+  "plusActive": "Finora Premium is active",
   "plusActiveSince": "Since {date}",
   "@plusActiveSince": {
     "placeholders": {
@@ -1297,13 +1297,13 @@
     }
   },
   "plusManage": "Manage your subscription",
-  "plusTeaser": "Retirement scenarios, household view and tax export",
-  "plusCancel": "Cancel Plus",
-  "plusCancelTitle": "Cancel Finora Plus?",
-  "plusCancelBody": "Scenarios, the household view and the tax export will be locked again. Your partner’s figures are kept. Everything else stays as it is.",
-  "plusKeep": "Keep Plus",
-  "plusUnlock": "Unlock with Plus",
-  "copyAsCsvPlus": "Copy as CSV · Plus",
+  "plusTeaser": "Unlimited banks and goals, scenarios, household view and tax export",
+  "plusCancel": "Cancel Premium",
+  "plusCancelTitle": "Cancel Finora Premium?",
+  "plusCancelBody": "Premium features will be locked again. Nothing is deleted: banks and goals above the free limits stay visible, you just cannot add more.",
+  "plusKeep": "Keep Premium",
+  "plusUnlock": "Unlock with Premium",
+  "copyAsCsvPlus": "Copy as CSV · Premium",
   "scenariosSection": "Scenarios",
   "scenariosLockedTitle": "Compare retirement scenarios",
   "scenariosLockedBody": "See how a lower conversion rate or higher returns would change your income in retirement.",
@@ -1635,7 +1635,7 @@
     }
   },
   "calendarAssetDetail": "Keeps your net worth realistic.",
-  "calendarPlusTitle": "Finora Plus renews",
+  "calendarPlusTitle": "Finora Premium renews",
   "calendarPlusDetail": "Cancel before this date if you no longer need it.",
   "householdTitle": "Household",
   "householdToolSubtitle": "Combine your finances with your partner",
@@ -1777,8 +1777,8 @@
   "lockCurrentTitle": "Enter your current PIN",
   "lockCurrentPin": "Current PIN",
   "plusRestore": "Restore purchase",
-  "plusRestored": "Your Finora Plus subscription was restored.",
-  "plusNothingToRestore": "No Finora Plus purchase was found for this account.",
+  "plusRestored": "Your Finora Premium subscription was restored.",
+  "plusNothingToRestore": "No Finora Premium purchase was found for this account.",
   "plusPurchaseFailed": "The purchase did not go through. Nothing was charged.",
   "plusStoreNote": "Billed yearly through your App Store or Google Play account. Cancel at any time in your store settings.",
   "remindersAskTitle": "Get reminders on your phone",
@@ -1795,7 +1795,7 @@
   "reminderTax": "Tax return",
   "reminderGoals": "Goal dates",
   "reminderAssets": "Value reviews",
-  "reminderPlus": "Finora Plus renewal",
+  "reminderPlus": "Finora Premium renewal",
   "remindersPrivacy": "Only the type and date of each reminder are sent to Finora’s server; goal and asset names stay on your phone.",
   "plusConfirmBodyStore": "You will confirm a yearly subscription of {price} with Apple or Google. You can cancel it at any time in your store settings.",
   "@plusConfirmBodyStore": {
@@ -2407,5 +2407,188 @@
   "signOutTitle": "Sign out of Finora?",
   "signOutBody": "Your bank connections and settings on this device are removed. Sign in again to reconnect.",
   "consentPurposeTerms": "Terms of use and privacy notice",
-  "consentPurposeMarketing": "Product news by e-mail"
+  "consentPurposeMarketing": "Product news by e-mail",
+  "planChooseTitle": "Choose how to start",
+  "planChooseBody": "Start free and upgrade whenever you like. The free plan has no time limit.",
+  "planFreeName": "Free",
+  "planFreeTagline": "Everything to see your money clearly",
+  "planPremiumTagline": "For people who plan ahead",
+  "planFreePrice": "CHF 0",
+  "planForever": "forever",
+  "planPerMonth": "{price} / month",
+  "@planPerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "planPerYear": "{price} / year",
+  "@planPerYear": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "planYearlyEquivalent": "a month · billed {price} a year",
+  "@planYearlyEquivalent": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "planBilledMonthly": "a month · billed monthly",
+  "billingMonthly": "Monthly",
+  "billingYearly": "Yearly",
+  "billingSave": "Save {percent}%",
+  "@billingSave": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "planRecommended": "Recommended",
+  "planCurrent": "Your plan",
+  "planStartFree": "Start free",
+  "planStayFree": "Continue with Free",
+  "trialStart": "Try Premium free for {days} days",
+  "@trialStart": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "trialTerms": "No charge today. We remind you {days} days before the trial ends, and you can cancel in one tap.",
+  "@trialTerms": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "trialStarted": "Your {days}-day Premium trial has started.",
+  "@trialStarted": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "trialActive": "Premium trial · ends {date}",
+  "@trialActive": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "trialDaysLeft": "{count, plural, =1{1 day left in your trial} other{{count} days left in your trial}}",
+  "@trialDaysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trialEndNow": "End trial now",
+  "subscribeAction": "Subscribe · {price}",
+  "@subscribeAction": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "compareSection": "Compare plans",
+  "compareFeature": "Feature",
+  "featureBanks": "Connected banks",
+  "featureHistory": "History",
+  "featureGoals": "Savings goals",
+  "featureAnalysis": "Spending analysis and budgets",
+  "featureHints": "Savings hints and offers",
+  "featureCalendar": "Financial calendar and health score",
+  "featureSimulators": "Home and tax simulators",
+  "featureScenarios": "Retirement scenarios",
+  "featureHousehold": "Shared household",
+  "featureTaxExport": "Tax export (CSV)",
+  "limitUpTo": "Up to {count}",
+  "@limitUpTo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "limitMonths": "{count} months",
+  "@limitMonths": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "limitUnlimited": "Unlimited",
+  "roadmapSection": "Coming to Premium",
+  "roadmapBody": "We build Premium with our members. These are next:",
+  "roadmapAlertsTitle": "Price-change alerts",
+  "roadmapAlertsBody": "Know when a bill goes up or a better rate appears.",
+  "roadmapVaultTitle": "Document vault",
+  "roadmapVaultBody": "Tax certificates and policies, ready for your tax return.",
+  "roadmapReportTitle": "Annual PDF report",
+  "roadmapReportBody": "Your year in one document to keep or share with an adviser.",
+  "roadmapCoachTitle": "Finora Coach",
+  "roadmapCoachBody": "Ask questions about your own figures and get clear answers.",
+  "roadmapSupportTitle": "Priority support",
+  "roadmapSupportBody": "Answers from our Swiss team within one working day.",
+  "paywallBanksTitle": "Connect more than {count} banks",
+  "@paywallBanksTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallBanksBody": "The free plan includes {count} banks. Premium connects as many as you have, so your net worth is complete.",
+  "@paywallBanksBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallGoalsTitle": "More than {count} goals",
+  "@paywallGoalsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallGoalsBody": "The free plan includes {count} savings goals. Premium has no limit.",
+  "@paywallGoalsBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallSeePlans": "See plans",
+  "paywallNotNow": "Not now",
+  "freeLimitNote": "Free plan: {used} of {count} banks",
+  "@freeLimitNote": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarTrialTitle": "Premium trial ends",
+  "calendarTrialDetail": "Choose a plan or go back to Free. Nothing is charged automatically in the demo."
 }

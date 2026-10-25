@@ -29,8 +29,19 @@ final sessionProvider = NotifierProvider<SessionController, UserSession>(
 
 class SessionController extends Notifier<UserSession> {
   @override
-  UserSession build() =>
-      ref.watch(sessionStoreProvider).load() ?? const UserSession();
+  UserSession build() {
+    final loaded = ref.watch(sessionStoreProvider).load() ?? const UserSession();
+    // A trial that ended while the app was closed falls back to Free.
+    final trialEnd = loaded.trialEndsAt;
+    if (trialEnd != null && !ref.read(clockProvider)().isBefore(trialEnd)) {
+      return loaded.copyWith(
+        plan: FinoraPlan.free,
+        plusSince: null,
+        trialEndsAt: null,
+      );
+    }
+    return loaded;
+  }
 
   void _update(UserSession next) {
     state = next;
@@ -232,12 +243,38 @@ class SessionController extends Notifier<UserSession> {
   /// Store or Google Play before switching the plan.
   /// Unlocks Plus after a successful purchase or restore; [since] is the
   /// subscription start reported by the store.
-  void startPlus({DateTime? since}) => _update(
-    state.copyWith(plan: FinoraPlan.plus, plusSince: since ?? _now),
+  void startPlus({DateTime? since, BillingPeriod? period}) => _update(
+    state.copyWith(
+      plan: FinoraPlan.plus,
+      plusSince: since ?? _now,
+      trialEndsAt: null,
+      billingPeriod: period ?? state.billingPeriod ?? BillingPeriod.yearly,
+    ),
   );
 
-  void cancelPlus() =>
-      _update(state.copyWith(plan: FinoraPlan.free, plusSince: null));
+  /// Starts the free Premium trial, once per profile.
+  void startTrial() {
+    if (state.trialUsed || state.isPlus) return;
+    final now = _now;
+    _update(
+      state.copyWith(
+        plan: FinoraPlan.plus,
+        plusSince: now,
+        trialEndsAt: now.add(const Duration(days: PlusPricing.trialDays)),
+        trialUsed: true,
+      ),
+    );
+  }
+
+  /// Back to Free, from a trial or a subscription. Nothing is deleted.
+  void cancelPlus() => _update(
+    state.copyWith(
+      plan: FinoraPlan.free,
+      plusSince: null,
+      trialEndsAt: null,
+      billingPeriod: null,
+    ),
+  );
 
   void dismissOpportunity(String id) => _update(
     state.copyWith(

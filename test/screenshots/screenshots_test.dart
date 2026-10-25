@@ -99,12 +99,19 @@ void main() {
     String name, {
     String? route,
     Size size = const Size(390, 844),
+    UserSession? as,
   }) async {
     // Tests draw shadows without blur; draw them as on a phone. The flag is
     // restored before the test ends because the framework checks it.
     debugDisableShadows = false;
     try {
-      await _renderScreen(tester, session, name, route: route, size: size);
+      await _renderScreen(
+        tester,
+        as ?? session,
+        name,
+        route: route,
+        size: size,
+      );
     } finally {
       debugDisableShadows = true;
     }
@@ -155,6 +162,28 @@ void main() {
       );
     }, skip: !_enabled);
   }
+
+  // Sign-up and plans, as a new user sees them.
+  const newUser = UserSession(languageCode: 'en');
+  final freeUser = UserSession.demo().copyWith(languageCode: 'en');
+  testWidgets('welcome', (tester) async {
+    await capture(tester, 'welcome', as: newUser);
+  }, skip: !_enabled);
+  testWidgets('sign-in', (tester) async {
+    await capture(tester, 'sign-in', route: '/sign-in', as: newUser);
+  }, skip: !_enabled);
+  testWidgets('plans', (tester) async {
+    await capture(tester, 'plans', route: '/plus', as: freeUser);
+  }, skip: !_enabled);
+  testWidgets('desktop-plans', (tester) async {
+    await capture(
+      tester,
+      'desktop-plans',
+      route: '/plus',
+      as: freeUser,
+      size: const Size(1440, 900),
+    );
+  }, skip: !_enabled);
 
   testWidgets('tablet-dashboard', (tester) async {
     await capture(tester, 'tablet-dashboard', size: const Size(900, 1200));

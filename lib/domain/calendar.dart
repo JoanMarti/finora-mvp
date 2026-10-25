@@ -16,7 +16,10 @@ enum CalendarEventKind {
   bill,
   goalDeadline,
   assetReview,
-  plusRenewal;
+  plusRenewal,
+
+  /// The free Premium trial ends: choose a plan or stay on Free.
+  trialEnd;
 
   /// Deadlines and reviews are worth putting in the phone's calendar;
   /// bills change every month and stay in the app.
@@ -65,6 +68,7 @@ class CalendarInput {
     required this.pillar3aLimit,
     required this.hasPillar3a,
     this.plusSince,
+    this.trialEndsAt,
   });
 
   final DateTime now;
@@ -75,6 +79,7 @@ class CalendarInput {
   final Money pillar3aLimit;
   final bool hasPillar3a;
   final DateTime? plusSince;
+  final DateTime? trialEndsAt;
 }
 
 abstract final class FinancialCalendar {
@@ -184,6 +189,17 @@ abstract final class FinancialCalendar {
         CalendarEvent(
           kind: CalendarEventKind.plusRenewal,
           date: renewal,
+          route: '/plus',
+        ),
+      );
+    }
+
+    final trialEnd = input.trialEndsAt;
+    if (trialEnd != null) {
+      events.add(
+        CalendarEvent(
+          kind: CalendarEventKind.trialEnd,
+          date: DateTime(trialEnd.year, trialEnd.month, trialEnd.day),
           route: '/plus',
         ),
       );

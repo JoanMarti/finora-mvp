@@ -69,7 +69,7 @@ class InstitutionBadge extends StatelessWidget {
             borderRadius: BorderRadius.circular(size * .22),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x1A272829),
+                color: Color(0x1A014164),
                 blurRadius: 10,
                 offset: Offset(0, 4),
               ),

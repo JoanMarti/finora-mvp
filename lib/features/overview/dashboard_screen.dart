@@ -6,6 +6,7 @@ import 'package:finora/domain/models.dart';
 import 'package:finora/features/calendar/calendar_screen.dart';
 import 'package:finora/features/health/health_screen.dart';
 import 'package:finora/features/offers/widgets/opportunity_widgets.dart';
+import 'package:finora/features/profile/about_you_screen.dart';
 import 'package:finora/features/overview/widgets/balance_overview_card.dart';
 import 'package:finora/features/report/report_screen.dart';
 import 'package:finora/features/overview/widgets/insights_carousel.dart';
@@ -67,6 +68,9 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                 );
               }
+              // Ask for the profile until half of it is filled in.
+              final showNudge =
+                  ref.watch(userProfileProvider).completeness < .5;
               final trajectory = overviewValue.history.length >= 2
                   ? WealthTrajectoryCard(overview: overviewValue)
                   : null;
@@ -113,6 +117,10 @@ class DashboardScreen extends ConsumerWidget {
                       const _QuickActions(),
                       const SizedBox(height: 12),
                       const HealthScoreCard(),
+                      if (showNudge) ...[
+                        const SizedBox(height: 12),
+                        const ProfileCompletenessCard(),
+                      ],
                       if (trajectory != null) ...[
                         const SizedBox(height: 12),
                         trajectory,
@@ -174,6 +182,10 @@ class DashboardScreen extends ConsumerWidget {
                               const _QuickActions(),
                               const SizedBox(height: 16),
                               const HealthScoreCard(),
+                              if (showNudge) ...[
+                                const SizedBox(height: 16),
+                                const ProfileCompletenessCard(),
+                              ],
                               const UpcomingEventsSection(),
                               const SizedBox(height: 16),
                               const MonthlyReportCard(),

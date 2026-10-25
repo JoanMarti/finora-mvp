@@ -12,6 +12,7 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/reminders.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/user_session.dart';
@@ -396,6 +397,9 @@ class SessionController extends Notifier<UserSession> {
       ],
     ),
   );
+
+  void setProfile(UserProfile profile) =>
+      _update(state.copyWith(profile: profile));
 
   void markEmailVerified() => _update(state.copyWith(emailVerified: true));
 

@@ -8,6 +8,7 @@ import 'package:finora/features/onboarding/auth_frame.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/features/onboarding/plan_step.dart';
 import 'package:finora/features/plus/plus_screen.dart';
+import 'package:finora/features/profile/about_you_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -20,6 +21,7 @@ enum _Step {
   account,
   verify,
   plan,
+  aboutYou,
   products,
   banks,
   investments,
@@ -44,6 +46,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         _Step.verify,
       ],
       _Step.plan,
+      _Step.aboutYou,
       _Step.products,
       _Step.banks,
       if (products.contains(FinancialProductType.investments))
@@ -159,6 +162,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         onChangeEmail: back,
       ),
       _Step.plan => PlanStep(key: key, onContinue: next),
+      _Step.aboutYou => _AboutYouStep(key: key, onContinue: next),
       _Step.products => _SelectionStep<FinancialProductType>(
         key: key,
         title: l10n.productsTitle,
@@ -517,6 +521,60 @@ class _ReviewStep extends StatelessWidget {
         FilledButton(
           onPressed: () => context.go('/connect'),
           child: Text(l10n.continueToConnections),
+        ),
+      ],
+    );
+  }
+}
+
+/// Optional: year of birth, canton, work and housing.
+class _AboutYouStep extends ConsumerWidget {
+  const _AboutYouStep({required this.onContinue, super.key});
+  final VoidCallback onContinue;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final profile = ref.watch(sessionProvider.select((s) => s.profile));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: ListView(
+            children: [
+              Text(
+                l10n.aboutYouOnboardingTitle,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                l10n.aboutYouOnboardingBody,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 24),
+              ProfileBasicsForm(
+                profile: profile,
+                showWork: true,
+                onChanged: ref.read(sessionProvider.notifier).setProfile,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.profilePrivacyNote,
+                style: const TextStyle(color: finoraMutedInk, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        FilledButton(
+          onPressed: profile.isEmpty ? null : onContinue,
+          child: Text(l10n.commonContinue),
+        ),
+        Center(
+          child: TextButton(
+            onPressed: onContinue,
+            child: Text(l10n.skipForNow),
+          ),
         ),
       ],
     );

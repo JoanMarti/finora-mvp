@@ -6,6 +6,7 @@ import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,9 +27,24 @@ final marketDataRepositoryProvider = Provider<MarketDataRepository>(
   ),
 );
 
-final wealthTargetsProvider = Provider<WealthTargets>(
-  (ref) => ref.watch(sessionProvider.select((session) => session.targets)),
+final userProfileProvider = Provider<UserProfile>(
+  (ref) => ref.watch(sessionProvider.select((session) => session.profile)),
 );
+
+/// The user's targets; the Pillar 3a limit follows the profile (higher for
+/// the self-employed without a pension fund).
+final wealthTargetsProvider = Provider<WealthTargets>((ref) {
+  final targets = ref.watch(sessionProvider.select((s) => s.targets));
+  final profile = ref.watch(userProfileProvider);
+  return WealthTargets(
+    safetyBufferMonths: targets.safetyBufferMonths,
+    longTermShare: targets.longTermShare,
+    pillar3aAnnualLimit: ProfileEstimates.pillar3aLimit(
+      profile,
+      targets.pillar3aAnnualLimit,
+    ),
+  );
+});
 
 /// Progress of every savings goal against today's balances.
 final goalProgressProvider = FutureProvider<List<GoalProgress>>((ref) async {
@@ -39,11 +55,17 @@ final goalProgressProvider = FutureProvider<List<GoalProgress>>((ref) async {
 });
 
 /// The user's pension details, or the example profile until they add theirs.
-final retirementProfileProvider = Provider<RetirementProfile>(
-  (ref) =>
-      ref.watch(sessionProvider.select((session) => session.retirement)) ??
-      RetirementProfile.demo,
-);
+/// The user's pension figures; until they enter them, the example uses
+/// their birth year and income from the profile when known.
+final retirementProfileProvider = Provider<RetirementProfile>((ref) {
+  final own = ref.watch(sessionProvider.select((s) => s.retirement));
+  if (own != null) return own;
+  final profile = ref.watch(userProfileProvider);
+  return RetirementProfile.demo.copyWith(
+    birthYear: profile.birthYear,
+    annualSalary: profile.grossIncome,
+  );
+});
 
 /// Whether the retirement figures are the user's own or the example.
 final hasOwnRetirementProfileProvider = Provider<bool>(

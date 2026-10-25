@@ -2590,5 +2590,89 @@
     }
   },
   "calendarTrialTitle": "Premium trial ends",
-  "calendarTrialDetail": "Choose a plan or go back to Free. Nothing is charged automatically in the demo."
+  "calendarTrialDetail": "Choose a plan or go back to Free. Nothing is charged automatically in the demo.",
+  "aboutYouTitle": "About you",
+  "aboutYouOnboardingTitle": "A little about you",
+  "aboutYouOnboardingBody": "Four quick answers make estimates and ideas fit your situation. You can skip and add them later.",
+  "skipForNow": "Skip for now",
+  "profileCompleteness": "Profile {percent}% complete",
+  "@profileCompleteness": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "profilePrivacyNote": "Your profile stays on this device. It personalises estimates and ideas; offers use it only with your consent.",
+  "profileNudgeTitle": "Complete your profile",
+  "profileNudgeBody": "Canton, work and home make tax, pension and savings ideas fit you.",
+  "profileSectionYou": "You",
+  "profileSectionWork": "Work and income",
+  "profileSectionHome": "Home",
+  "profileSectionRisk": "Investing",
+  "profileSectionInterests": "What matters to you",
+  "cantonLabel": "Canton",
+  "childrenLabel": "Children",
+  "grossIncomeLabel": "Gross income from work a year",
+  "monthlyRentLabel": "Rent a month",
+  "rentDepositLabel": "Rent deposit in a blocked account",
+  "civilSingle": "Single",
+  "civilMarried": "Married",
+  "civilPartnership": "Registered partnership",
+  "civilDivorced": "Divorced",
+  "civilWidowed": "Widowed",
+  "employmentEmployee": "Employed",
+  "employmentSelf": "Self-employed",
+  "employmentStudent": "Studying",
+  "employmentNotWorking": "Not working",
+  "employmentRetired": "Retired",
+  "housingRenting": "I rent",
+  "housingOwning": "I own",
+  "housingFamily": "With family",
+  "riskCautious": "Cautious",
+  "riskBalanced": "Balanced",
+  "riskDynamic": "Dynamic",
+  "riskCautiousBody": "Stability first; smaller swings, lower expected return.",
+  "riskBalancedBody": "A mix of growth and stability for a medium horizon.",
+  "riskDynamicBody": "Growth first; you accept larger swings for a long horizon.",
+  "riskNotSet": "Not set yet",
+  "riskTakeCheck": "Take the 3-question check",
+  "riskRetake": "Retake the check",
+  "riskQ1": "When will you need most of this money?",
+  "riskQ1a": "Within 3 years",
+  "riskQ1b": "In 3 to 10 years",
+  "riskQ1c": "In more than 10 years",
+  "riskQ2": "Your investments drop 20% in a year. What do you do?",
+  "riskQ2a": "Sell to avoid further losses",
+  "riskQ2b": "Wait and hold",
+  "riskQ2c": "Buy more while prices are low",
+  "riskQ3": "How familiar are you with investing?",
+  "riskQ3a": "New to it",
+  "riskQ3b": "Some experience with funds or ETFs",
+  "riskQ3c": "I invest regularly",
+  "riskResult": "Your profile: {profile}",
+  "@riskResult": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "riskDisclaimer": "A simple self-assessment, not investment advice under FinSA.",
+  "interestSaveMore": "Save more",
+  "interestInvesting": "Start investing",
+  "interestBuyHome": "Buy a home",
+  "interestRetireEarly": "Retire early",
+  "interestPayOffDebt": "Be debt-free",
+  "interestFamily": "Plan for family",
+  "interestTravel": "Travel",
+  "taxRateFromProfile": "Estimated from your canton, income and civil status. Use the rate from your last tax assessment for a precise result.",
+  "pillar3aSelfEmployedNote": "As self-employed without a pension fund you can pay in up to {amount} this year.",
+  "@pillar3aSelfEmployedNote": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

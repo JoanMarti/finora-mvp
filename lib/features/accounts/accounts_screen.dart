@@ -1,9 +1,11 @@
+import 'package:finora/app/layout.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/health.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/accounts/account_detail_screen.dart';
 import 'package:finora/features/accounts/widgets/account_actions.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
@@ -24,8 +26,67 @@ class AccountsScreen extends ConsumerStatefulWidget {
 class _AccountsScreenState extends ConsumerState<AccountsScreen> {
   _AccountFilter _filter = _AccountFilter.all;
 
+  /// Account shown next to the list on wide screens.
+  String? _selected;
+
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < finoraWideContentWidth) {
+          return _buildList(context, wide: false);
+        }
+        final visible = (ref.watch(accountsProvider).value ?? const [])
+            .where(_matchesFilter)
+            .map((account) => account.id)
+            .toList();
+        final selected = visible.contains(_selected)
+            ? _selected
+            : visible.firstOrNull;
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: 440,
+              child: _buildList(context, wide: true, selected: selected),
+            ),
+            const VerticalDivider(width: 1, color: finoraBorder),
+            Expanded(
+              child: selected == null
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: Text(
+                          context.l10n.accountsSelectHint,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: finoraMutedInk),
+                        ),
+                      ),
+                    )
+                  : AccountDetailScreen(
+                      key: ValueKey(selected),
+                      accountId: selected,
+                    ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _openAccount(FinancialAccount account, {required bool wide}) {
+    if (wide) {
+      setState(() => _selected = account.id);
+    } else {
+      context.push('/account/${account.id}');
+    }
+  }
+
+  Widget _buildList(
+    BuildContext context, {
+    required bool wide,
+    String? selected,
+  }) {
     final accounts = ref.watch(accountsProvider);
     final institutions =
         ref.watch(institutionsProvider).value ?? const <Institution>[];
@@ -135,8 +196,9 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                                 .toList(),
                             onInstitutionTap: () =>
                                 context.push('/institution/${institution.id}'),
+                            selectedAccountId: selected,
                             onAccountTap: (account) =>
-                                context.push('/account/${account.id}'),
+                                _openAccount(account, wide: wide),
                             onAction: (action, account) => _handleAccountAction(
                               action,
                               account,
@@ -372,7 +434,9 @@ class _InstitutionAccountsGroup extends StatelessWidget {
     required this.onInstitutionTap,
     required this.onAccountTap,
     required this.onAction,
+    this.selectedAccountId,
   });
+  final String? selectedAccountId;
   final Institution institution;
   final DateTime now;
   final InstitutionConnection? connection;
@@ -454,6 +518,7 @@ class _InstitutionAccountsGroup extends StatelessWidget {
             _AccessibleAccountRow(
               account: accounts[index],
               institution: institution,
+              selected: accounts[index].id == selectedAccountId,
               onTap: () => onAccountTap(accounts[index]),
               onAction: (action) => onAction(action, accounts[index]),
             ),
@@ -498,9 +563,11 @@ class _AccessibleAccountRow extends StatelessWidget {
     required this.institution,
     required this.onTap,
     required this.onAction,
+    this.selected = false,
   });
   final FinancialAccount account;
   final Institution institution;
+  final bool selected;
   final VoidCallback onTap;
   final ValueChanged<AccountAction> onAction;
 
@@ -513,7 +580,9 @@ class _AccessibleAccountRow extends StatelessWidget {
         ? l10n.changeUp(changeAmount)
         : l10n.changeDown(changeAmount);
     final typeLabel = l10n.productType(account.type);
-    return Row(
+    return ColoredBox(
+      color: selected ? finoraSoftBlue : Colors.transparent,
+      child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
@@ -616,6 +685,7 @@ class _AccessibleAccountRow extends StatelessWidget {
           ),
         ),
       ],
+      ),
     );
   }
 }

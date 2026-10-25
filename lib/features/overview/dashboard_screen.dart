@@ -1,3 +1,4 @@
+import 'package:finora/app/layout.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
@@ -27,80 +28,168 @@ class DashboardScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final languageCode = Localizations.localeOf(context).languageCode;
 
+    final balance = overview.when(
+      loading: () => const SizedBox(
+        height: 218,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, _) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(l10n.overviewUnavailable),
+        ),
+      ),
+      data: (data) => data.isEmpty
+          ? const _EmptyOverview()
+          : BalanceOverviewCard(
+              overview: data,
+              onRefresh: () => refreshFinancialData(ref),
+            ),
+    );
+
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => refreshFinancialData(ref),
-          child: FinoraPage(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-            child: ListView(
-              children: [
-                const _FinoraHeader(),
-                const SizedBox(height: 18),
-                overview.when(
-                  loading: () => const SizedBox(
-                    height: 218,
-                    child: Center(child: CircularProgressIndicator()),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (overviewValue == null || overviewValue.isEmpty) {
+                return FinoraPage(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                  child: ListView(
+                    children: [
+                      const _FinoraHeader(),
+                      const SizedBox(height: 18),
+                      balance,
+                      const SizedBox(height: 12),
+                      const MarketDataNote(),
+                    ],
                   ),
-                  error: (_, _) => Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Text(l10n.overviewUnavailable),
-                    ),
+                );
+              }
+              final trajectory = overviewValue.history.length >= 2
+                  ? WealthTrajectoryCard(overview: overviewValue)
+                  : null;
+              final plan = [
+                SectionTitle(
+                  l10n.wealthPlanSection,
+                  action: TextButton(
+                    onPressed: () => context.push('/goals'),
+                    child: Text(l10n.editPlan),
                   ),
-                  data: (data) => data.isEmpty
-                      ? const _EmptyOverview()
-                      : BalanceOverviewCard(
-                          overview: data,
-                          onRefresh: () => refreshFinancialData(ref),
-                        ),
                 ),
-                if (overviewValue != null && !overviewValue.isEmpty) ...[
-                  const SizedBox(height: 16),
-                  const _QuickActions(),
-                  const SizedBox(height: 12),
-                  const HealthScoreCard(),
-                  if (overviewValue.history.length >= 2) ...[
-                    const SizedBox(height: 12),
-                    WealthTrajectoryCard(overview: overviewValue),
+                WealthPlanCard(
+                  overview: overviewValue,
+                  targets: ref.watch(wealthTargetsProvider),
+                  goals: ref.watch(goalProgressProvider).value ?? const [],
+                ),
+              ];
+              final tools = [
+                SectionTitle(l10n.planningToolsSection),
+                const _PlanningTools(),
+              ];
+              final ideas = [
+                SectionTitle(l10n.ideasSection),
+                PersonalizedInsightsCarousel(
+                  insights: buildInsights(
+                    l10n,
+                    overviewValue,
+                    ref.watch(wealthTargetsProvider),
+                    ref.watch(marketThemesProvider(languageCode)).value ??
+                        const [],
+                  ),
+                ),
+              ];
+
+              if (constraints.maxWidth < finoraWideContentWidth) {
+                return FinoraPage(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                  child: ListView(
+                    children: [
+                      const _FinoraHeader(),
+                      const SizedBox(height: 18),
+                      balance,
+                      const SizedBox(height: 16),
+                      const _QuickActions(),
+                      const SizedBox(height: 12),
+                      const HealthScoreCard(),
+                      if (trajectory != null) ...[
+                        const SizedBox(height: 12),
+                        trajectory,
+                      ],
+                      const SizedBox(height: 24),
+                      ...plan,
+                      const SizedBox(height: 12),
+                      const SavingsOpportunitiesSection(),
+                      const UpcomingEventsSection(),
+                      const SizedBox(height: 12),
+                      const MonthlyReportCard(),
+                      const SizedBox(height: 12),
+                      ...tools,
+                      const SizedBox(height: 24),
+                      ...ideas,
+                      const SizedBox(height: 12),
+                      const MarketDataNote(),
+                    ],
+                  ),
+                );
+              }
+
+              // Desktop: what you have on the left, what to do on the right.
+              return FinoraPage(
+                maxWidth: 1240,
+                padding: const EdgeInsets.fromLTRB(28, 20, 28, 32),
+                child: ListView(
+                  children: [
+                    const _FinoraHeader(),
+                    const SizedBox(height: 20),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              balance,
+                              if (trajectory != null) ...[
+                                const SizedBox(height: 16),
+                                trajectory,
+                              ],
+                              const SizedBox(height: 24),
+                              ...plan,
+                              const SizedBox(height: 16),
+                              const SavingsOpportunitiesSection(),
+                              const SizedBox(height: 12),
+                              ...ideas,
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const _QuickActions(),
+                              const SizedBox(height: 16),
+                              const HealthScoreCard(),
+                              const UpcomingEventsSection(),
+                              const SizedBox(height: 16),
+                              const MonthlyReportCard(),
+                              const SizedBox(height: 12),
+                              ...tools,
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const MarketDataNote(),
                   ],
-                  const SizedBox(height: 24),
-                  SectionTitle(
-                    l10n.wealthPlanSection,
-                    action: TextButton(
-                      onPressed: () => context.push('/goals'),
-                      child: Text(l10n.editPlan),
-                    ),
-                  ),
-                  WealthPlanCard(
-                    overview: overviewValue,
-                    targets: ref.watch(wealthTargetsProvider),
-                    goals: ref.watch(goalProgressProvider).value ?? const [],
-                  ),
-                  const SizedBox(height: 12),
-                  const SavingsOpportunitiesSection(),
-                  const UpcomingEventsSection(),
-                  const SizedBox(height: 12),
-                  const MonthlyReportCard(),
-                  const SizedBox(height: 12),
-                  SectionTitle(l10n.planningToolsSection),
-                  const _PlanningTools(),
-                  const SizedBox(height: 24),
-                  SectionTitle(l10n.ideasSection),
-                  PersonalizedInsightsCarousel(
-                    insights: buildInsights(
-                      l10n,
-                      overviewValue,
-                      ref.watch(wealthTargetsProvider),
-                      ref.watch(marketThemesProvider(languageCode)).value ??
-                          const [],
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 12),
-                const MarketDataNote(),
-              ],
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

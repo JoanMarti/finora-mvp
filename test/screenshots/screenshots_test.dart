@@ -133,4 +133,30 @@ void main() {
   testWidgets('dashboard-full', (tester) async {
     await capture(tester, 'dashboard-full', size: const Size(390, 3200));
   }, skip: !_enabled);
+
+  testWidgets('account-detail', (tester) async {
+    await capture(tester, 'account-detail', route: '/account/ubs-savings');
+  }, skip: !_enabled);
+
+  // The web experience on a laptop and a tablet.
+  const desktop = {
+    'desktop-dashboard': null,
+    'desktop-accounts': '/accounts',
+    'desktop-activity': '/activity',
+    'desktop-offers': '/offers',
+  };
+  for (final entry in desktop.entries) {
+    testWidgets(entry.key, (tester) async {
+      await capture(
+        tester,
+        entry.key,
+        route: entry.value,
+        size: const Size(1440, 900),
+      );
+    }, skip: !_enabled);
+  }
+
+  testWidgets('tablet-dashboard', (tester) async {
+    await capture(tester, 'tablet-dashboard', size: const Size(900, 1200));
+  }, skip: !_enabled);
 }

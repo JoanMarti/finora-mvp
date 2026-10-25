@@ -347,6 +347,50 @@ class RetirementProjection {
       : totalMonthly.cents / targetMonthly.cents;
 }
 
+/// Alternative assumptions for the retirement projection (Finora Plus).
+enum RetirementScenario {
+  /// Pension funds often convert the whole capital at about 5 %, below the
+  /// 6.8 % legal minimum that only covers the mandatory part; 3a returns
+  /// 1.5 points lower.
+  cautious,
+
+  /// The user's own assumptions.
+  base,
+
+  /// Pension fund interest of 2 % and 3a returns 2 points higher.
+  favourable,
+}
+
+extension RetirementScenarios on RetirementScenario {
+  /// Projects [profile] under this scenario's assumptions.
+  RetirementProjection project(
+    RetirementProfile profile, {
+    required Money pillar3aBalance,
+    required DateTime now,
+  }) {
+    final (rules, pillarReturn) = switch (this) {
+      RetirementScenario.cautious => (
+        const SwissPensionRules(bvgConversionRate: .05),
+        math.max(0.0, profile.pillar3aReturn - .015),
+      ),
+      RetirementScenario.base => (
+        SwissPensionRules.y2026,
+        profile.pillar3aReturn,
+      ),
+      RetirementScenario.favourable => (
+        const SwissPensionRules(bvgMinimumInterest: .02),
+        profile.pillar3aReturn + .02,
+      ),
+    };
+    return RetirementProjection.of(
+      profile.copyWith(pillar3aReturn: pillarReturn),
+      pillar3aBalance: pillar3aBalance,
+      now: now,
+      rules: rules,
+    );
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Tax return summary
 // -----------------------------------------------------------------------------

@@ -56,6 +56,8 @@ class DashboardScreen extends ConsumerWidget {
                         ),
                 ),
                 if (overviewValue != null && !overviewValue.isEmpty) ...[
+                  const SizedBox(height: 16),
+                  const _QuickActions(),
                   const SizedBox(height: 12),
                   const HealthScoreCard(),
                   if (overviewValue.history.length >= 2) ...[
@@ -111,90 +113,172 @@ class _FinoraHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initials = ref.watch(sessionProvider).initials;
+    final session = ref.watch(sessionProvider);
     final alerts = ref.watch(alertsProvider).value ?? const <FinoraAlert>[];
-    final hidden = ref.watch(
-      sessionProvider.select((session) => session.hideAmounts),
-    );
+    final hidden = session.hideAmounts;
+    final hour = ref.watch(clockProvider)().hour;
+    final l10n = context.l10n;
+    final name = session.displayName ?? l10n.you;
+    final greeting = hour < 12
+        ? l10n.greetingMorning(name)
+        : hour < 18
+        ? l10n.greetingAfternoon(name)
+        : l10n.greetingEvening(name);
     return Row(
       children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: finoraBlue,
-            borderRadius: BorderRadius.circular(13),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x333C94FF),
-                blurRadius: 14,
-                offset: Offset(0, 5),
+        InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () => context.go('/profile'),
+          child: Container(
+            width: 44,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              gradient: finoraBrandGradient,
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              session.initials,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
               ),
-            ],
-          ),
-          child: const Icon(
-            Icons.account_balance_wallet_outlined,
-            color: Colors.white,
-            size: 22,
+            ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'finora',
-                style: TextStyle(
-                  color: finoraBlue,
-                  fontSize: 23,
-                  height: 1,
+              Text(
+                greeting,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: finoraInk,
+                  fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: -.7,
+                  letterSpacing: -.3,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
-                context.l10n.headerTagline,
-                style: const TextStyle(color: finoraMutedInk, fontSize: 12),
+                l10n.headerTagline,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: finoraMutedInk, fontSize: 13),
               ),
             ],
           ),
         ),
-        IconButton(
-          tooltip: hidden ? context.l10n.showAmounts : context.l10n.hideAmounts,
+        _HeaderButton(
+          tooltip: hidden ? l10n.showAmounts : l10n.hideAmounts,
           onPressed: () =>
               ref.read(sessionProvider.notifier).setHideAmounts(!hidden),
-          icon: Icon(
+          child: Icon(
             hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
             color: finoraInk,
+            size: 22,
           ),
         ),
-        IconButton(
+        const SizedBox(width: 8),
+        _HeaderButton(
           tooltip: alerts.isEmpty
-              ? context.l10n.notifications
-              : context.l10n.notificationsNew(alerts.length),
+              ? l10n.notifications
+              : l10n.notificationsNew(alerts.length),
           onPressed: () => _showAlerts(context, alerts),
-          icon: Badge(
+          child: Badge(
             isLabelVisible: alerts.isNotEmpty,
             label: Text('${alerts.length}'),
-            backgroundColor: finoraBlueText,
-            child: const Icon(Icons.notifications_none, color: finoraInk),
-          ),
-        ),
-        InkWell(
-          customBorder: const CircleBorder(),
-          onTap: () => context.go('/profile'),
-          child: CircleAvatar(
-            radius: 19,
-            backgroundColor: finoraSoftBlue,
-            foregroundColor: finoraInk,
-            child: Text(
-              initials,
-              style: const TextStyle(fontWeight: FontWeight.w800),
+            backgroundColor: finoraDanger,
+            child: const Icon(
+              Icons.notifications_none,
+              color: finoraInk,
+              size: 22,
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// Round white button used in the dashboard header.
+class _HeaderButton extends StatelessWidget {
+  const _HeaderButton({
+    required this.tooltip,
+    required this.onPressed,
+    required this.child,
+  });
+  final String tooltip;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    tooltip: tooltip,
+    onPressed: onPressed,
+    style: IconButton.styleFrom(
+      backgroundColor: finoraWhite,
+      fixedSize: const Size(44, 44),
+      side: const BorderSide(color: finoraBorder),
+    ),
+    icon: child,
+  );
+}
+
+/// Four shortcuts to what people open most.
+class _QuickActions extends StatelessWidget {
+  const _QuickActions();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final actions = [
+      (Icons.donut_small_outlined, l10n.quickAnalysis, '/analysis'),
+      (Icons.pie_chart_outline, l10n.budgetsTitle, '/budgets'),
+      (Icons.calendar_month_outlined, l10n.quickCalendar, '/calendar'),
+      (Icons.savings_outlined, l10n.quickSave, '/offers'),
+    ];
+    return Row(
+      children: [
+        for (final (icon, label, route) in actions)
+          Expanded(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () => context.push(route),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: finoraWhite,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: finoraBorder),
+                      ),
+                      child: Icon(icon, color: finoraBlueText),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: finoraInk,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -393,29 +477,59 @@ class _PlanningTools extends ConsumerWidget {
         '/tax',
       ),
     ];
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          for (var index = 0; index < tools.length; index++) ...[
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: finoraSoftBlue,
-                foregroundColor: finoraBlueText,
-                child: Icon(tools[index].$1, size: 20),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = (constraints.maxWidth - 10) / 2;
+        return Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            for (final (icon, title, subtitle, route) in tools)
+              SizedBox(
+                width: width,
+                child: Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: () => context.push(route),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TonalIcon(icon, size: 40),
+                          const SizedBox(height: 12),
+                          Text(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          SizedBox(
+                            height: 34,
+                            child: Text(
+                              subtitle,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: finoraMutedInk,
+                                fontSize: 12,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              title: Text(
-                tools[index].$2,
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text(tools[index].$3),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(tools[index].$4),
-            ),
-            if (index != tools.length - 1) const Divider(height: 1),
           ],
-        ],
-      ),
+        );
+      },
     );
   }
 }

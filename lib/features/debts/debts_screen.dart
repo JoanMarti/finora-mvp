@@ -166,8 +166,7 @@ class _PlanCard extends ConsumerWidget {
       l10n.localeName,
     ).format(DateTime(now.year, now.month + month));
     final difference = other.totalInterest - plan.totalInterest;
-    return Card(
-      color: finoraInk,
+    return HeroCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

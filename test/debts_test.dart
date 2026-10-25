@@ -212,7 +212,7 @@ void main() {
     await tester.pumpWidget(_screen(const AnalysisScreen()));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.text('SPENDING ABROAD'),
+      find.text('Spending abroad'),
       400,
       scrollable: find.byType(Scrollable).first,
     );

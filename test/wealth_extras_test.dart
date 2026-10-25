@@ -148,7 +148,7 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('ASSETS YOU ENTERED'), findsOneWidget);
+      expect(find.text('Assets you entered'), findsOneWidget);
       expect(find.text('Flat in Winterthur · Property'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });

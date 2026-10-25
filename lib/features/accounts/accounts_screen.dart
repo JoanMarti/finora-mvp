@@ -246,8 +246,7 @@ class _AccountsSummaryCard extends StatelessWidget {
         l10n.accountCount(accountCount),
       ),
       child: ExcludeSemantics(
-        child: Card(
-          color: finoraInk,
+        child: HeroCard(
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -353,17 +352,14 @@ class _AccountFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChoiceChip(
-    avatar: Icon(icon, size: 17),
+    avatar: Icon(
+      icon,
+      size: 17,
+      color: selected ? finoraWhite : finoraBlueText,
+    ),
     label: Text(label),
     selected: selected,
     onSelected: (_) => onSelected(),
-    showCheckmark: false,
-    side: BorderSide(color: selected ? finoraBlue : finoraBorder),
-    selectedColor: finoraSoftBlue,
-    labelStyle: TextStyle(
-      color: selected ? finoraBlueText : finoraInk,
-      fontWeight: FontWeight.w700,
-    ),
   );
 }
 

@@ -313,8 +313,7 @@ class _AccountBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: finoraInk,
+    return HeroCard(
       child: Padding(
         padding: const EdgeInsets.all(22),
         child: Column(

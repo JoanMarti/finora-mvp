@@ -177,6 +177,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_session(tester, PlusScreen).isPlus, isTrue);
+    // The status card sits at the top of the plans screen.
+    await tester.scrollUntilVisible(
+      find.text('Finora Premium is active'),
+      -300,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Finora Premium is active'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

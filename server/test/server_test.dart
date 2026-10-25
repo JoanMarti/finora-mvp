@@ -176,4 +176,112 @@ void main() {
     );
     expect(allowed, 200);
   });
+
+  group('accounts', () {
+    const signUp = {
+      'firstName': 'Anna',
+      'email': 'Anna@Example.ch',
+      'password': 'Matterhorn2026',
+      'termsVersion': '2026-10',
+      'marketing': false,
+    };
+
+    test('sign-up, verification and sign-in', () async {
+      final secured = buildHandler(fixtures, accessToken: 'ops-token');
+      final (created, body) = await call(
+        'POST',
+        '/v1/auth/register',
+        body: signUp,
+        using: secured,
+      );
+      expect(created, 201);
+      final user = (body! as Map)['user'] as Map;
+      expect(user['email'], 'anna@example.ch');
+      expect(user['emailVerified'], isFalse);
+      expect(user.containsKey('hash'), isFalse);
+
+      final (taken, takenBody) = await call(
+        'POST',
+        '/v1/auth/register',
+        body: signUp,
+        using: secured,
+      );
+      expect(taken, 409);
+      expect((takenBody! as Map)['code'], 'emailTaken');
+
+      final (wrong, wrongBody) = await call(
+        'POST',
+        '/v1/auth/verify',
+        body: {'email': 'anna@example.ch', 'code': '000000'},
+        using: secured,
+      );
+      expect(wrong, 400);
+      expect((wrongBody! as Map)['code'], 'invalidCode');
+
+      final (verified, verifiedBody) = await call(
+        'POST',
+        '/v1/auth/verify',
+        body: {'email': 'anna@example.ch', 'code': AccountRegistry.devCode},
+        using: secured,
+      );
+      expect(verified, 200);
+      final token = (verifiedBody! as Map)['accessToken'] as String;
+      // The issued token opens the data endpoints.
+      final (allowed, _) = await call(
+        'GET',
+        '/v1/accounts',
+        using: secured,
+        headers: {'authorization': 'Bearer $token'},
+      );
+      expect(allowed, 200);
+
+      final (badLogin, _) = await call(
+        'POST',
+        '/v1/auth/login',
+        body: {'email': 'anna@example.ch', 'password': 'nope'},
+        using: secured,
+      );
+      expect(badLogin, 401);
+      final (login, loginBody) = await call(
+        'POST',
+        '/v1/auth/login',
+        body: {'email': 'ANNA@example.ch', 'password': 'Matterhorn2026'},
+        using: secured,
+      );
+      expect(login, 200);
+      expect(((loginBody! as Map)['user'] as Map)['emailVerified'], isTrue);
+    });
+
+    test('weak passwords and repeated wrong codes are refused', () async {
+      final (weak, weakBody) = await call(
+        'POST',
+        '/v1/auth/register',
+        body: {...signUp, 'password': 'short'},
+      );
+      expect(weak, 422);
+      expect((weakBody! as Map)['code'], 'weakPassword');
+
+      await call('POST', '/v1/auth/register', body: signUp);
+      for (var i = 0; i < AccountRegistry.maxAttempts; i++) {
+        await call(
+          'POST',
+          '/v1/auth/verify',
+          body: {'email': 'anna@example.ch', 'code': '000000'},
+        );
+      }
+      final (locked, lockedBody) = await call(
+        'POST',
+        '/v1/auth/verify',
+        body: {'email': 'anna@example.ch', 'code': AccountRegistry.devCode},
+      );
+      expect(locked, 429);
+      expect((lockedBody! as Map)['code'], 'tooManyAttempts');
+      final (reset, _) = await call(
+        'POST',
+        '/v1/auth/password-reset',
+        body: {'email': 'nobody@example.ch'},
+      );
+      expect(reset, 204);
+    });
+  });
 }

@@ -13,6 +13,7 @@ import 'package:finora/features/debts/debts_screen.dart';
 import 'package:finora/features/health/health_screen.dart';
 import 'package:finora/features/household/household_screen.dart';
 import 'package:finora/features/onboarding/onboarding_screen.dart';
+import 'package:finora/features/onboarding/sign_in_screen.dart';
 import 'package:finora/features/offers/opportunities_screen.dart';
 import 'package:finora/features/offers/pilot_metrics_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
@@ -32,7 +33,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// Routes reachable before onboarding is finished.
-const _onboardingRoutes = {'/onboarding', '/connect'};
+const _onboardingRoutes = {'/onboarding', '/connect', '/sign-in'};
 
 final routerProvider = Provider<GoRouter>((ref) {
   // Re-evaluate redirects when onboarding completes or the session resets,
@@ -55,13 +56,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!onboardingCompleted.value) {
         return _onboardingRoutes.contains(location) ? null : '/onboarding';
       }
-      if (location == '/onboarding' || location == '/') return '/home';
+      if (location == '/onboarding' || location == '/sign-in' || location == '/') {
+        return '/home';
+      }
       return null;
     },
     routes: [
       GoRoute(path: '/', redirect: (_, _) => '/home'),
       GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
       GoRoute(path: '/connect', builder: (_, _) => const ConnectionScreen()),
+      GoRoute(path: '/sign-in', builder: (_, _) => const SignInScreen()),
       // Every signed-in page lives in the shell, so desktop keeps the
       // sidebar on screen while phones show secondary pages full screen.
       ShellRoute(

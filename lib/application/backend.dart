@@ -8,6 +8,7 @@ import 'package:finora/domain/backend_services.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/domain/partners.dart';
 import 'package:finora/domain/purchases.dart';
+import 'package:finora/domain/trust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -88,6 +89,32 @@ final linkOpenerProvider = Provider<Future<bool> Function(Uri)>(
 final purchaseServiceProvider = Provider<PurchaseService>(
   (ref) => DemoPurchaseService(ref.watch(clockProvider)),
 );
+
+/// Store prices by billing period; empty in the demo or when the store
+/// cannot be reached.
+final storePricesProvider = FutureProvider<Map<BillingPeriod, StorePrice>>((
+  ref,
+) async {
+  try {
+    return await ref.watch(purchaseServiceProvider).prices();
+  } on Object {
+    return const {};
+  }
+});
+
+/// On store builds, checks once per start that a Premium subscription is
+/// still active (it may have been cancelled or refunded in Google Play).
+/// A failed check (offline) keeps Premium; only "nothing to restore" ends it.
+final billingSyncProvider = FutureProvider<void>((ref) async {
+  final service = ref.watch(purchaseServiceProvider);
+  if (!service.isStore) return;
+  final session = ref.read(sessionProvider);
+  if (!session.isPlus || session.onTrial) return;
+  final result = await service.restore();
+  if (result.status == PurchaseStatus.nothingToRestore) {
+    ref.read(sessionProvider.notifier).cancelPlus();
+  }
+});
 
 final notificationPermissionsProvider = Provider<NotificationPermissions>(
   (ref) => const DemoNotificationPermissions(),

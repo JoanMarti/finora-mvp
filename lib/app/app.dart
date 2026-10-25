@@ -19,6 +19,8 @@ class FinoraApp extends ConsumerWidget {
     );
     // Keeps reminders and funnel counts in step with a configured backend.
     ref.watch(backendSyncProvider);
+    // Store builds confirm the Premium subscription with Google Play.
+    ref.watch(billingSyncProvider);
     final hideAmounts = ref.watch(
       sessionProvider.select((session) => session.hideAmounts),
     );

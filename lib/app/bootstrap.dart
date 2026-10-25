@@ -5,11 +5,14 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/data/api/api_client.dart';
 import 'package:finora/data/api/http_auth_service.dart';
 import 'package:finora/data/api/http_backend_services.dart';
+import 'package:finora/data/billing/in_app_purchase_port.dart';
+import 'package:finora/data/billing/play_purchase_service.dart';
 import 'package:finora/data/demo_auth_service.dart';
 import 'package:finora/data/mock_financial_repository.dart';
 import 'package:finora/data/mock_market_data_repository.dart';
 import 'package:finora/data/remote_financial_repository.dart';
 import 'package:finora/domain/user_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +21,27 @@ import 'package:http/http.dart' as http;
 /// Empty (the default) runs the demo with generated data.
 const finoraApiUrl = String.fromEnvironment('FINORA_API_URL');
 
+/// How Premium is sold: `demo` (default, nothing charged) or `play`
+/// (Google Play Billing), e.g. `--dart-define=FINORA_PURCHASES=play`.
+const finoraPurchases = String.fromEnvironment(
+  'FINORA_PURCHASES',
+  defaultValue: 'demo',
+);
+
+/// Google Play Billing for store builds on Android; the demo elsewhere
+/// (web has no Play Billing).
+List<Override> purchaseOverrides({HttpBackendServices? backend}) {
+  if (finoraPurchases != 'play' || kIsWeb) return const [];
+  return [
+    purchaseServiceProvider.overrideWithValue(
+      PlayPurchaseService(
+        InAppPurchasePort(),
+        verify: backend?.verifyPurchase,
+      ),
+    ),
+  ];
+}
+
 /// The data sources for this build: the backend when [finoraApiUrl] is set,
 /// otherwise the demo.
 List<Override> appOverrides({
@@ -25,10 +49,13 @@ List<Override> appOverrides({
   AccountStore? accountStore,
 }) {
   if (finoraApiUrl.isEmpty) {
-    return demoOverrides(
-      sessionStore: sessionStore,
-      accountStore: accountStore,
-    );
+    return [
+      ...demoOverrides(
+        sessionStore: sessionStore,
+        accountStore: accountStore,
+      ),
+      ...purchaseOverrides(),
+    ];
   }
   final tokens = AuthTokenHolder();
   return backendOverrides(
@@ -71,6 +98,7 @@ List<Override> backendOverrides(
     funnelReporterProvider.overrideWithValue(services),
     reminderServiceProvider.overrideWithValue(services),
     partnerDirectoryProvider.overrideWithValue(services),
+    ...purchaseOverrides(backend: services),
   ];
 }
 

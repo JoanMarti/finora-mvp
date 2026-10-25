@@ -140,7 +140,7 @@ class _PriceChangeCard extends ConsumerWidget {
   /// the charge can be reviewed.
   Future<void> _compare(BuildContext context, WidgetRef ref) async {
     final kind = relatedOfferKind(change);
-    final router = GoRouter.of(context);
+    final router = GoRouter.maybeOf(context);
     var offers = const <Opportunity>[];
     if (kind != null) {
       try {
@@ -157,7 +157,7 @@ class _PriceChangeCard extends ConsumerWidget {
       showOpportunitySheet(context, offer);
       return;
     }
-    router.push(
+    router?.push(
       kind == OpportunityKind.subscriptionsReview ? '/subscriptions' : '/analysis',
     );
   }

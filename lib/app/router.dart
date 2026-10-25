@@ -22,6 +22,7 @@ import 'package:finora/features/planning/retirement_screen.dart';
 import 'package:finora/features/planning/tax_summary_screen.dart';
 import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/features/privacy/privacy_screen.dart';
+import 'package:finora/features/profile/about_you_screen.dart';
 import 'package:finora/features/profile/profile_screen.dart';
 import 'package:finora/features/report/report_screen.dart';
 import 'package:finora/features/simulators/home_buying_screen.dart';
@@ -105,6 +106,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (_, _) => const HouseholdScreen(),
           ),
           GoRoute(path: '/assets', builder: (_, _) => const AssetsScreen()),
+          GoRoute(
+            path: '/about-you',
+            builder: (_, _) => const AboutYouScreen(),
+          ),
           GoRoute(path: '/plus', builder: (_, _) => const PlusScreen()),
           GoRoute(path: '/privacy', builder: (_, _) => const PrivacyScreen()),
           GoRoute(

@@ -8,6 +8,7 @@ import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/reminders.dart';
 import 'package:finora/domain/trust.dart';
 
@@ -47,6 +48,7 @@ class UserSession {
     this.trialEndsAt,
     this.trialUsed = false,
     this.billingPeriod,
+    this.profile = const UserProfile(),
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -64,6 +66,19 @@ class UserSession {
         accountIds: const {'ubs-savings', 'zkb-savings'},
       ),
     ],
+    profile: const UserProfile(
+      birthYear: 1988,
+      canton: Canton.zh,
+      civilStatus: CivilStatus.single,
+      children: 0,
+      employment: Employment.employee,
+      grossIncome: Money.cents(11000000),
+      housing: Housing.renting,
+      monthlyRent: Money.cents(220000),
+      rentDeposit: Money.cents(660000),
+      risk: RiskProfile.balanced,
+      interests: {Interest.buyHome, Interest.investing},
+    ),
   );
 
   final String email;
@@ -159,6 +174,9 @@ class UserSession {
   /// How a paid Premium subscription is billed; `null` on Free or trial.
   final BillingPeriod? billingPeriod;
 
+  /// Age, canton, family, work, housing, risk and interests.
+  final UserProfile profile;
+
   /// Whether the session holds Premium, ignoring trial expiry. Use
   /// [isPremiumAt] (or `isPlusProvider`) to decide what to unlock.
   bool get isPlus => plan == FinoraPlan.plus;
@@ -232,6 +250,7 @@ class UserSession {
     Object? trialEndsAt = _unset,
     bool? trialUsed,
     Object? billingPeriod = _unset,
+    UserProfile? profile,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -282,6 +301,7 @@ class UserSession {
       billingPeriod: identical(billingPeriod, _unset)
           ? this.billingPeriod
           : billingPeriod as BillingPeriod?,
+      profile: profile ?? this.profile,
     );
   }
 
@@ -325,6 +345,7 @@ class UserSession {
     'trialEndsAt': trialEndsAt?.toIso8601String(),
     'trialUsed': trialUsed,
     'billingPeriod': billingPeriod?.name,
+    'profile': profile.toJson(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -413,6 +434,7 @@ class UserSession {
       billingPeriod: BillingPeriod.values
           .where((value) => value.name == json['billingPeriod'])
           .firstOrNull,
+      profile: UserProfile.fromJson(json['profile']),
     );
   }
 

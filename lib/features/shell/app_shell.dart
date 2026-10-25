@@ -147,6 +147,12 @@ final sidebarNavGroups = [
   ]),
   NavGroup((l10n) => l10n.navGroupYou, [
     NavItem(
+      '/about-you',
+      Icons.badge_outlined,
+      Icons.badge,
+      (l10n) => l10n.aboutYouTitle,
+    ),
+    NavItem(
       '/health',
       Icons.favorite_border,
       Icons.favorite,

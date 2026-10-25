@@ -420,6 +420,7 @@ enum AlertKind {
   assetValueOutdated,
   budgetExceeded,
   billDue,
+  priceIncrease,
 }
 
 /// Something the user should know about, derived from their own data.
@@ -432,8 +433,12 @@ class FinoraAlert {
     this.amount,
     this.daysUntilDue,
     this.route,
+    this.previousAmount,
   });
   final AlertKind kind;
+
+  /// For a price increase: what the charge cost before.
+  final Money? previousAmount;
 
   /// Institution name or merchant the alert is about.
   final String subject;
@@ -449,6 +454,7 @@ class FinoraAlert {
     AlertKind.staleConnection || AlertKind.budgetExceeded => AlertSeverity.warning,
     AlertKind.manualValueOutdated ||
     AlertKind.assetValueOutdated ||
-    AlertKind.billDue => AlertSeverity.info,
+    AlertKind.billDue ||
+    AlertKind.priceIncrease => AlertSeverity.info,
   };
 }

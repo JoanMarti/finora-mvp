@@ -1079,5 +1079,18 @@
   "deleteAccountDone": "Il tuo account è stato eliminato.",
   "legalSection": "Note legali",
   "privacyPolicyLink": "Informativa sulla privacy",
-  "appVersion": "Versione {version}"
+  "appVersion": "Versione {version}",
+  "priceAlertsTitle": "Aumenti di prezzo",
+  "priceAlertsSubtitle": "Addebiti ricorrenti che costano più del mese precedente.",
+  "priceAlertRow": "{before} → {after} · +{percent}%",
+  "priceAlertYearly": "{amount} in più all’anno",
+  "priceAlertsLockedTitle": "{count, plural, =1{1 aumento di prezzo trovato nelle tue fatture} other{{count} aumenti di prezzo trovati nelle tue fatture}}",
+  "priceAlertsLockedBody": "Premium mostra quali fatture sono aumentate, di quanto e cosa confrontare.",
+  "priceAlertsEmpty": "Al momento nessun aumento nei tuoi addebiti ricorrenti.",
+  "priceAlertsHow": "Finora confronta ogni addebito ricorrente con quello del mese prima. Sono mostrati aumenti di almeno il 2% e CHF 1.",
+  "priceAlertCompare": "Confronta alternative",
+  "priceAlertSince": "Dal {date}",
+  "alertPriceTitle": "{merchant} costa di più",
+  "alertPriceBody": "Da {before} a {after}: {yearly} in più all’anno.",
+  "featurePriceAlerts": "Avvisi di aumento prezzo"
 }

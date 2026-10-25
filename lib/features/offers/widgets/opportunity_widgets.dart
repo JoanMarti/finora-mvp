@@ -143,7 +143,8 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
       return;
     }
     // A configured partner: open its tracked link outside the app.
-    final link = ref.read(partnerLinksProvider).value?[opportunity.kind];
+    final links = ref.read(partnerLinksProvider).value;
+    final link = links?[opportunity.kind];
     if (link != null) {
       final open = ref.read(linkOpenerProvider);
       Navigator.pop(context);
@@ -181,9 +182,8 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
     final opportunity = widget.opportunity;
     final saving = l10n.opportunitySaving(opportunity);
     final canContinue = !opportunity.isSponsored || _shareConsent;
-    final link = opportunity.isSponsored
-        ? ref.watch(partnerLinksProvider).value?[opportunity.kind]
-        : null;
+    final links = ref.watch(partnerLinksProvider).value;
+    final link = opportunity.isSponsored ? links?[opportunity.kind] : null;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),

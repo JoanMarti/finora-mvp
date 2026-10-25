@@ -62,10 +62,12 @@ class HttpBackendServices
   @override
   Future<Map<OpportunityKind, PartnerLink>> links() async {
     final body = await _api.get('v1/partners');
-    return {
-      if (body is List)
-        for (final raw in body)
-          if (PartnerLink.fromJson(raw) case final link?) link.kind: link,
-    };
+    final links = <OpportunityKind, PartnerLink>{};
+    if (body is List) {
+      for (final link in body.map(PartnerLink.fromJson).nonNulls) {
+        links[link.kind] = link;
+      }
+    }
+    return links;
   }
 }

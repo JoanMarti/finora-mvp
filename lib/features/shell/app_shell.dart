@@ -186,11 +186,12 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final delegate = GoRouter.of(context).routerDelegate;
+    final router = GoRouter.of(context);
     return ListenableBuilder(
-      listenable: delegate,
+      listenable: router.routerDelegate,
       builder: (context, _) {
-        final section = navSectionOf(delegate.currentConfiguration.uri.path);
+        // The top route, including pages opened with push.
+        final section = navSectionOf(router.state.uri.path);
         return switch (FinoraWindow.of(context)) {
           FinoraWindow.compact => _CompactShell(
             section: section,

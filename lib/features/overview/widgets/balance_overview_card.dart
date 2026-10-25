@@ -163,13 +163,16 @@ class BalanceOverviewCard extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 14),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                // One scrollable row keeps the card compact whatever the
+                // number of parts.
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: [
                       for (final (label, money) in parts)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child:
                         Semantics(
                           label: '$label ${formatMoney(money)}',
                           child: ExcludeSemantics(
@@ -205,6 +208,7 @@ class BalanceOverviewCard extends StatelessWidget {
                               ),
                             ),
                           ),
+                        ),
                         ),
                     ],
                   ),

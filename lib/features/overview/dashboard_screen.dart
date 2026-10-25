@@ -236,10 +236,10 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final actions = [
-      (Icons.donut_small_outlined, l10n.analysisTitle, '/analysis'),
+      (Icons.donut_small_outlined, l10n.quickAnalysis, '/analysis'),
       (Icons.pie_chart_outline, l10n.budgetsTitle, '/budgets'),
-      (Icons.calendar_month_outlined, l10n.calendarScreenTitle, '/calendar'),
-      (Icons.savings_outlined, l10n.waysToSaveSection, '/offers'),
+      (Icons.calendar_month_outlined, l10n.quickCalendar, '/calendar'),
+      (Icons.savings_outlined, l10n.quickSave, '/offers'),
     ];
     return Row(
       children: [

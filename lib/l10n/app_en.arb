@@ -1889,5 +1889,123 @@
       }
     }
   },
-  "taxSavingsDisclaimer": "An estimate: the actual saving depends on your full tax return."
+  "taxSavingsDisclaimer": "An estimate: the actual saving depends on your full tax return.",
+  "budgetsTitle": "Budgets",
+  "budgetsToolSubtitle": "Monthly limits per category",
+  "budgetsEmptyTitle": "Set monthly budgets",
+  "budgetsEmptyBody": "Start from what you spend today: Finora suggests a limit for each category, rounded up to CHF 50. You can change every one.",
+  "budgetsSuggest": "Suggest budgets from my spending",
+  "budgetsCategoriesSection": "This month",
+  "budgetsWithoutSection": "Without a budget",
+  "budgetsSpentThisMonth": "{amount} this month",
+  "@budgetsSpentThisMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetsLeftThisMonth": "Left to spend this month",
+  "budgetsOverTotal": "Over your budgets by",
+  "budgetsSpentOf": "{spent} spent of {limit}",
+  "@budgetsSpentOf": {
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetsSafePerDay": "About {amount} a day for the next {days} days",
+  "@budgetsSafePerDay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "budgetsLeft": "{amount} left",
+  "@budgetsLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetsOverBy": "{amount} over budget",
+  "@budgetsOverBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetsEditTitle": "Budget for {category}",
+  "@budgetsEditTitle": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetsLimitLabel": "Monthly limit",
+  "budgetsRemove": "Remove budget",
+  "budgetsNote": "Spending comes from your everyday accounts and resets every month.",
+  "alertBudgetTitle": "{category} budget exceeded",
+  "@alertBudgetTitle": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "alertBudgetBody": "{amount} over the monthly limit.",
+  "@alertBudgetBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsTitle": "Subscriptions",
+  "subscriptionsToolSubtitle": "Decide what to keep and track what you save",
+  "subscriptionsYearly": "Subscriptions per year",
+  "subscriptionsPlanned": "Saving once cancelled",
+  "subscriptionsAchieved": "Saved a year",
+  "subscriptionsUndecided": "Still to review",
+  "subscriptionsListSection": "Your subscriptions",
+  "subscriptionsEmpty": "No optional subscriptions were found in your accounts.",
+  "subscriptionsPerYear": "{amount} a year",
+  "@subscriptionsPerYear": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsKeep": "Keep",
+  "subscriptionsToCancel": "Cancel",
+  "subscriptionsHowToCancel": "Cancel directly with {merchant}, in its app or account settings. Finora is read-only and cannot cancel for you.",
+  "@subscriptionsHowToCancel": {
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsMarkCancelled": "Done, it is cancelled",
+  "subscriptionsCancelledSaving": "Cancelled: {amount} saved a year",
+  "@subscriptionsCancelledSaving": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsNote": "Mandatory bills such as the radio and TV fee, insurance and electricity are not listed."
 }

@@ -134,7 +134,11 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
     if (!opportunity.isSponsored) {
       final router = GoRouter.of(context);
       Navigator.pop(context);
-      router.push('/analysis');
+      router.push(
+        opportunity.kind == OpportunityKind.subscriptionsReview
+            ? '/subscriptions'
+            : '/analysis',
+      );
       return;
     }
     final l10n = context.l10n;

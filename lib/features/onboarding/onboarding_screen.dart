@@ -201,7 +201,7 @@ class _Welcome extends StatelessWidget {
           height: 72,
           decoration: BoxDecoration(
             color: finoraBlue,
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(finoraRadius),
           ),
           child: const Icon(
             Icons.account_balance_wallet_outlined,
@@ -358,7 +358,7 @@ class _SelectionStep<T> extends StatelessWidget {
               return Material(
                 color: isSelected ? finoraSoftBlue : Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(finoraRadius),
                   side: BorderSide(
                     color: isSelected ? finoraBlue : finoraBorder,
                     width: isSelected ? 1.5 : 1,
@@ -366,7 +366,7 @@ class _SelectionStep<T> extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () => onToggle(option),
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(finoraRadius),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 18,

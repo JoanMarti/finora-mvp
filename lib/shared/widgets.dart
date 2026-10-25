@@ -66,7 +66,7 @@ class InstitutionBadge extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Color(institution.colorValue),
-            borderRadius: BorderRadius.circular(size * .28),
+            borderRadius: BorderRadius.circular(size * .22),
             boxShadow: const [
               BoxShadow(
                 color: Color(0x1A272829),
@@ -130,7 +130,7 @@ class StatusPill extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color.withValues(alpha: .1),
-        borderRadius: BorderRadius.circular(99),
+        borderRadius: BorderRadius.circular(finoraRadiusSmall),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -217,7 +217,7 @@ class ValuePill extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(99),
+        borderRadius: BorderRadius.circular(finoraRadiusSmall),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -378,7 +378,7 @@ class TonalIcon extends StatelessWidget {
     height: size,
     decoration: BoxDecoration(
       color: background,
-      borderRadius: BorderRadius.circular(size * .36),
+      borderRadius: BorderRadius.circular(size * .22),
     ),
     child: Icon(icon, color: color, size: size * .5),
   );

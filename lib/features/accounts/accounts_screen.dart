@@ -539,7 +539,7 @@ class _AccessibleAccountRow extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Color(institution.colorValue)
                               .withValues(alpha: .08),
-                          borderRadius: BorderRadius.circular(13),
+                          borderRadius: BorderRadius.circular(finoraRadiusControl),
                         ),
                         child: Icon(
                           productIcon(account.type),

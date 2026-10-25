@@ -23,16 +23,15 @@ class ApiException implements Exception {
 class FinoraApiClient {
   FinoraApiClient({
     required this.baseUrl,
-    required http.Client client,
+    required this.client,
     Future<String?> Function()? accessToken,
     this.timeout = const Duration(seconds: 15),
-  }) : _client = client,
-       _accessToken = accessToken ?? _noToken;
+  }) : _accessToken = accessToken ?? _noToken;
 
   static Future<String?> _noToken() async => null;
 
   final Uri baseUrl;
-  final http.Client _client;
+  final http.Client client;
   final Future<String?> Function() _accessToken;
   final Duration timeout;
 
@@ -55,10 +54,10 @@ class FinoraApiClient {
   }
 
   Future<Object?> get(String path, {Map<String, String>? query}) =>
-      _send(() async => _client.get(_uri(path, query), headers: await _headers()));
+      _send(() async => client.get(_uri(path, query), headers: await _headers()));
 
   Future<Object?> post(String path, [Object? body]) => _send(
-    () async => _client.post(
+    () async => client.post(
       _uri(path),
       headers: await _headers(json: true),
       body: body == null ? null : jsonEncode(body),
@@ -66,7 +65,7 @@ class FinoraApiClient {
   );
 
   Future<Object?> put(String path, Object? body) => _send(
-    () async => _client.put(
+    () async => client.put(
       _uri(path),
       headers: await _headers(json: true),
       body: jsonEncode(body),

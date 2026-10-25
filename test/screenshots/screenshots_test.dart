@@ -12,7 +12,6 @@ import 'package:finora/app/router.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';

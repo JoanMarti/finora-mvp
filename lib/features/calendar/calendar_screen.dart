@@ -252,9 +252,12 @@ class _RemindersCard extends ConsumerWidget {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  FilledButton(
-                    onPressed: () => _turnOn(context, ref),
-                    child: Text(l10n.remindersTurnOn),
+                  // The theme makes filled buttons full width.
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () => _turnOn(context, ref),
+                      child: Text(l10n.remindersTurnOn),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   TextButton(

@@ -2101,5 +2101,134 @@
       }
     }
   },
-  "abroadNote": "A rough estimate from the last month: travel is irregular."
+  "abroadNote": "A rough estimate from the last month: travel is irregular.",
+  "reportScreenTitle": "Monthly report",
+  "reportTitle": "Your {month}",
+  "@reportTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "reportCardTitle": "Your {month} report",
+  "@reportCardTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "reportEmpty": "The first report appears once a full month of data is available.",
+  "reportSaved": "{amount} saved",
+  "@reportSaved": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reportOverspent": "{amount} more spent than earned",
+  "@reportOverspent": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSavingsRate": "Savings rate {percent}%",
+  "@reportSavingsRate": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reportPreviousRate": "month before {percent}%",
+  "@reportPreviousRate": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reportIncome": "Income",
+  "reportSpending": "Spending",
+  "reportNetWorth": "Net worth change",
+  "reportAverageSpending": "Average spending",
+  "reportHighlightsSection": "Highlights",
+  "reportNextSection": "For this month",
+  "reportBestMonth": "Your best month for saving in the last six months: {amount}.",
+  "@reportBestMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reportAboveAverage": "Spending was {amount} ({percent}%) above your average.",
+  "@reportAboveAverage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reportBelowAverage": "Spending was {amount} ({percent}%) below your average.",
+  "@reportBelowAverage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reportNetWorthUp": "Your net worth grew by {amount}.",
+  "@reportNetWorthUp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reportNetWorthDown": "Your net worth fell by {amount}.",
+  "@reportNetWorthDown": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSubscriptionsSaved": "Cancelled subscriptions save you {amount} a year.",
+  "@reportSubscriptionsSaved": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSummaryLine": "Income {income}, spending {spending}, saved {saved} ({percent}%).",
+  "@reportSummaryLine": {
+    "placeholders": {
+      "income": {
+        "type": "String"
+      },
+      "spending": {
+        "type": "String"
+      },
+      "saved": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reportCopy": "Copy summary",
+  "reportCopied": "Summary copied."
 }

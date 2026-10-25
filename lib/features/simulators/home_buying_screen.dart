@@ -73,8 +73,7 @@ class _HomeBuyingScreenState extends ConsumerState<HomeBuyingScreen> {
       body: FinoraPage(
         child: ListView(
           children: [
-            Card(
-              color: finoraInk,
+            HeroCard(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(

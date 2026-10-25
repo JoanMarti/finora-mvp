@@ -844,5 +844,8 @@
   "reportSubscriptionsSaved": "Les abonnements résiliés vous font économiser {amount} par an.",
   "reportSummaryLine": "Revenus {income}, dépenses {spending}, épargne {saved} ({percent} %).",
   "reportCopy": "Copier le résumé",
-  "reportCopied": "Résumé copié."
+  "reportCopied": "Résumé copié.",
+  "greetingMorning": "Bonjour, {name}",
+  "greetingAfternoon": "Bon après-midi, {name}",
+  "greetingEvening": "Bonsoir, {name}"
 }

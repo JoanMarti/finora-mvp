@@ -1,3 +1,4 @@
+import 'package:finora/app/theme.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +22,11 @@ class AppShell extends StatelessWidget {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: finoraBorder)),
+        ),
+        child: NavigationBar(
         selectedIndex: index,
         onDestinationSelected: (next) => context.go(destinations[next]),
         destinations: [
@@ -46,6 +51,7 @@ class AppShell extends StatelessWidget {
             label: l10n.navProfile,
           ),
         ],
+        ),
       ),
     );
   }

@@ -844,5 +844,8 @@
   "reportSubscriptionsSaved": "Gli abbonamenti disdetti ti fanno risparmiare {amount} all’anno.",
   "reportSummaryLine": "Entrate {income}, spese {spending}, risparmiati {saved} ({percent}%).",
   "reportCopy": "Copia riepilogo",
-  "reportCopied": "Riepilogo copiato."
+  "reportCopied": "Riepilogo copiato.",
+  "greetingMorning": "Buongiorno, {name}",
+  "greetingAfternoon": "Buon pomeriggio, {name}",
+  "greetingEvening": "Buonasera, {name}"
 }

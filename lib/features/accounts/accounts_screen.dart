@@ -246,8 +246,7 @@ class _AccountsSummaryCard extends StatelessWidget {
         l10n.accountCount(accountCount),
       ),
       child: ExcludeSemantics(
-        child: Card(
-          color: finoraInk,
+        child: HeroCard(
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

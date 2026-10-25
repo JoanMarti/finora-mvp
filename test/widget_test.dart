@@ -113,20 +113,20 @@ void main() {
     expect(find.text('Financial health'), findsOneWidget);
     expect(find.text('Wealth evolution'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('YOUR WEALTH PLAN'),
+      find.text('Your wealth plan'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('YOUR WEALTH PLAN'), findsOneWidget);
+    expect(find.text('Your wealth plan'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
-      find.text('IDEAS FOR YOU'),
+      find.text('Ideas for you'),
       400,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('IDEAS FOR YOU'), findsOneWidget);
+    expect(find.text('Ideas for you'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.textContaining('Illustrative targets and ideas'),
       300,
@@ -151,7 +151,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('No accounts connected yet'), findsOneWidget);
-    expect(find.text('YOUR WEALTH PLAN'), findsNothing);
+    expect(find.text('Your wealth plan'), findsNothing);
   });
 
   testWidgets('notification bell lists derived alerts', (tester) async {
@@ -184,7 +184,7 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
-      find.text('CASH FLOW'),
+      find.text('Cash flow'),
       420,
       scrollable: find.byType(Scrollable).first,
     );
@@ -200,7 +200,7 @@ void main() {
     expect(find.text('Housing'), findsOneWidget);
 
     await tester.scrollUntilVisible(
-      find.text('RECURRING PAYMENTS'),
+      find.text('Recurring payments'),
       420,
       scrollable: find.byType(Scrollable).first,
     );
@@ -211,7 +211,7 @@ void main() {
     expect(find.text('Netflix'), findsOneWidget);
 
     await tester.scrollUntilVisible(
-      find.text('POTENTIAL IMPROVEMENTS'),
+      find.text('Potential improvements'),
       420,
       scrollable: find.byType(Scrollable).first,
     );

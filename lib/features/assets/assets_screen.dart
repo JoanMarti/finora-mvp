@@ -42,8 +42,7 @@ class AssetsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.only(bottom: 96),
           children: [
-            Card(
-              color: finoraInk,
+            HeroCard(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(

@@ -58,8 +58,7 @@ class PlusScreen extends ConsumerWidget {
       body: FinoraPage(
         child: ListView(
           children: [
-            Card(
-              color: finoraInk,
+            HeroCard(
               child: Padding(
                 padding: const EdgeInsets.all(22),
                 child: Column(

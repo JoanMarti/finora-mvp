@@ -144,8 +144,7 @@ class _SummaryCard extends StatelessWidget {
         ? 0.0
         : summary.totalSpent.cents / summary.totalLimit.cents;
     final over = summary.totalRemaining.isNegative;
-    return Card(
-      color: finoraInk,
+    return HeroCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

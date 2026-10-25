@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/features/overview/widgets/balance_overview_card.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +167,7 @@ class _WealthTrendPainter extends CustomPainter {
     final chartRect = Rect.fromLTWH(0, 6, size.width, size.height - 12);
 
     final gridPaint = Paint()
-      ..color = finoraBorder
+      ..color = finoraFill
       ..strokeWidth = 1;
     for (var index = 0; index < 3; index++) {
       final y = chartRect.top + chartRect.height * index / 2;
@@ -185,10 +186,7 @@ class _WealthTrendPainter extends CustomPainter {
               ((values[index] - minValue) / range) * chartRect.height,
         ),
     ];
-    final line = Path()..moveTo(points.first.dx, points.first.dy);
-    for (var index = 1; index < points.length; index++) {
-      line.lineTo(points[index].dx, points[index].dy);
-    }
+    final line = smoothPath(points);
 
     final fill = Path.from(line)
       ..lineTo(points.last.dx, chartRect.bottom)
@@ -200,7 +198,7 @@ class _WealthTrendPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0x553C94FF), Color(0x003C94FF)],
+          colors: [Color(0x402F6BFF), Color(0x002F6BFF)],
         ).createShader(chartRect),
     );
     canvas.drawPath(

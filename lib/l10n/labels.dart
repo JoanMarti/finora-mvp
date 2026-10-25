@@ -1,4 +1,5 @@
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/opportunities.dart';
 import 'package:finora/l10n/generated/app_localizations.dart';
 import 'package:finora/shared/formatters.dart';
 import 'package:intl/intl.dart';
@@ -108,3 +109,88 @@ extension FinoraLabels on AppLocalizations {
 
 bool _isSameDay(DateTime a, DateTime b) =>
     a.year == b.year && a.month == b.month && a.day == b.day;
+
+/// Texts for savings opportunities. Every sentence names the evidence it is
+/// based on, so the user can see why an offer appears.
+extension OpportunityLabels on AppLocalizations {
+  String opportunityTitle(Opportunity item) => switch (item.kind) {
+    OpportunityKind.healthInsuranceSwitch => offerHealthTitle,
+    OpportunityKind.insuranceReview => offerInsuranceReviewTitle,
+    OpportunityKind.idleCash => offerIdleCashTitle,
+    OpportunityKind.pillar3aRoom => offerPillarRoomTitle,
+    OpportunityKind.pillar3aOpen => offerPillarOpenTitle,
+    OpportunityKind.mortgageRenewal => offerMortgageTitle,
+    OpportunityKind.cardFees => offerCardTitle,
+    OpportunityKind.telecomPlan => offerTelecomTitle,
+    OpportunityKind.subscriptionsReview => offerSubscriptionsTitle,
+    OpportunityKind.bankFees => offerBankFeesTitle,
+  };
+
+  String opportunityReason(Opportunity item) {
+    final amount = item.amount == null ? '' : formatMoney(item.amount!);
+    return switch (item.kind) {
+      OpportunityKind.healthInsuranceSwitch => offerHealthReason(
+        amount,
+        item.subject ?? '',
+        item.percent ?? 0,
+      ),
+      OpportunityKind.insuranceReview => offerInsuranceReviewReason(
+        item.count ?? 0,
+        amount,
+      ),
+      OpportunityKind.idleCash => offerIdleCashReason(amount),
+      OpportunityKind.pillar3aRoom => offerPillarRoomReason(amount),
+      OpportunityKind.pillar3aOpen => offerPillarOpenReason(amount),
+      OpportunityKind.mortgageRenewal => offerMortgageReason(amount),
+      OpportunityKind.cardFees => offerCardReason(item.subject ?? ''),
+      OpportunityKind.telecomPlan => offerTelecomReason(
+        amount,
+        item.subject ?? '',
+      ),
+      OpportunityKind.subscriptionsReview => offerSubscriptionsReason(
+        item.count ?? 0,
+        amount,
+      ),
+      OpportunityKind.bankFees => offerBankFeesReason(item.count ?? 0),
+    };
+  }
+
+  String opportunityAction(Opportunity item) => switch (item.kind) {
+    OpportunityKind.healthInsuranceSwitch => offerHealthAction,
+    OpportunityKind.insuranceReview => offerInsuranceReviewAction,
+    OpportunityKind.idleCash => offerIdleCashAction,
+    OpportunityKind.pillar3aRoom ||
+    OpportunityKind.pillar3aOpen => offerPillarAction,
+    OpportunityKind.mortgageRenewal => offerMortgageAction,
+    OpportunityKind.cardFees => offerCardAction,
+    OpportunityKind.telecomPlan => offerTelecomAction,
+    OpportunityKind.subscriptionsReview => offerSubscriptionsAction,
+    OpportunityKind.bankFees => offerBankFeesAction,
+  };
+
+  String opportunityCategory(OpportunityCategory category) =>
+      switch (category) {
+        OpportunityCategory.insurance => offerCategoryInsurance,
+        OpportunityCategory.banking => offerCategoryBanking,
+        OpportunityCategory.pensions => offerCategoryPensions,
+        OpportunityCategory.mortgage => offerCategoryMortgage,
+        OpportunityCategory.telecom => offerCategoryTelecom,
+        OpportunityCategory.budget => offerCategoryBudget,
+      };
+
+  /// How Finora is paid, in plain words, for the disclosure line.
+  String revenueDisclosure(RevenueModel revenue) => switch (revenue) {
+    RevenueModel.leadFee => offerDisclosureLeadFee,
+    RevenueModel.commission => offerDisclosureCommission,
+    RevenueModel.affiliate => offerDisclosureAffiliate,
+    RevenueModel.none => offerDisclosureNone,
+  };
+
+  /// `CHF 210 – 630 a year`, or `null` when there is no estimate.
+  String? opportunitySaving(Opportunity item) {
+    final low = item.savingLow;
+    final high = item.savingHigh;
+    if (low == null || high == null) return null;
+    return offerSavingRange(formatMoneyWhole(low), formatMoneyWhole(high));
+  }
+}

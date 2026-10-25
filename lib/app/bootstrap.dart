@@ -3,6 +3,7 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/data/mock_financial_repository.dart';
 import 'package:finora/data/mock_market_data_repository.dart';
 import 'package:finora/domain/user_session.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 
 /// Wires the demo data sources into the app. A production build would return
@@ -10,10 +11,16 @@ import 'package:flutter_riverpod/misc.dart';
 List<Override> demoOverrides({SessionStore? sessionStore}) => [
   if (sessionStore != null) sessionStoreProvider.overrideWithValue(sessionStore),
   financialRepositoryProvider.overrideWith((ref) {
-    final session = ref.watch(sessionProvider);
+    // Only the connected institutions and products shape the data; other
+    // session changes (language, goals, consent) must not reload it.
+    final (institutionIds, products) = ref.watch(
+      sessionProvider.select(
+        (session) => (session.connectedInstitutionIds, session.products),
+      ),
+    );
     return MockFinancialRepository(
-      institutionIds: session.connectedInstitutionIds,
-      products: session.products,
+      institutionIds: institutionIds,
+      products: products,
       clock: ref.watch(clockProvider),
     );
   }),

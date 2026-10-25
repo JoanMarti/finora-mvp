@@ -37,7 +37,7 @@ const finoraInkGradient = LinearGradient(
 
 /// Soft shadow used by hero cards and floating elements.
 const finoraShadow = [
-  BoxShadow(color: Color(0x262F3FBF), blurRadius: 24, offset: Offset(0, 8)),
+  BoxShadow(color: Color(0x1A2F3FBF), blurRadius: 20, offset: Offset(0, 6)),
 ];
 
 const finoraRadius = 24.0;

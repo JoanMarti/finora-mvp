@@ -15,6 +15,8 @@ flutter run --dart-define=FINORA_API_URL=https://api.example.ch/
 
 Without `FINORA_API_URL` the app runs the demo with generated data (`lib/app/bootstrap.dart`).
 
+A **reference implementation** of this contract lives in [`server/`](../server/README.md). It serves the demo profile over HTTP, and CI checks it against the app with `test/contract_test.dart`.
+
 ## Conventions
 
 | Topic | Rule |

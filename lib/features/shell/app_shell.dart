@@ -191,10 +191,11 @@ class AppShell extends StatelessWidget {
       listenable: router.routerDelegate,
       builder: (context, _) {
         // The top route, including pages opened with push.
-        final section = navSectionOf(router.state.uri.path);
+        final path = router.state.uri.path;
+        final section = navSectionOf(path);
         return switch (FinoraWindow.of(context)) {
           FinoraWindow.compact => _CompactShell(
-            section: section,
+            path: path,
             child: child,
           ),
           FinoraWindow.medium => _RailShell(section: section, child: child),
@@ -209,13 +210,15 @@ class AppShell extends StatelessWidget {
 }
 
 class _CompactShell extends StatelessWidget {
-  const _CompactShell({required this.section, required this.child});
-  final String section;
+  const _CompactShell({required this.path, required this.child});
+
+  /// Full location: only the main pages themselves show the bar.
+  final String path;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final index = primaryNavItems.indexWhere((item) => item.route == section);
+    final index = primaryNavItems.indexWhere((item) => item.route == path);
     final l10n = context.l10n;
     return Scaffold(
       body: child,

@@ -46,6 +46,8 @@ abstract final class ApiEncoding {
     'category': value.category.name,
     'bookedAt': _date(value.bookedAt),
     'amount': money(value.amount),
+    if (value.foreignCurrency != null)
+      'foreignCurrency': value.foreignCurrency,
   };
 
   static Map<String, Object?> analytics(AccountAnalytics value) => {

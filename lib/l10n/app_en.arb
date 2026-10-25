@@ -2007,5 +2007,99 @@
       }
     }
   },
-  "subscriptionsNote": "Mandatory bills such as the radio and TV fee, insurance and electricity are not listed."
+  "subscriptionsNote": "Mandatory bills such as the radio and TV fee, insurance and electricity are not listed.",
+  "debtsTitle": "Debt-free plan",
+  "debtsToolSubtitle": "Cards, loans and leasing paid off in order",
+  "debtsAdd": "Add debt",
+  "debtsEdit": "Edit debt",
+  "debtsDelete": "Remove debt",
+  "debtsEmpty": "No consumer debts found. If you have a loan or leasing contract, add it to plan how to repay it.",
+  "debtsFreeBy": "Debt-free by",
+  "debtsNotFeasible": "This payment does not cover the interest. Increase it to make progress.",
+  "debtsMonthsInterest": "{months, plural, =1{In 1 month, with {interest} of interest} other{In {months} months, with {interest} of interest}}",
+  "@debtsMonthsInterest": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      },
+      "interest": {
+        "type": "String"
+      }
+    }
+  },
+  "debtsBetterThanOther": "{amount} less interest than the other method",
+  "@debtsBetterThanOther": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "debtsPaymentSection": "Monthly repayment",
+  "debtsPaymentLabel": "Amount per month for all debts",
+  "debtsPaymentHelp": "At least the minimums: {amount}.",
+  "@debtsPaymentHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "debtsAvalanche": "Highest rate first",
+  "debtsSnowball": "Smallest first",
+  "debtsAvalancheHelp": "Pays the least interest overall.",
+  "debtsSnowballHelp": "Clears a debt sooner, which helps to keep going.",
+  "debtsListSection": "Your debts",
+  "debtsRateMinimum": "{rate}% · minimum {minimum}",
+  "@debtsRateMinimum": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "debtsAboveLegal": "above the legal maximum",
+  "debtsLegalNote": "In Switzerland consumer credit may cost at most 10% a year for cash loans and 12% for credit card balances.",
+  "debtsCardNote": "Card balances start from your connected cards at 12%. If you pay your card bill in full each month, it costs no interest: remove it from the plan.",
+  "debtKindCard": "Credit card",
+  "debtKindLoan": "Loan",
+  "debtKindLeasing": "Leasing",
+  "debtKindOther": "Other",
+  "debtsBalanceLabel": "Outstanding amount",
+  "debtsRateLabel": "Yearly interest rate",
+  "debtsMinimumLabel": "Minimum monthly payment",
+  "debtsInvalid": "Enter a name, an amount, a rate below 100% and a minimum payment.",
+  "abroadSection": "Spending abroad",
+  "abroadLastMonth": "{amount} in {count} card payments in {currencies} in the last 30 days",
+  "@abroadLastMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "abroadFees": "Over a year that could be about {yearly}. Typical card currency fees of 1.75% would cost {fees}; a card without them could save around {saving}.",
+  "@abroadFees": {
+    "placeholders": {
+      "yearly": {
+        "type": "String"
+      },
+      "fees": {
+        "type": "String"
+      },
+      "saving": {
+        "type": "String"
+      }
+    }
+  },
+  "abroadNote": "A rough estimate from the last month: travel is irregular."
 }

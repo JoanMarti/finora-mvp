@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/budgets.dart';
+import 'package:finora/domain/debts.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/application/providers.dart';
@@ -283,6 +284,14 @@ class SessionController extends Notifier<UserSession> {
     }
     _update(state.copyWith(subscriptionDecisions: next));
   }
+
+  void setDebts(List<Debt> debts) => _update(state.copyWith(debts: debts));
+
+  void setDebtPayment(Money payment) =>
+      _update(state.copyWith(debtPayment: payment));
+
+  void setPayoffStrategy(PayoffStrategy strategy) =>
+      _update(state.copyWith(payoffStrategy: strategy));
 
   void setReminders(ReminderPreferences reminders) =>
       _update(state.copyWith(reminders: reminders));

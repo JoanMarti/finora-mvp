@@ -138,9 +138,18 @@ class _PriceChangeCard extends ConsumerWidget {
 
   /// The matching savings offer when there is one, else the place where
   /// the charge can be reviewed.
-  void _compare(BuildContext context, WidgetRef ref) {
+  Future<void> _compare(BuildContext context, WidgetRef ref) async {
     final kind = relatedOfferKind(change);
-    final offers = ref.read(opportunitiesProvider).value ?? const [];
+    final router = GoRouter.maybeOf(context);
+    var offers = const <Opportunity>[];
+    if (kind != null) {
+      try {
+        offers = await ref.read(opportunitiesProvider.future);
+      } on Object {
+        offers = const [];
+      }
+    }
+    if (!context.mounted) return;
     final offer = kind == null
         ? null
         : offers.where((item) => item.kind == kind).firstOrNull;
@@ -148,7 +157,7 @@ class _PriceChangeCard extends ConsumerWidget {
       showOpportunitySheet(context, offer);
       return;
     }
-    context.push(
+    router?.push(
       kind == OpportunityKind.subscriptionsReview ? '/subscriptions' : '/analysis',
     );
   }

@@ -64,6 +64,10 @@ class FinoraApiClient {
     ),
   );
 
+  Future<Object?> delete(String path) => _send(
+    () async => client.delete(_uri(path), headers: await _headers()),
+  );
+
   Future<Object?> put(String path, Object? body) => _send(
     () async => client.put(
       _uri(path),

@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Backend calls (bank data, sign-in) once a server is configured. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Fingerprint or face unlock, when the user turns it on. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <!-- Account data, PIN hash and consents stay on the device: they are
          never copied to cloud backups or to a new phone. -->
     <application

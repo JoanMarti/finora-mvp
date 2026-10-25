@@ -2792,6 +2792,17 @@
       "foreignCurrency": "EUR"
     },
     {
+      "id": "t21",
+      "accountId": "ubs-card",
+      "merchant": "Spotify",
+      "category": "shopping",
+      "bookedAt": "2026-10-16T12:00:00.000",
+      "amount": {
+        "cents": -1295,
+        "currency": "CHF"
+      }
+    },
+    {
       "id": "t3",
       "accountId": "ubs-personal",
       "merchant": "Salary",
@@ -2893,6 +2904,17 @@
       }
     },
     {
+      "id": "t22",
+      "accountId": "ubs-card",
+      "merchant": "Spotify",
+      "category": "shopping",
+      "bookedAt": "2026-09-16T12:00:00.000",
+      "amount": {
+        "cents": -1195,
+        "currency": "CHF"
+      }
+    },
+    {
       "id": "t7",
       "accountId": "ubs-personal",
       "merchant": "Salary",
@@ -2900,6 +2922,17 @@
       "bookedAt": "2026-09-15T12:00:00.000",
       "amount": {
         "cents": 685000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t20",
+      "accountId": "zkb-private",
+      "merchant": "Swisscom",
+      "category": "utilities",
+      "bookedAt": "2026-09-14T12:00:00.000",
+      "amount": {
+        "cents": -8490,
         "currency": "CHF"
       }
     }

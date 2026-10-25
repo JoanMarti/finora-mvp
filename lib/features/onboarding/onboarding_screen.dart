@@ -1,9 +1,12 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/onboarding/account_steps.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
+import 'package:finora/features/onboarding/plan_step.dart';
+import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -15,6 +18,7 @@ enum _Step {
   welcome,
   account,
   verify,
+  plan,
   products,
   banks,
   investments,
@@ -38,6 +42,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         _Step.account,
         _Step.verify,
       ],
+      _Step.plan,
       _Step.products,
       _Step.banks,
       if (products.contains(FinancialProductType.investments))
@@ -59,6 +64,24 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final state = ref.read(onboardingProvider);
     final last = _stepsFor(state).length - 1;
     _controller.setStep((state.stepIndex - 1).clamp(0, last));
+  }
+
+  /// Selecting banks respects the plan: Free connects up to three.
+  void _toggleInstitution(String id) {
+    final selected = ref.read(onboardingProvider).institutionIds;
+    final entitlements = ref.read(entitlementsProvider);
+    if (!selected.contains(id) &&
+        !entitlements.canConnectMore(selected.length)) {
+      showPaywall(context, PaywallReason.banks);
+      return;
+    }
+    _controller.toggleInstitution(id);
+  }
+
+  String? _limitNote(OnboardingState state) {
+    final limit = ref.watch(entitlementsProvider).maxInstitutions;
+    if (limit == null) return null;
+    return context.l10n.freeLimitNote(state.institutionIds.length, limit);
   }
 
   void _useDemoData() {
@@ -132,6 +155,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         onVerified: next,
         onChangeEmail: back,
       ),
+      _Step.plan => PlanStep(key: key, onContinue: next),
       _Step.products => _SelectionStep<FinancialProductType>(
         key: key,
         title: l10n.productsTitle,
@@ -152,8 +176,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         }),
         selected: state.institutionIds,
         label: InstitutionCatalogue.nameOf,
-        onToggle: _controller.toggleInstitution,
+        onToggle: _toggleInstitution,
         onContinue: state.institutionIds.isNotEmpty ? next : null,
+        note: _limitNote(state),
       ),
       _Step.investments => _SelectionStep<String>(
         key: key,
@@ -162,7 +187,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         options: _idsOffering({FinancialProductType.investments}),
         selected: state.institutionIds,
         label: InstitutionCatalogue.nameOf,
-        onToggle: _controller.toggleInstitution,
+        onToggle: _toggleInstitution,
+        note: _limitNote(state),
         onContinue: next,
         canSkip: true,
       ),
@@ -173,7 +199,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         options: _idsOffering({FinancialProductType.pillar3a}),
         selected: state.institutionIds,
         label: InstitutionCatalogue.nameOf,
-        onToggle: _controller.toggleInstitution,
+        onToggle: _toggleInstitution,
+        note: _limitNote(state),
         onContinue: next,
         canSkip: true,
       ),
@@ -280,8 +307,12 @@ class _SelectionStep<T> extends StatelessWidget {
     required this.onToggle,
     required this.onContinue,
     this.canSkip = false,
+    this.note,
     super.key,
   });
+
+  /// Small hint under the subtitle, e.g. the free plan's bank limit.
+  final String? note;
   final String title;
   final String subtitle;
   final List<T> options;
@@ -299,6 +330,24 @@ class _SelectionStep<T> extends StatelessWidget {
         Text(title, style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 10),
         Text(subtitle, style: Theme.of(context).textTheme.bodyLarge),
+        if (note != null) ...[
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Icon(Icons.info_outline, size: 16, color: finoraBlueText),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  note!,
+                  style: const TextStyle(
+                    color: finoraBlueText,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
         const SizedBox(height: 24),
         Expanded(
           child: ListView.separated(

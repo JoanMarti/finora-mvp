@@ -1,10 +1,12 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/lock/lock_screen.dart';
+import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -136,22 +138,33 @@ class ProfileScreen extends ConsumerWidget {
                 label: Text(l10n.addConnection),
               ),
               SectionTitle(l10n.planSection),
-              Card(
-                child: ListTile(
-                  leading: Icon(
-                    session.isPlus ? Icons.verified : Icons.auto_awesome,
-                    color: session.isPlus ? finoraGreen : finoraBlueText,
-                  ),
-                  title: Text(
-                    session.isPlus ? l10n.plusActive : l10n.planFree,
-                    style: const TextStyle(fontWeight: FontWeight.w800),
-                  ),
-                  subtitle: Text(
-                    session.isPlus ? l10n.plusManage : l10n.plusTeaser,
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.push('/plus'),
-                ),
+              Builder(
+                builder: (context) {
+                  final premium = ref.watch(isPlusProvider);
+                  final trialEnd = session.onTrial ? session.trialEndsAt : null;
+                  final now = ref.watch(clockProvider)();
+                  return Card(
+                    child: ListTile(
+                      leading: Icon(
+                        premium ? Icons.verified : Icons.auto_awesome,
+                        color: premium ? finoraGreen : finoraBlueText,
+                      ),
+                      title: Text(
+                        !premium
+                            ? l10n.planFree
+                            : trialEnd != null
+                            ? l10n.trialDaysLeft(daysLeft(now, trialEnd))
+                            : l10n.plusActive,
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      subtitle: Text(
+                        premium ? l10n.plusManage : l10n.plusTeaser,
+                      ),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/plus'),
+                    ),
+                  );
+                },
               ),
               SectionTitle(l10n.preferencesSection),
               Card(

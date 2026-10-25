@@ -44,6 +44,9 @@ class UserSession {
     this.userId,
     this.emailVerified = false,
     this.marketingOptIn = false,
+    this.trialEndsAt,
+    this.trialUsed = false,
+    this.billingPeriod,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -147,7 +150,23 @@ class UserSession {
 
   bool get hasAccount => userId != null;
 
+  /// End of the Premium trial; `null` when no trial is running.
+  final DateTime? trialEndsAt;
+
+  /// The trial is offered once per profile.
+  final bool trialUsed;
+
+  /// How a paid Premium subscription is billed; `null` on Free or trial.
+  final BillingPeriod? billingPeriod;
+
+  /// Whether the session holds Premium, ignoring trial expiry. Use
+  /// [isPremiumAt] (or `isPlusProvider`) to decide what to unlock.
   bool get isPlus => plan == FinoraPlan.plus;
+
+  bool get onTrial => isPlus && trialEndsAt != null;
+
+  bool isPremiumAt(DateTime now) =>
+      isPlus && (trialEndsAt == null || now.isBefore(trialEndsAt!));
 
   static const _unset = Object();
 
@@ -210,6 +229,9 @@ class UserSession {
     Object? userId = _unset,
     bool? emailVerified,
     bool? marketingOptIn,
+    Object? trialEndsAt = _unset,
+    bool? trialUsed,
+    Object? billingPeriod = _unset,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -253,6 +275,13 @@ class UserSession {
       userId: identical(userId, _unset) ? this.userId : userId as String?,
       emailVerified: emailVerified ?? this.emailVerified,
       marketingOptIn: marketingOptIn ?? this.marketingOptIn,
+      trialEndsAt: identical(trialEndsAt, _unset)
+          ? this.trialEndsAt
+          : trialEndsAt as DateTime?,
+      trialUsed: trialUsed ?? this.trialUsed,
+      billingPeriod: identical(billingPeriod, _unset)
+          ? this.billingPeriod
+          : billingPeriod as BillingPeriod?,
     );
   }
 
@@ -293,6 +322,9 @@ class UserSession {
     'userId': userId,
     'emailVerified': emailVerified,
     'marketingOptIn': marketingOptIn,
+    'trialEndsAt': trialEndsAt?.toIso8601String(),
+    'trialUsed': trialUsed,
+    'billingPeriod': billingPeriod?.name,
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -376,6 +408,11 @@ class UserSession {
       userId: json['userId'] as String?,
       emailVerified: json['emailVerified'] as bool? ?? false,
       marketingOptIn: json['marketingOptIn'] as bool? ?? false,
+      trialEndsAt: DateTime.tryParse('${json['trialEndsAt']}'),
+      trialUsed: json['trialUsed'] as bool? ?? false,
+      billingPeriod: BillingPeriod.values
+          .where((value) => value.name == json['billingPeriod'])
+          .firstOrNull,
     );
   }
 

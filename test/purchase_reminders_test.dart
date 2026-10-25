@@ -6,6 +6,7 @@ import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/backend_services.dart';
 import 'package:finora/domain/calendar.dart';
 import 'package:finora/domain/purchases.dart';
+import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/reminders.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:finora/features/calendar/calendar_screen.dart';
@@ -27,7 +28,9 @@ class _FakeStore implements PurchaseService {
   bool get isStore => true;
 
   @override
-  Future<PurchaseResult> buyPlus() async => buy;
+  Future<PurchaseResult> buyPlus({
+    BillingPeriod period = BillingPeriod.yearly,
+  }) async => buy;
 
   @override
   Future<PurchaseResult> restore() async => restoreResult;
@@ -152,13 +155,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.textContaining('App Store or Google Play'),
-        300,
-        scrollable: find.byType(Scrollable).first,
-      );
-
-      final start = find.textContaining('Start Plus ·');
+      final start = find.textContaining('Subscribe ·');
       await tester.scrollUntilVisible(
         start,
         300,
@@ -166,7 +163,7 @@ void main() {
       );
       await tester.tap(start);
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(FilledButton, 'Start Plus'));
+      await tester.tap(find.widgetWithText(FilledButton, 'Start Premium'));
       await tester.pumpAndSettle();
       expect(_session(tester, PlusScreen).isPlus, isFalse);
       expect(find.textContaining('did not go through'), findsOneWidget);
@@ -205,7 +202,7 @@ void main() {
       final session = _session(tester, PlusScreen);
       expect(session.isPlus, isTrue);
       expect(session.plusSince, since);
-      expect(find.text('Your Finora Plus subscription was restored.'), findsOneWidget);
+      expect(find.text('Your Finora Premium subscription was restored.'), findsOneWidget);
     });
   });
 

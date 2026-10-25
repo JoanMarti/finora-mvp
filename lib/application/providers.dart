@@ -1,5 +1,7 @@
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/budgets.dart';
 import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
@@ -224,6 +226,26 @@ final alertsProvider = FutureProvider<List<FinoraAlert>>((ref) async {
           kind: AlertKind.assetValueOutdated,
           subject: asset.name,
           route: '/assets',
+        ),
+      );
+    }
+  }
+
+  // Budgets already exceeded this month.
+  if (session.budgets.isNotEmpty) {
+    final analysis = await ref.watch(spendingAnalysisProvider.future);
+    final summary = BudgetSummary.of(
+      session.budgets,
+      analysis.combined.spendingCategories,
+      now,
+    );
+    for (final line in summary.overBudget) {
+      alerts.add(
+        FinoraAlert(
+          kind: AlertKind.budgetExceeded,
+          subject: line.category.name,
+          amount: line.spent - line.limit,
+          route: '/budgets',
         ),
       );
     }

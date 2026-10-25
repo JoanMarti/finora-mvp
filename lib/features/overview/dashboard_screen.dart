@@ -329,6 +329,12 @@ class _PlanningTools extends ConsumerWidget {
         '/analysis',
       ),
       (
+        Icons.pie_chart_outline,
+        l10n.budgetsTitle,
+        l10n.budgetsToolSubtitle,
+        '/budgets',
+      ),
+      (
         Icons.calendar_month_outlined,
         l10n.calendarScreenTitle,
         l10n.calendarToolSubtitle,

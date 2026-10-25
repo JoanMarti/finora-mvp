@@ -91,6 +91,11 @@ extension FinoraLabels on AppLocalizations {
     AlertKind.staleConnection => alertStaleTitle(alert.subject),
     AlertKind.manualValueOutdated => alertManualTitle(alert.subject),
     AlertKind.assetValueOutdated => alertAssetTitle(alert.subject),
+    AlertKind.budgetExceeded => alertBudgetTitle(
+      _categoryNamed(alert.subject) == null
+          ? alert.subject
+          : transactionCategory(_categoryNamed(alert.subject)!),
+    ),
     AlertKind.billDue => alertBillTitle(alert.subject),
   };
 
@@ -99,6 +104,9 @@ extension FinoraLabels on AppLocalizations {
     AlertKind.staleConnection => alertStaleBody,
     AlertKind.manualValueOutdated => alertManualBody,
     AlertKind.assetValueOutdated => alertAssetBody,
+    AlertKind.budgetExceeded => alertBudgetBody(
+      alert.amount == null ? '' : formatMoney(alert.amount!),
+    ),
     AlertKind.billDue => alertBillBody(
       alert.bill == null ? '' : billCategory(alert.bill!),
       alert.amount == null ? '' : formatMoney(alert.amount!),
@@ -111,6 +119,9 @@ extension FinoraLabels on AppLocalizations {
       ? connectionUnavailable
       : syncTime(connection.lastSyncedAt, now);
 }
+
+TransactionCategory? _categoryNamed(String name) =>
+    TransactionCategory.values.where((value) => value.name == name).firstOrNull;
 
 bool _isSameDay(DateTime a, DateTime b) =>
     a.year == b.year && a.month == b.month && a.day == b.day;

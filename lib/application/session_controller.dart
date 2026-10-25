@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/budgets.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/application/providers.dart';
@@ -256,6 +257,31 @@ class SessionController extends Notifier<UserSession> {
     ].join();
     _update(state.copyWith(installationId: id));
     return id;
+  }
+
+  /// Sets the monthly limit for [category]; `null` removes the budget.
+  void setBudget(TransactionCategory category, Money? limit) {
+    final next = {...state.budgets};
+    if (limit == null || limit.isZero) {
+      next.remove(category);
+    } else {
+      next[category] = limit;
+    }
+    _update(state.copyWith(budgets: next));
+  }
+
+  void setBudgets(Map<TransactionCategory, Money> budgets) =>
+      _update(state.copyWith(budgets: {...state.budgets, ...budgets}));
+
+  /// Records the user's decision for a subscription; `null` clears it.
+  void decideSubscription(String merchant, SubscriptionDecision? decision) {
+    final next = {...state.subscriptionDecisions};
+    if (decision == null) {
+      next.remove(merchant);
+    } else {
+      next[merchant] = decision;
+    }
+    _update(state.copyWith(subscriptionDecisions: next));
   }
 
   void setReminders(ReminderPreferences reminders) =>

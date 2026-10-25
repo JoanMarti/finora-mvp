@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/budgets.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
@@ -33,6 +34,8 @@ class UserSession {
     this.installationId,
     this.appLock,
     this.reminders = const ReminderPreferences(),
+    this.budgets = const {},
+    this.subscriptionDecisions = const {},
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -107,6 +110,12 @@ class UserSession {
   /// Push reminder choices for the financial calendar.
   final ReminderPreferences reminders;
 
+  /// Monthly spending limit per category.
+  final Map<TransactionCategory, Money> budgets;
+
+  /// The user's decision per subscription, keyed by merchant.
+  final Map<String, SubscriptionDecision> subscriptionDecisions;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -155,6 +164,8 @@ class UserSession {
     String? installationId,
     Object? appLock = _unset,
     ReminderPreferences? reminders,
+    Map<TransactionCategory, Money>? budgets,
+    Map<String, SubscriptionDecision>? subscriptionDecisions,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -186,6 +197,9 @@ class UserSession {
       installationId: installationId ?? this.installationId,
       appLock: identical(appLock, _unset) ? this.appLock : appLock as AppLock?,
       reminders: reminders ?? this.reminders,
+      budgets: budgets ?? this.budgets,
+      subscriptionDecisions:
+          subscriptionDecisions ?? this.subscriptionDecisions,
     );
   }
 
@@ -212,6 +226,13 @@ class UserSession {
     'installationId': installationId,
     'appLock': appLock?.toJson(),
     'reminders': reminders.toJson(),
+    'budgets': {
+      for (final entry in budgets.entries) entry.key.name: entry.value.cents,
+    },
+    'subscriptionDecisions': {
+      for (final entry in subscriptionDecisions.entries)
+        entry.key: entry.value.name,
+    },
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -265,6 +286,19 @@ class UserSession {
       installationId: json['installationId'] as String?,
       appLock: AppLock.fromJson(json['appLock']),
       reminders: ReminderPreferences.fromJson(json['reminders']),
+      budgets: {
+        if (json['budgets'] case final Map raw)
+          for (final entry in raw.entries)
+            for (final category in TransactionCategory.values)
+              if (category.name == entry.key && entry.value is int)
+                category: Money.cents(entry.value as int),
+      },
+      subscriptionDecisions: {
+        if (json['subscriptionDecisions'] case final Map raw)
+          for (final entry in raw.entries)
+            for (final decision in SubscriptionDecision.values)
+              if (decision.name == entry.value) '${entry.key}': decision,
+      },
     );
   }
 

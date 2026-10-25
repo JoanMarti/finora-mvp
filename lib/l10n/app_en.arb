@@ -2674,5 +2674,47 @@
         "type": "String"
       }
     }
+  },
+  "offerRentDepositTitle": "Free up your rent deposit",
+  "offerRentDepositReason": "{amount} is blocked in your rent deposit account. A rent deposit guarantee frees it for about {percent}% of the deposit a year, so it only pays off if you need the cash, for example to clear a card balance or build your buffer.",
+  "@offerRentDepositReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "offerRentDepositAction": "Compare deposit guarantees",
+  "offerFamilyTitle": "Check your family allowances",
+  "offerFamilyReason": "{count, plural, =1{With 1 child} other{With {count} children}} you are owed at least {amount} a month in child allowances; many cantons pay more, and from age 16 the education allowance is higher. Check that your employer or compensation fund pays them.",
+  "@offerFamilyReason": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerFamilyAction": "Update family details",
+  "partnerContinueTo": "Continue to {partner}",
+  "@partnerContinueTo": {
+    "placeholders": {
+      "partner": {
+        "type": "String"
+      }
+    }
+  },
+  "partnerLinkNote": "Opens {partner} in your browser. Finora may receive a fee if you sign up; it never changes which offers you see.",
+  "@partnerLinkNote": {
+    "placeholders": {
+      "partner": {
+        "type": "String"
+      }
+    }
   }
 }

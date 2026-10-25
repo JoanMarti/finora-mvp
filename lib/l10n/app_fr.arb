@@ -1063,5 +1063,13 @@
   "interestFamily": "Planifier pour la famille",
   "interestTravel": "Voyager",
   "taxRateFromProfile": "Estimé d’après votre canton, revenu et état civil. Pour un résultat précis, utilisez le taux de votre dernière taxation.",
-  "pillar3aSelfEmployedNote": "En tant qu’indépendant·e sans caisse de pension, vous pouvez verser jusqu’à {amount} cette année."
+  "pillar3aSelfEmployedNote": "En tant qu’indépendant·e sans caisse de pension, vous pouvez verser jusqu’à {amount} cette année.",
+  "offerRentDepositTitle": "Libérer votre garantie de loyer",
+  "offerRentDepositReason": "{amount} sont bloqués sur votre compte de garantie de loyer. Une assurance caution les libère pour environ {percent} % de la garantie par an : utile seulement si vous avez besoin de cet argent, par exemple pour rembourser une carte ou constituer votre réserve.",
+  "offerRentDepositAction": "Comparer les assurances caution",
+  "offerFamilyTitle": "Vérifier vos allocations familiales",
+  "offerFamilyReason": "{count, plural, =1{Avec 1 enfant} other{Avec {count} enfants}}, vous avez droit à au moins {amount} par mois d’allocations ; beaucoup de cantons versent plus, et dès 16 ans l’allocation de formation est plus élevée. Vérifiez que votre employeur ou votre caisse de compensation les verse.",
+  "offerFamilyAction": "Mettre à jour la famille",
+  "partnerContinueTo": "Continuer vers {partner}",
+  "partnerLinkNote": "Ouvre {partner} dans votre navigateur. Finora peut être rémunéré si vous souscrivez ; cela ne change jamais les offres affichées."
 }

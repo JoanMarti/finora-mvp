@@ -51,6 +51,7 @@ final opportunitiesProvider = FutureProvider<List<Opportunity>>((ref) async {
       propertyValue: ref
           .watch(sessionProvider.select((session) => session.manualAssets))
           .totalOf(ManualAssetKind.property),
+      profile: ref.watch(userProfileProvider),
     ),
   );
   return [

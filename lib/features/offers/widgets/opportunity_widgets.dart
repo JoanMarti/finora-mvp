@@ -1,4 +1,5 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/backend.dart';
 import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/opportunities.dart';
@@ -134,11 +135,19 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
     if (!opportunity.isSponsored) {
       final router = GoRouter.of(context);
       Navigator.pop(context);
-      router.push(
-        opportunity.kind == OpportunityKind.subscriptionsReview
-            ? '/subscriptions'
-            : '/analysis',
-      );
+      router.push(switch (opportunity.kind) {
+        OpportunityKind.subscriptionsReview => '/subscriptions',
+        OpportunityKind.familyAllowance => '/about-you',
+        _ => '/analysis',
+      });
+      return;
+    }
+    // A configured partner: open its tracked link outside the app.
+    final link = ref.read(partnerLinksProvider).value?[opportunity.kind];
+    if (link != null) {
+      final open = ref.read(linkOpenerProvider);
+      Navigator.pop(context);
+      await open(link.trackedUrl());
       return;
     }
     final l10n = context.l10n;
@@ -172,6 +181,9 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
     final opportunity = widget.opportunity;
     final saving = l10n.opportunitySaving(opportunity);
     final canContinue = !opportunity.isSponsored || _shareConsent;
+    final link = opportunity.isSponsored
+        ? ref.watch(partnerLinksProvider).value?[opportunity.kind]
+        : null;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -238,8 +250,21 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
             const SizedBox(height: 8),
             FilledButton(
               onPressed: canContinue ? _continue : null,
-              child: Text(l10n.opportunityAction(opportunity)),
+              child: Text(
+                link == null
+                    ? l10n.opportunityAction(opportunity)
+                    : l10n.partnerContinueTo(link.partnerName),
+              ),
             ),
+            if (link != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  l10n.partnerLinkNote(link.partnerName),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: finoraMutedInk, fontSize: 11),
+                ),
+              ),
             TextButton(
               onPressed: _dismiss,
               child: Text(l10n.offerNotInterested),

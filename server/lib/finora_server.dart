@@ -88,6 +88,7 @@ Handler buildHandler(
   InstallationStore? store,
   AccountRegistry? accounts,
   String? accessToken,
+  List<Map<String, Object?>> partners = const [],
 }) {
   final installations = store ?? InstallationStore();
   final registry = accounts ?? AccountRegistry();
@@ -224,6 +225,9 @@ Handler buildHandler(
       return reply(data);
     })
     ..post('/v1/refresh', (Request _) => Response(204))
+    // Partner links by offer kind. The reference server has no contracts,
+    // so it returns the configured list (empty by default).
+    ..get('/v1/partners', (Request _) => reply(partners))
     ..put('/v1/installations/<id>/funnel', (Request request, String id) async {
       final body = await _object(request);
       // Privacy guard: only aggregated fields are accepted.

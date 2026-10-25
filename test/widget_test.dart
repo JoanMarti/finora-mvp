@@ -69,6 +69,8 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
+    // Let the list come to rest: a tap on a moving list only stops it.
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Start free'));
     await tester.pumpAndSettle();
 

@@ -24,7 +24,7 @@ flutter run --dart-define=FINORA_API_URL=http://localhost:8080/
 
 ## Fixture
 
-`fixtures/demo.json` is generated from the app's demo data, so the app and the server cannot drift apart. CI fails when the file is out of date. To regenerate it, run from the repository root:
+`fixtures/demo.json` is generated from the app's demo data, so the app and the server cannot drift apart. On pull requests CI regenerates it and commits it when it changes, and `test/contract_test.dart` fails if a committed fixture no longer matches. To regenerate it locally, run from the repository root:
 
 ```sh
 UPDATE_FIXTURES=1 flutter test test/contract_test.dart

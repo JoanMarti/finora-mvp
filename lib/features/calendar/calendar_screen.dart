@@ -1,7 +1,10 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/backend.dart';
 import 'package:finora/application/calendar.dart';
 import 'package:finora/application/providers.dart';
+import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/calendar.dart';
+import 'package:finora/domain/reminders.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -149,6 +152,8 @@ class CalendarScreen extends ConsumerWidget {
                   l10n.calendarIntro,
                   style: const TextStyle(color: finoraMutedInk, height: 1.4),
                 ),
+                const SizedBox(height: 12),
+                const _RemindersCard(),
                 for (final entry in byMonth.entries) ...[
                   SectionTitle(formatMonthYear(entry.key)),
                   Card(
@@ -200,5 +205,160 @@ class CalendarScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(l10n.calendarCopied(count))));
+  }
+}
+
+/// Asks once whether to send push reminders, then lets the user choose
+/// which kinds of dates they want.
+class _RemindersCard extends ConsumerWidget {
+  const _RemindersCard();
+
+  Future<void> _turnOn(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    final allowed = await ref.read(notificationPermissionsProvider).request();
+    final session = ref.read(sessionProvider.notifier);
+    final current = ref.read(sessionProvider).reminders;
+    if (!allowed) {
+      session.setReminders(current.copyWith(enabled: false));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.remindersBlocked)));
+      return;
+    }
+    session.setReminders(current.copyWith(enabled: true));
+    messenger.showSnackBar(SnackBar(content: Text(l10n.remindersOn)));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final reminders = ref.watch(
+      sessionProvider.select((session) => session.reminders),
+    );
+    final session = ref.read(sessionProvider.notifier);
+    return switch (reminders.enabled) {
+      null => Card(
+        color: finoraSoftBlue,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.remindersAskTitle,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 4),
+              Text(l10n.remindersAskBody, style: const TextStyle(height: 1.4)),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  // The theme makes filled buttons full width.
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () => _turnOn(context, ref),
+                      child: Text(l10n.remindersTurnOn),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: () => session.setReminders(
+                      reminders.copyWith(enabled: false),
+                    ),
+                    child: Text(l10n.offersConsentDecline),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      true => Card(
+        child: ListTile(
+          leading: const Icon(Icons.notifications_active_outlined),
+          title: Text(l10n.remindersOnTitle),
+          subtitle: Text(l10n.remindersOnBody),
+          trailing: const Icon(Icons.tune),
+          onTap: () => showModalBottomSheet<void>(
+            context: context,
+            showDragHandle: true,
+            builder: (_) => const _ReminderSettings(),
+          ),
+        ),
+      ),
+      false => Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          onPressed: () => _turnOn(context, ref),
+          icon: const Icon(Icons.notifications_none),
+          label: Text(l10n.remindersTurnOn),
+        ),
+      ),
+    };
+  }
+}
+
+class _ReminderSettings extends ConsumerWidget {
+  const _ReminderSettings();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final reminders = ref.watch(
+      sessionProvider.select((session) => session.reminders),
+    );
+    final session = ref.read(sessionProvider.notifier);
+    String label(CalendarEventKind kind) => switch (kind) {
+      CalendarEventKind.healthInsuranceSwitch => l10n.reminderHealth,
+      CalendarEventKind.pillar3aDeposit => l10n.reminderPillar,
+      CalendarEventKind.taxReturn => l10n.reminderTax,
+      CalendarEventKind.goalDeadline => l10n.reminderGoals,
+      CalendarEventKind.assetReview => l10n.reminderAssets,
+      CalendarEventKind.plusRenewal => l10n.reminderPlus,
+      CalendarEventKind.bill => '',
+    };
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                l10n.remindersSettingsTitle,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            for (final kind in ReminderPreferences.kinds)
+              SwitchListTile(
+                value: !reminders.muted.contains(kind),
+                title: Text(label(kind)),
+                onChanged: (on) => session.setReminders(
+                  reminders.copyWith(
+                    muted: on
+                        ? ({...reminders.muted}..remove(kind))
+                        : {...reminders.muted, kind},
+                  ),
+                ),
+              ),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: finoraDanger),
+              onPressed: () {
+                session.setReminders(reminders.copyWith(enabled: false));
+                Navigator.pop(context);
+              },
+              child: Text(l10n.remindersTurnOff),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                l10n.remindersPrivacy,
+                style: const TextStyle(color: finoraMutedInk, fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

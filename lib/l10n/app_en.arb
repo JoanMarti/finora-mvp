@@ -807,5 +807,245 @@
   "privacyNoCredentials": "No bank credentials or consent tokens are collected.",
   "restartOnboardingTitle": "Restart onboarding?",
   "restartOnboardingBody": "Your demo profile and connections on this device will be cleared.",
-  "restart": "Restart"
+  "restart": "Restart",
+  "editPlan": "Edit",
+  "planningToolsSection": "Planning",
+  "setFirstGoal": "Set your first savings goal",
+  "goalCount": "{count, plural, =1{1 goal in progress} other{{count} goals in progress}}",
+  "@goalCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "retirementToolSubtitle": "AHV, pension fund and Pillar 3a together",
+  "retirementToolEstimate": "About {amount} a month from {year}",
+  "@retirementToolEstimate": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "taxToolSubtitle": "Figures for your {year} tax return",
+  "@taxToolSubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "goalsTitle": "Goals & targets",
+  "goalsHeadline": "Make your plan yours",
+  "goalsSubtitle": "Adjust your plan targets and track what you are saving for.",
+  "planTargetsSection": "Plan targets",
+  "bufferMonthsValue": "{months} months of spending",
+  "@bufferMonthsValue": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "longTermShareValue": "{percent}% invested long term",
+  "@longTermShareValue": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "savingsGoalsSection": "Savings goals",
+  "noGoalsYet": "No goals yet. Add one to see how much to put aside each month.",
+  "addGoal": "Add a goal",
+  "editGoal": "Edit goal",
+  "goalReached": "Goal reached",
+  "goalNoDeadline": "No deadline",
+  "goalByDate": "By {date} · {amount} a month",
+  "@goalByDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSemantics": "{name}: {saved} of {target}, {percent} percent",
+  "@goalSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "saved": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "goalNameLabel": "Name",
+  "goalNameHint": "e.g. Flat deposit",
+  "goalNameRequired": "Give your goal a name",
+  "goalTargetLabel": "Target amount",
+  "goalTargetRequired": "Enter an amount above zero",
+  "goalAddDeadline": "Add a deadline",
+  "goalRemoveDeadline": "Remove deadline",
+  "goalAccountsLabel": "Counts towards this goal",
+  "saveGoal": "Save goal",
+  "deleteGoal": "Delete goal",
+  "retirementTitle": "Retirement outlook",
+  "exampleFiguresNote": "These are example figures. Enter your own from your pension fund certificate for a personal estimate.",
+  "useMyFigures": "Use my figures",
+  "estimatedIncomeFrom": "Estimated retirement income from {year}",
+  "@estimatedIncomeFrom": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "retirementTarget": "Target {amount} a month ({percent}% of today’s salary)",
+  "@retirementTarget": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "retirementOnTrack": "On track · {percent}% of your target",
+  "@retirementOnTrack": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "retirementGap": "{amount} a month short of your target",
+  "@retirementGap": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "threePillarsSection": "The three pillars",
+  "pillarOneLabel": "1st pillar · AHV",
+  "pillarOneDetail": "State pension, including the 13th AHV pension",
+  "pillarTwoLabel": "2nd pillar · pension fund",
+  "pillarThreeLabel": "3rd pillar · Pillar 3a",
+  "pillarCapital": "Capital at retirement {amount}",
+  "@pillarCapital": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "assumptionsSection": "Assumptions",
+  "assumptionAhv": "AHV: full contribution years, today’s salary as average income, 13th pension paid every December.",
+  "assumptionPensionFund": "Pension fund: {interest}% interest a year and a {conversion}% conversion rate (legal minimums).",
+  "@assumptionPensionFund": {
+    "placeholders": {
+      "interest": {
+        "type": "String"
+      },
+      "conversion": {
+        "type": "String"
+      }
+    }
+  },
+  "assumptionPillar3a": "Pillar 3a: {rate}% return a year, capital spent over {years} years.",
+  "@assumptionPillar3a": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      },
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "assumptionTodaysFrancs": "All amounts are in today’s francs, before tax.",
+  "editMyFigures": "Edit my figures",
+  "retirementDisclaimer": "Estimate only, not pension advice. Your pension fund certificate and AHV account statement give the exact figures.",
+  "certificateHint": "You find these on your yearly pension fund certificate.",
+  "birthYearLabel": "Year of birth",
+  "birthYearInvalid": "Enter a valid year of birth",
+  "annualSalaryLabel": "Gross annual salary",
+  "annualSalaryRequired": "Enter your salary",
+  "pensionFundBalanceLabel": "Pension fund savings today",
+  "pensionFundCreditsLabel": "Yearly savings credits",
+  "pensionFundCreditsHelp": "Employee and employer contributions together",
+  "pillar3aContributionLabel": "Yearly Pillar 3a contribution",
+  "pillar3aContributionHelp": "Up to CHF 7,258 with a pension fund (2026)",
+  "pillar3aReturnLabel": "Expected Pillar 3a return: {rate}% a year",
+  "@pillar3aReturnLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "replacementLabel": "Retirement income target: {percent}% of salary",
+  "@replacementLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "saveFigures": "Save my figures",
+  "taxTitle": "Tax summary",
+  "taxBalancesOn": "Balances on {date}",
+  "@taxBalancesOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "taxYearToDate": "Year to date · as of {date}",
+  "@taxYearToDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "taxNetWealth": "Net taxable wealth",
+  "taxIncomeFromAssets": "Interest and dividends",
+  "taxPillar3aDeduction": "Pillar 3a deduction",
+  "taxDebtInterestDeduction": "Debt interest deduction",
+  "taxBankAccounts": "Bank accounts",
+  "taxSecurities": "Securities",
+  "taxDebts": "Debts",
+  "taxInterest": "Interest",
+  "taxDividends": "Dividends",
+  "taxInterestPaid": "Interest paid",
+  "taxNothingToDeclare": "Nothing to declare from your connected accounts.",
+  "taxPillar3aContributions": "Contributions this year",
+  "taxPillar3aDeductible": "Deductible (up to the legal limit)",
+  "taxPillar3aNote": "Pillar 3a savings are not taxable wealth; ask your provider for the contribution certificate.",
+  "taxCsvCopied": "{year} tax figures copied as CSV.",
+  "@taxCsvCopied": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "taxDisclaimer": "Helps you fill in your return; compare with your banks’ tax statements. Demo figures, not tax advice."
 }

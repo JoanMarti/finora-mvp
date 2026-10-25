@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/planning.dart';
 
 /// Demo data source. It generates a consistent, fictional financial picture
 /// for exactly the institutions and products the user selected, with dates
@@ -141,6 +142,52 @@ class MockFinancialRepository implements FinancialRepository {
     return contributed.compareTo(_pillar3aAnnualLimit) > 0
         ? _pillar3aAnnualLimit
         : contributed;
+  }
+
+  @override
+  Future<TaxYearData> getTaxYearData(int year) async {
+    final now = _now;
+    final isComplete = year < now.year;
+    // Months between 31 December of [year] and today, used to roll the
+    // current balance back to the year end with the monthly trend.
+    final monthsSinceYearEnd = isComplete
+        ? (now.year - year - 1) * 12 + now.month
+        : 0;
+    final accounts = await getAccounts();
+    return TaxYearData(
+      year: year,
+      asOf: isComplete ? DateTime(year, 12, 31) : now,
+      isComplete: isComplete,
+      pillar3aContributions: await getPillar3aContributions(year: year),
+      accounts: [
+        for (final account in accounts)
+          _taxFigures(account, monthsSinceYearEnd, isComplete ? 12 : now.month),
+      ],
+    );
+  }
+
+  /// Demo yields: 0.5 % on savings, 1.8 % dividends on securities and
+  /// 1.6 % mortgage interest, pro rata for an incomplete year.
+  TaxAccountFigures _taxFigures(
+    FinancialAccount account,
+    int monthsSinceYearEnd,
+    int monthsInYear,
+  ) {
+    final closing =
+        account.balance - account.monthlyChange * monthsSinceYearEnd;
+    final share = monthsInYear / 12;
+    return TaxAccountFigures(
+      account: account,
+      closingBalance: closing,
+      income: switch (account.type) {
+        FinancialProductType.savings => closing * (.005 * share),
+        FinancialProductType.investments => closing * (.018 * share),
+        _ => Money.zero,
+      },
+      interestPaid: account.type == FinancialProductType.mortgage
+          ? closing.abs() * (.016 * share)
+          : Money.zero,
+    );
   }
 
   @override

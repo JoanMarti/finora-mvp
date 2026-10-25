@@ -223,6 +223,9 @@ class _HeaderButton extends StatelessWidget {
       backgroundColor: finoraWhite,
       fixedSize: const Size(44, 44),
       side: const BorderSide(color: finoraBorder),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
+      ),
     ),
     icon: child,
   );
@@ -246,7 +249,7 @@ class _QuickActions extends StatelessWidget {
         for (final (icon, label, route) in actions)
           Expanded(
             child: InkWell(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(finoraRadius),
               onTap: () => context.push(route),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
@@ -257,7 +260,7 @@ class _QuickActions extends StatelessWidget {
                       height: 56,
                       decoration: BoxDecoration(
                         color: finoraWhite,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(finoraRadius),
                         border: Border.all(color: finoraBorder),
                       ),
                       child: Icon(icon, color: finoraBlueText),

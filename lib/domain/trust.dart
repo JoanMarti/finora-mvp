@@ -5,16 +5,64 @@ import 'package:finora/domain/opportunities.dart';
 // Finora Plus
 // -----------------------------------------------------------------------------
 
+/// `plus` is shown to users as **Finora Premium**; the stored name stays
+/// for compatibility with saved sessions.
 enum FinoraPlan { free, plus }
 
-/// What Finora Plus adds. Everyday analysis never moves behind the paywall:
-/// Plus only adds deeper planning and exports.
+/// What Premium adds. Everyday analysis never moves behind the paywall:
+/// Premium lifts the free limits and adds deeper planning and exports.
 enum PlusFeature { retirementScenarios, taxExport, household }
 
-/// Price shown on the Plus screen. CHF 59 a year is the business-plan
-/// assumption and still has to be validated with users.
+enum BillingPeriod { monthly, yearly }
+
+/// Prices shown on the plans screen. CHF 59 a year is the business-plan
+/// assumption; the monthly price makes the yearly plan ~29 % cheaper.
+/// Both still have to be validated with users.
 abstract final class PlusPricing {
   static const yearly = Money.cents(5900);
+  static const monthly = Money.cents(690);
+  static const trialDays = 14;
+
+  /// Days before the end of the trial when the user is reminded.
+  static const trialReminderDays = 3;
+
+  static Money price(BillingPeriod period) =>
+      period == BillingPeriod.yearly ? yearly : monthly;
+
+  /// Yearly price per month, for comparison with the monthly plan.
+  static Money get yearlyPerMonth => Money.cents((yearly.cents / 12).round());
+
+  /// How much cheaper the yearly plan is than twelve monthly payments.
+  static int get yearlySavingPercent =>
+      ((1 - yearly.cents / (monthly.cents * 12)) * 100).floor();
+}
+
+/// Limits of the free plan. Downgrading never deletes anything: items above
+/// a limit stay, the user just cannot add more.
+abstract final class FreeLimits {
+  static const institutions = 3;
+  static const goals = 2;
+  static const historyMonths = 6;
+  static const premiumHistoryMonths = 24;
+}
+
+/// What the current plan allows. `null` limits mean unlimited.
+class Entitlements {
+  const Entitlements({required this.premium});
+
+  final bool premium;
+
+  int? get maxInstitutions => premium ? null : FreeLimits.institutions;
+  int? get maxGoals => premium ? null : FreeLimits.goals;
+  int get historyMonths =>
+      premium ? FreeLimits.premiumHistoryMonths : FreeLimits.historyMonths;
+
+  bool canConnectMore(int connected) =>
+      maxInstitutions == null || connected < maxInstitutions!;
+
+  bool canAddGoal(int existing) => maxGoals == null || existing < maxGoals!;
+
+  bool has(PlusFeature feature) => premium;
 }
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,7 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
+import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/l10n/l10n.dart';
@@ -57,6 +59,13 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
   bool _isManual(String id) => InstitutionCatalogue.byId(id)?.isManual ?? false;
 
   Future<void> _connect(String id) async {
+    if (_addingToExisting) {
+      final connected = ref.read(sessionProvider).connectedInstitutionIds;
+      if (!ref.read(entitlementsProvider).canConnectMore(connected.length)) {
+        await showPaywall(context, PaywallReason.banks);
+        return;
+      }
+    }
     setState(() => _statuses[id] = _SimulatedStatus.connecting);
     await Future<void>.delayed(const Duration(milliseconds: 850));
     if (!mounted) return;
@@ -156,6 +165,14 @@ class _ConnectionScreenState extends ConsumerState<ConnectionScreen> {
                 l10n.connectionDemoNote,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
+              if (_addingToExisting)
+                _FreeLimitNote(
+                  used: ref.watch(
+                    sessionProvider.select(
+                      (s) => s.connectedInstitutionIds.length,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 22),
               Expanded(
                 child: _statuses.isEmpty
@@ -302,6 +319,56 @@ class _ConnectionTile extends StatelessWidget {
               ),
             },
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// "Free plan: 2 of 3 banks", with a way to see the plans.
+class _FreeLimitNote extends ConsumerWidget {
+  const _FreeLimitNote({required this.used});
+  final int used;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final limit = ref.watch(entitlementsProvider).maxInstitutions;
+    if (limit == null) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Material(
+        color: finoraSoftBlue,
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(finoraRadiusControl),
+          onTap: () => context.push('/plus'),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, size: 18, color: finoraBlueText),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.freeLimitNote(used.clamp(0, limit), limit),
+                    style: const TextStyle(
+                      color: finoraInk,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Text(
+                  l10n.paywallSeePlans,
+                  style: const TextStyle(
+                    color: finoraBlueText,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: finoraBlueText),
+              ],
+            ),
+          ),
         ),
       ),
     );

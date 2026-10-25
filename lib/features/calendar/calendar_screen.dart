@@ -22,6 +22,7 @@ IconData calendarIcon(CalendarEventKind kind) => switch (kind) {
   CalendarEventKind.goalDeadline => Icons.flag_outlined,
   CalendarEventKind.assetReview => Icons.home_work_outlined,
   CalendarEventKind.plusRenewal => Icons.auto_awesome,
+  CalendarEventKind.trialEnd => Icons.hourglass_bottom,
 };
 
 /// One event row: icon, title, detail and how many days are left.
@@ -314,6 +315,7 @@ class _ReminderSettings extends ConsumerWidget {
       CalendarEventKind.goalDeadline => l10n.reminderGoals,
       CalendarEventKind.assetReview => l10n.reminderAssets,
       CalendarEventKind.plusRenewal => l10n.reminderPlus,
+      CalendarEventKind.trialEnd => l10n.calendarTrialTitle,
       CalendarEventKind.bill => '',
     };
     return SafeArea(

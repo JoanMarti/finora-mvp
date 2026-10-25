@@ -1,3 +1,5 @@
+import 'package:finora/domain/trust.dart';
+
 /// Outcome of a store interaction.
 enum PurchaseStatus { purchased, restored, nothingToRestore, cancelled, failed }
 
@@ -23,7 +25,8 @@ abstract interface class PurchaseService {
   /// Whether this build takes real payments.
   bool get isStore;
 
-  Future<PurchaseResult> buyPlus();
+  /// Subscribes to Premium, billed monthly or yearly.
+  Future<PurchaseResult> buyPlus({BillingPeriod period = BillingPeriod.yearly});
   Future<PurchaseResult> restore();
 }
 
@@ -37,7 +40,9 @@ class DemoPurchaseService implements PurchaseService {
   bool get isStore => false;
 
   @override
-  Future<PurchaseResult> buyPlus() async =>
+  Future<PurchaseResult> buyPlus({
+    BillingPeriod period = BillingPeriod.yearly,
+  }) async =>
       PurchaseResult(PurchaseStatus.purchased, since: _now());
 
   /// There is no store account behind the demo, so nothing is found.

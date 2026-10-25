@@ -112,6 +112,13 @@ final consentLogProvider = Provider<List<ConsentRecord>>(
       .toList(),
 );
 
-final isPlusProvider = Provider<bool>(
-  (ref) => ref.watch(sessionProvider.select((session) => session.isPlus)),
+/// Whether Premium is unlocked right now (a running trial counts).
+final isPlusProvider = Provider<bool>((ref) {
+  final now = ref.watch(clockProvider)();
+  return ref.watch(sessionProvider.select((s) => s.isPremiumAt(now)));
+});
+
+/// Limits and features of the current plan.
+final entitlementsProvider = Provider<Entitlements>(
+  (ref) => Entitlements(premium: ref.watch(isPlusProvider)),
 );

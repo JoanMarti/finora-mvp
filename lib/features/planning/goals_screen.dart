@@ -1,8 +1,10 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +111,14 @@ class GoalsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             FilledButton.icon(
-              onPressed: () => showGoalEditor(context, null),
+              onPressed: () {
+                final count = ref.read(sessionProvider).goals.length;
+                if (ref.read(entitlementsProvider).canAddGoal(count)) {
+                  showGoalEditor(context, null);
+                } else {
+                  showPaywall(context, PaywallReason.goals);
+                }
+              },
               icon: const Icon(Icons.add),
               label: Text(l10n.addGoal),
             ),

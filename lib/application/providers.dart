@@ -6,6 +6,7 @@ import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/trust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Current time. Overridable so tests and demos can freeze the clock.
@@ -104,12 +105,13 @@ final accountsProvider = FutureProvider<List<FinancialAccount>>(
   (ref) => ref.watch(financialRepositoryProvider).getAccounts(),
 );
 
-/// Months of balance history: 6, or 24 with Finora Plus.
-final historyMonthsProvider = Provider<int>(
-  (ref) => ref.watch(sessionProvider.select((session) => session.isPlus))
-      ? 24
-      : 6,
-);
+/// Months of balance history: 6, or 24 with Finora Premium.
+final historyMonthsProvider = Provider<int>((ref) {
+  final now = ref.watch(clockProvider)();
+  return ref.watch(sessionProvider.select((s) => s.isPremiumAt(now)))
+      ? FreeLimits.premiumHistoryMonths
+      : FreeLimits.historyMonths;
+});
 
 final accountAnalyticsProvider = FutureProvider.family<AccountAnalytics, String>(
   (ref, accountId) => ref

@@ -319,6 +319,7 @@ extension CalendarLabels on AppLocalizations {
     CalendarEventKind.goalDeadline => calendarGoalTitle(event.subject ?? ''),
     CalendarEventKind.assetReview => calendarAssetTitle(event.subject ?? ''),
     CalendarEventKind.plusRenewal => calendarPlusTitle,
+    CalendarEventKind.trialEnd => calendarTrialTitle,
   };
 
   String calendarDetail(CalendarEvent event) {
@@ -333,6 +334,7 @@ extension CalendarLabels on AppLocalizations {
       CalendarEventKind.goalDeadline => calendarGoalDetail(amount),
       CalendarEventKind.assetReview => calendarAssetDetail,
       CalendarEventKind.plusRenewal => calendarPlusDetail,
+      CalendarEventKind.trialEnd => calendarTrialDetail,
     };
   }
 }

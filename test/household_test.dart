@@ -148,7 +148,7 @@ void main() {
     await tester.pumpWidget(_screen(const HouseholdScreen()));
     await tester.pumpAndSettle();
     expect(find.text('See your household together'), findsOneWidget);
-    expect(find.text('Unlock with Plus'), findsOneWidget);
+    expect(find.text('Unlock with Premium'), findsOneWidget);
   });
 
   testWidgets('a partner can be added and shows the combined view', (

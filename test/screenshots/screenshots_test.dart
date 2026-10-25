@@ -129,6 +129,7 @@ void main() {
     'report': '/report',
     'plus': '/plus',
     'home-buying': '/home-buying',
+    'about-you': '/about-you',
   };
 
   for (final entry in screens.entries) {

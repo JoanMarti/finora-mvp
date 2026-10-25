@@ -3,6 +3,7 @@ import 'package:finora/domain/calendar.dart';
 import 'package:finora/domain/health.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/report.dart';
 import 'package:finora/l10n/generated/app_localizations.dart';
 import 'package:finora/shared/formatters.dart';
@@ -374,4 +375,51 @@ extension ReportLabels on AppLocalizations {
     ),
     for (final highlight in report.highlights) '• ${reportHighlight(highlight)}',
   ].join('\n');
+}
+
+/// Texts for the user profile.
+extension ProfileLabels on AppLocalizations {
+  String civilStatus(CivilStatus status) => switch (status) {
+    CivilStatus.single => civilSingle,
+    CivilStatus.married => civilMarried,
+    CivilStatus.registeredPartnership => civilPartnership,
+    CivilStatus.divorced => civilDivorced,
+    CivilStatus.widowed => civilWidowed,
+  };
+
+  String employment(Employment employment) => switch (employment) {
+    Employment.employee => employmentEmployee,
+    Employment.selfEmployed => employmentSelf,
+    Employment.student => employmentStudent,
+    Employment.notWorking => employmentNotWorking,
+    Employment.retired => employmentRetired,
+  };
+
+  String housing(Housing housing) => switch (housing) {
+    Housing.renting => housingRenting,
+    Housing.owning => housingOwning,
+    Housing.withFamily => housingFamily,
+  };
+
+  String riskProfile(RiskProfile risk) => switch (risk) {
+    RiskProfile.cautious => riskCautious,
+    RiskProfile.balanced => riskBalanced,
+    RiskProfile.dynamic => riskDynamic,
+  };
+
+  String riskProfileBody(RiskProfile risk) => switch (risk) {
+    RiskProfile.cautious => riskCautiousBody,
+    RiskProfile.balanced => riskBalancedBody,
+    RiskProfile.dynamic => riskDynamicBody,
+  };
+
+  String interest(Interest interest) => switch (interest) {
+    Interest.saveMore => interestSaveMore,
+    Interest.investing => interestInvesting,
+    Interest.buyHome => interestBuyHome,
+    Interest.retireEarly => interestRetireEarly,
+    Interest.payOffDebt => interestPayOffDebt,
+    Interest.family => interestFamily,
+    Interest.travel => interestTravel,
+  };
 }

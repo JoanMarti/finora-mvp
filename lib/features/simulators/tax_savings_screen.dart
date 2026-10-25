@@ -1,6 +1,7 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/simulators.dart';
 import 'package:finora/features/simulators/simulator_widgets.dart';
 import 'package:finora/l10n/l10n.dart';
@@ -20,7 +21,9 @@ class TaxSavingsScreen extends ConsumerStatefulWidget {
 class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
   Money? _pillar3a;
   Money _buyIn = Money.zero;
-  double _rate = TaxSavings.defaultRate;
+  /// The user's own rate; until they move the slider, an estimate from the
+  /// profile (or a middle default).
+  double? _rate;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +34,17 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final limit = ref.watch(wealthTargetsProvider).pillar3aAnnualLimit;
+    final estimate = ProfileEstimates.marginalRate(
+      ref.watch(userProfileProvider),
+    );
+    final rate = _rate ?? estimate ?? TaxSavings.defaultRate;
     final room = limit - overview.pillar3aContributionsThisYear;
     // Starts with what is still allowed this year.
     final pillar3a = _pillar3a ??= room.cents > 0 ? room : Money.zero;
     final result = TaxSavings.simulate(
       pillar3aContribution: pillar3a,
       buyIn: _buyIn,
-      marginalRate: _rate,
+      marginalRate: rate,
       yearsToRetirement: projection.yearsToRetirement,
     );
     final overLimit = pillar3a.cents > room.cents;
@@ -106,17 +113,19 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
             ),
             SectionTitle(l10n.taxSavingsRateSection),
             Text(
-              l10n.taxSavingsRateLabel((_rate * 100).round()),
+              l10n.taxSavingsRateLabel((rate * 100).round()),
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
             Slider(
-              value: _rate,
+              value: rate,
               min: TaxSavings.minRate,
               max: TaxSavings.maxRate,
               divisions: 35,
-              label: '${(_rate * 100).round()}%',
+              label: '${(rate * 100).round()}%',
               onChanged: (value) => setState(() => _rate = value),
             ),
+            if (_rate == null && estimate != null)
+              SimulatorNote(l10n.taxRateFromProfile),
             SimulatorNote(l10n.taxSavingsRateHelp),
         ],
         details: [

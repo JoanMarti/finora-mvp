@@ -7,6 +7,7 @@ import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/lock/lock_screen.dart';
 import 'package:finora/features/plus/plus_screen.dart';
+import 'package:finora/features/profile/about_you_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,8 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
+              const ProfileCompletenessCard(),
               SectionTitle(l10n.connectionsSection),
               if (connections.isEmpty)
                 Padding(

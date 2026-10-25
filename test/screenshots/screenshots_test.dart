@@ -185,6 +185,23 @@ void main() {
     );
   }, skip: !_enabled);
 
+  testWidgets('desktop-home-buying', (tester) async {
+    await capture(
+      tester,
+      'desktop-home-buying',
+      route: '/home-buying',
+      size: const Size(1440, 900),
+    );
+  }, skip: !_enabled);
+  testWidgets('desktop-welcome', (tester) async {
+    await capture(
+      tester,
+      'desktop-welcome',
+      as: newUser,
+      size: const Size(1440, 900),
+    );
+  }, skip: !_enabled);
+
   testWidgets('tablet-dashboard', (tester) async {
     await capture(tester, 'tablet-dashboard', size: const Size(900, 1200));
   }, skip: !_enabled);

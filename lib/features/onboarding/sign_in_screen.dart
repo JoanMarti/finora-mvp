@@ -3,6 +3,7 @@ import 'package:finora/application/auth.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/auth.dart';
 import 'package:finora/features/onboarding/account_steps.dart';
+import 'package:finora/features/onboarding/auth_frame.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
@@ -72,7 +73,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: SafeArea(
         top: false,
-        child: FinoraPage(
+        child: AuthFrame(
+          child: FinoraPage(
           maxWidth: 480,
           child: AutofillGroup(
             child: ListView(
@@ -144,6 +146,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 ),
               ],
             ),
+          ),
           ),
         ),
       ),

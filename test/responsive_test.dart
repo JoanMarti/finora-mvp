@@ -114,4 +114,33 @@ void main() {
     expect(find.text('Planning'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('desktop simulators show inputs and result side by side', (
+    tester,
+  ) async {
+    final container = await _pumpApp(tester, _desktop);
+    container.read(routerProvider).go('/home-buying');
+    await tester.pumpAndSettle();
+    final result = tester.getTopLeft(find.text('Highest affordable price'));
+    final income = tester.getTopLeft(find.text('Gross household income per year'));
+    // Result on the right, first input on the left, both on screen.
+    expect(result.dx, greaterThan(income.dx));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('sign-up on desktop sits next to the brand panel', (
+    tester,
+  ) async {
+    usePhoneViewport(tester, size: _desktop);
+    final container = createTestContainer(
+      session: const UserSession(languageCode: 'en'),
+    );
+    await tester.pumpWidget(
+      UncontrolledProviderScope(container: container, child: const FinoraApp()),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Your Swiss wealth, in one place'), findsOneWidget);
+    expect(find.text('Get started'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

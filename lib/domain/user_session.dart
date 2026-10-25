@@ -28,6 +28,7 @@ class UserSession {
     this.manualAssets = const [],
     this.hideAmounts = false,
     this.household,
+    this.installationId,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -92,6 +93,10 @@ class UserSession {
   /// The partner's figures for the household view (Finora Plus).
   final Household? household;
 
+  /// Random id for this installation, used only to key aggregated data
+  /// sent to the backend. Created when a backend is first used.
+  final String? installationId;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -137,6 +142,7 @@ class UserSession {
     List<ManualAsset>? manualAssets,
     bool? hideAmounts,
     Object? household = _unset,
+    String? installationId,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -165,6 +171,7 @@ class UserSession {
       household: identical(household, _unset)
           ? this.household
           : household as Household?,
+      installationId: installationId ?? this.installationId,
     );
   }
 
@@ -188,6 +195,7 @@ class UserSession {
     'manualAssets': [for (final asset in manualAssets) asset.toJson()],
     'hideAmounts': hideAmounts,
     'household': household?.toJson(),
+    'installationId': installationId,
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -238,6 +246,7 @@ class UserSession {
       ],
       hideAmounts: json['hideAmounts'] as bool? ?? false,
       household: Household.fromJson(json['household']),
+      installationId: json['installationId'] as String?,
     );
   }
 

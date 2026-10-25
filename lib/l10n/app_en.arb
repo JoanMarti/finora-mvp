@@ -2257,5 +2257,53 @@
   },
   "quickAnalysis": "Analysis",
   "quickCalendar": "Calendar",
-  "quickSave": "Save"
+  "quickSave": "Save",
+  "hintSaveUpTo": "Save up to {amount} a year",
+  "@hintSaveUpTo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerSavingsRateTitle": "Earn more interest on your savings",
+  "offerSavingsRateReason": "{account} holds {amount}. Big banks often pay around 0.25%, while savings accounts paying up to {percent}% are widely available.",
+  "@offerSavingsRateReason": {
+    "placeholders": {
+      "account": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "offerPillarFeesTitle": "Lower the fees on your Pillar 3a",
+  "offerPillarFeesReason": "{account} holds {amount}. Bank 3a funds often cost around 1.2% a year in fees; low-cost providers charge about 0.45%, and the difference compounds until retirement.",
+  "@offerPillarFeesReason": {
+    "placeholders": {
+      "account": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerHouseholdTitle": "Compare household insurance",
+  "offerHouseholdReason": "You pay {amount} a month to {merchant}. Household and liability cover with the same protection often costs 10–25% less elsewhere.",
+  "@offerHouseholdReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "offerHouseholdAction": "Compare offers"
 }

@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/accounts/widgets/account_actions.dart';
 import 'package:finora/features/accounts/widgets/account_analytics_cards.dart';
+import 'package:finora/features/offers/widgets/opportunity_widgets.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -89,6 +91,13 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               onAction: (action) =>
                   _handleDetailAction(action, account, institution),
             ),
+            // Price suggestions about this account (rate, fees, renewal).
+            for (final hint in ref.watch(
+              accountOpportunitiesProvider(account.id),
+            )) ...[
+              const SizedBox(height: 12),
+              InlineOfferHint(opportunity: hint),
+            ],
             if (analytics.hasBalanceHistory) ...[
               SectionTitle(l10n.accountHealthSection),
               _PeriodSelector(
@@ -141,6 +150,13 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 analytics: analytics,
                 showAll: _showAllRecurring,
                 now: now,
+                hintBuilder: (bill) => switch (hintForBill(
+                  ref.watch(opportunitiesProvider).value ?? const [],
+                  bill,
+                )) {
+                  final hint? => InlineOfferHint(opportunity: hint),
+                  null => null,
+                },
               ),
             ],
             if (analytics.hasCashFlow) ...[

@@ -389,3 +389,66 @@ class SavingsOpportunitiesSection extends ConsumerWidget {
     );
   }
 }
+
+/// Small suggestion shown next to the data it is about (a bill, an
+/// account). Tapping it opens the full explanation and consent sheet.
+class InlineOfferHint extends StatelessWidget {
+  const InlineOfferHint({required this.opportunity, super.key});
+  final Opportunity opportunity;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final saving = opportunity.savingHigh == null
+        ? null
+        : formatMoneyWhole(opportunity.savingHigh!);
+    return Material(
+      color: finoraMint,
+      borderRadius: BorderRadius.circular(finoraRadiusControl),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
+        onTap: () => showOpportunitySheet(context, opportunity),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+          child: Row(
+            children: [
+              const Icon(Icons.lightbulb_outline, color: finoraGreen, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      saving == null
+                          ? l10n.opportunityTitle(opportunity)
+                          : l10n.hintSaveUpTo(saving),
+                      style: const TextStyle(
+                        color: finoraGreen,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
+                    ),
+                    Text(
+                      [
+                        l10n.opportunityTitle(opportunity),
+                        if (opportunity.isSponsored) l10n.offerPartnerLabel,
+                      ].join(' · '),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: finoraInk,
+                        fontSize: 12,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: finoraGreen),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

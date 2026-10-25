@@ -8,7 +8,7 @@ Version 1.0 is an **early-access** build:
 
 - Bank connections run with generated demo data. bLink and OpenWealth are not connected yet.
 - Accounts are kept on the device, because the build has no `FINORA_API_URL`.
-- No payment is taken. Premium (trial and subscription) is a demo and does not use Google Play Billing.
+- No payment is taken in the default build. Store builds with `FINORA_PURCHASES=play` sell Premium through Google Play Billing (section 8).
 - Everything else works with the user's own figures: goals, budgets, assets, profile, simulators, calendar.
 
 The store listing says this openly ("Early access"). Recommended path: internal testing, then closed testing, then production once the blockers at the end of this file are solved.
@@ -87,9 +87,30 @@ The texts can be uploaded by hand or with `fastlane supply` (`fastlane supply --
 
 ## 7. Blockers before production ☐
 
-- **Premium purchases:** Google Play requires Play Billing for digital subscriptions. Either implement `PurchaseService` with `in_app_purchase` (monthly CHF 6.90, yearly CHF 59, 14-day trial as an introductory offer), or hide the purchase and keep Premium free during early access.
+- **Premium purchases:** ✅ Google Play Billing is built in (sprint 29). Build store versions with `--dart-define=FINORA_PURCHASES=play` and create the subscription in Play Console (section 8).
 - **Legal texts:** operator name and address, full terms of use, and a lawyer's review of the privacy policy, the consent texts (nLPD) and the offers model (LSFin; FINMA registration if Finora is paid directly by insurers).
 - **Bank data:** connect bLink and OpenWealth through the backend, or keep the early-access label and the demo data clearly marked.
 - **Translations:** a native review of the DE, FR and IT app and store texts.
 - **Store screenshots:** French and Italian sets (add `fr-FR` and `it-IT` to the screenshot test).
 - **Bank names in the demo:** the demo and the store screenshots show real Swiss bank names and colours. Before production, get written permission or switch the store screenshots to neutral demo institutions, so the listing does not suggest an affiliation (Google Play impersonation and IP policies).
+
+## 8. Premium subscription in Play Console ☐
+
+The app expects this setup (`lib/data/billing/in_app_purchase_port.dart`):
+
+| Item | Value |
+| --- | --- |
+| Subscription product id | `finora_premium` |
+| Base plan `monthly` | Auto-renewing, 1 month, CHF 6.90 |
+| Base plan `yearly` | Auto-renewing, 1 year, CHF 59.00 |
+| Offer on each base plan | `trial-14d`: free trial of 14 days, eligibility "new customer acquisition" |
+| Grace period | 7 days (Play default) |
+
+How it works:
+
+- Prices on the plans screen come from Google Play, so they are localised.
+- "Try Premium free for 14 days" buys the trial offer, and Play handles the reminder, the billing at the end and cancellation.
+- Each purchase is acknowledged (Play refunds purchases that are not acknowledged within 3 days). When a backend is configured, the purchase token is checked first with `POST /v1/purchases/verify`; the production server must check it against the Google Play Developer API.
+- On every start, a store build checks that the subscription is still active. A subscription cancelled or refunded in Google Play ends Premium. An offline check keeps it.
+- To test purchases: add the testers as **license testers** in Play Console. Purchases from license testers are free and the trial is shortened.
+- Build: the CI `android` job already builds the bundle with `--dart-define=FINORA_PURCHASES=play`. Locally: `flutter build appbundle --release --dart-define=FINORA_PURCHASES=play`.

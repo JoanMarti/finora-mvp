@@ -409,6 +409,7 @@ enum AlertKind {
   staleConnection,
   manualValueOutdated,
   assetValueOutdated,
+  budgetExceeded,
   billDue,
 }
 
@@ -436,7 +437,7 @@ class FinoraAlert {
 
   AlertSeverity get severity => switch (kind) {
     AlertKind.consentRequired => AlertSeverity.critical,
-    AlertKind.staleConnection => AlertSeverity.warning,
+    AlertKind.staleConnection || AlertKind.budgetExceeded => AlertSeverity.warning,
     AlertKind.manualValueOutdated ||
     AlertKind.assetValueOutdated ||
     AlertKind.billDue => AlertSeverity.info,

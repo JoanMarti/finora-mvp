@@ -70,8 +70,13 @@ jobs:
         working-directory: server
         run: |
           dart pub get
-          dart analyze --fatal-infos
-          dart test
+          status=0
+          dart analyze --fatal-infos > analyze.txt 2>&1 || status=$?
+          cat analyze.txt
+          grep -E '^ *(error|warning|info) - ' analyze.txt \
+            | sed -E 's/^ *(error|warning|info) - ([^:]+):([0-9]+):([0-9]+) - (.*)$/::error file=server\/\2,line=\3,col=\4::\5/' || true
+          if [ "$status" -ne 0 ]; then exit $status; fi
+          dart test --reporter expanded
       - run: flutter build web --release --base-href /finora-mvp/
       - if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5

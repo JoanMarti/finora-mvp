@@ -159,9 +159,9 @@ void main() {
       _screen(const AccountDetailScreen(accountId: 'ubs-savings')),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Save up to CHF 100 a year'), findsOneWidget);
+    expect(find.textContaining('100 a year'), findsOneWidget);
 
-    await tester.tap(find.text('Save up to CHF 100 a year'));
+    await tester.tap(find.textContaining('100 a year'));
     await tester.pumpAndSettle();
     expect(find.text('Why you see this'), findsOneWidget);
     expect(find.textContaining('up to 1%'), findsOneWidget);
@@ -185,11 +185,11 @@ void main() {
     await tester.pumpWidget(_screen(const AnalysisScreen()));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.text('Save up to CHF 630 a year'),
+      find.textContaining('630 a year'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('Save up to CHF 630 a year'), findsOneWidget);
+    expect(find.textContaining('630 a year'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

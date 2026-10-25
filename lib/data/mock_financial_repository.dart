@@ -127,6 +127,7 @@ class MockFinancialRepository implements FinancialRepository {
             category: template.category,
             bookedAt: now.subtract(Duration(days: template.daysAgo)),
             amount: Money.cents(template.cents),
+            foreignCurrency: template.foreignCurrency,
           ),
     ];
     items.sort((a, b) => b.bookedAt.compareTo(a.bookedAt));
@@ -615,8 +616,10 @@ class _TransactionTemplate {
     this.merchant,
     this.category,
     this.daysAgo,
-    this.cents,
-  );
+    this.cents, {
+    this.foreignCurrency,
+  });
+  final String? foreignCurrency;
   final String id;
   final String accountId;
   final String merchant;
@@ -753,5 +756,33 @@ const _transactionTemplates = <_TransactionTemplate>[
     TransactionCategory.housing,
     18,
     -98000,
+  ),
+  // Card payments in other currencies, for the spending-abroad insight.
+  _TransactionTemplate(
+    't17',
+    'ubs-card',
+    'Amazon.de',
+    TransactionCategory.shopping,
+    6,
+    -8930,
+    foreignCurrency: 'EUR',
+  ),
+  _TransactionTemplate(
+    't18',
+    'ubs-card',
+    'Trattoria da Luca, Milano',
+    TransactionCategory.dining,
+    13,
+    -6450,
+    foreignCurrency: 'EUR',
+  ),
+  _TransactionTemplate(
+    't19',
+    'ubs-card',
+    'Booking.com',
+    TransactionCategory.other,
+    20,
+    -42000,
+    foreignCurrency: 'EUR',
   ),
 ];

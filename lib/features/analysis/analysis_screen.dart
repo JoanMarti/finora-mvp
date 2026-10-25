@@ -1,3 +1,5 @@
+import 'package:finora/app/theme.dart';
+import 'package:finora/application/debts.dart';
 import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/analysis.dart';
@@ -97,6 +99,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                     ),
                   ),
                 ],
+                const _ForeignSpendingCard(),
                 if (opportunities.isNotEmpty) ...[
                   SectionTitle(l10n.waysToSaveSection),
                   for (final item in opportunities.take(3))
@@ -136,5 +139,62 @@ class _KeyFigures extends StatelessWidget {
       ),
     ];
     return KeyFigureGrid(figures: figures);
+  }
+}
+
+/// Card payments in other currencies and what the card fees probably cost.
+class _ForeignSpendingCard extends ConsumerWidget {
+  const _ForeignSpendingCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final spending = ref.watch(foreignSpendingProvider).value;
+    if (spending == null || spending.isEmpty) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionTitle(l10n.abroadSection),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.abroadLastMonth(
+                    formatMoney(spending.lastMonth),
+                    spending.count,
+                    (spending.currencies.toList()..sort()).join(', '),
+                  ),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  l10n.abroadFees(
+                    formatMoneyWhole(spending.yearlyEstimate),
+                    formatMoneyWhole(spending.yearlyFees),
+                    formatMoneyWhole(spending.yearlySaving),
+                  ),
+                  style: const TextStyle(height: 1.4),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  l10n.abroadNote,
+                  style: const TextStyle(color: finoraMutedInk, fontSize: 12),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => context.push('/offers'),
+                    child: Text(l10n.offerCardAction),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

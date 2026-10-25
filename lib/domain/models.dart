@@ -168,13 +168,22 @@ class FinancialTransaction {
     required this.category,
     required this.bookedAt,
     required this.amount,
+    this.foreignCurrency,
   });
   final String id;
   final String accountId;
   final String merchant;
   final TransactionCategory category;
   final DateTime bookedAt;
+
+  /// Booked amount in CHF, including any currency conversion.
   final Money amount;
+
+  /// Original currency for payments abroad or online in another currency
+  /// (e.g. `EUR`); `null` for CHF payments.
+  final String? foreignCurrency;
+
+  bool get isForeign => foreignCurrency != null;
 }
 
 class BalanceHistoryPoint {

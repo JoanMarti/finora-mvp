@@ -72,8 +72,9 @@ void main() {
     });
 
     test('filters transactions and serves yearly figures', () async {
-      final (_, all) = await call('GET', '/v1/transactions');
-      final accountId = ((all! as List).first as Map)['accountId'];
+      final (_, raw) = await call('GET', '/v1/transactions');
+      final all = raw! as List;
+      final accountId = (all.first as Map)['accountId'];
       final (_, filtered) = await call(
         'GET',
         '/v1/transactions?accountId=$accountId',

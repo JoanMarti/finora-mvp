@@ -22,11 +22,35 @@ A **reference implementation** of this contract lives in [`server/`](../server/R
 | Topic | Rule |
 | --- | --- |
 | Transport | HTTPS and JSON only. Requests send `Accept: application/json`. |
-| Auth | `Authorization: Bearer <access token>`, from an OIDC sign-in that is still to be built. `401` means the user must sign in again. |
+| Auth | `Authorization: Bearer <access token>`, issued by `/v1/auth/verify` or `/v1/auth/login`. `401` means the user must sign in again. `/v1/auth/*` needs no token. |
 | Money | `{"cents": 1248040, "currency": "CHF"}`, in integer minor units. Liabilities are negative. |
 | Dates | ISO 8601. Day-only values use `YYYY-MM-DD`. |
 | Enums | Sent by their Dart name, for example `currentAccount` or `healthInsurance`. Unknown values are rejected, so a new value needs an app release first. |
 | Errors | Any non-2xx status becomes `ApiException`, and the screen shows its "unavailable" state. |
+
+## Accounts
+
+| Method and path | Body and response |
+| --- | --- |
+| `POST /v1/auth/register` | `{firstName, email, password, termsVersion, marketing}` returns `201 {user}`. A 6-digit code is e-mailed. |
+| `POST /v1/auth/verify` | `{email, code}` returns `{user, accessToken}`. |
+| `POST /v1/auth/resend` | `{email}` returns `204` and sends a new code. |
+| `POST /v1/auth/login` | `{email, password}` returns `{user, accessToken}`. |
+| `POST /v1/auth/password-reset` | `{email}` always returns `204`, so it never reveals whether an address has an account. |
+
+`user` is `{id, email, firstName, emailVerified}`. E-mail addresses are compared in lower case.
+
+Auth errors add a machine-readable `code` next to `error`, which the app maps to its own texts:
+
+| Status | `code` |
+| --- | --- |
+| 400 | `invalidCode` |
+| 401 | `invalidCredentials` |
+| 409 | `emailTaken` |
+| 422 | `weakPassword`, `invalidEmail` |
+| 429 | `tooManyAttempts` (after 5 wrong codes or passwords) |
+
+Passwords need at least 10 characters, a letter and a digit, and must not contain the e-mail name. The server stores only a salted hash. The reference server uses the code `123456` and keeps accounts in memory.
 
 ## Read endpoints
 
@@ -61,6 +85,6 @@ Reminders are only sent when the user turned them on in the calendar. Kinds they
 
 ## Still to build on the backend side
 
-- OIDC sign-in, and the bLink and OpenWealth consent redirect for connecting an institution. In the app this is still the demo connection flow.
+- Production accounts: a database, real e-mail delivery of codes and reset links, token expiry and refresh, and an optional OIDC provider. Then the bLink and OpenWealth consent redirect for connecting an institution. In the app this is still the demo connection flow.
 - Push delivery (APNs/FCM) from the reminders list, with the device token registered after sign-in.
 - Partner sharing for the household view: today the partner's figures are entered on the device.

@@ -42,12 +42,24 @@ void main() {
 
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(EditableText).first, 'demo');
+    final fields = find.byType(EditableText);
+    await tester.enterText(fields.at(0), 'Anna');
+    await tester.enterText(fields.at(1), 'anna');
     await tester.pump();
     expect(find.text('Enter a valid e-mail address'), findsOneWidget);
-    await tester.enterText(find.byType(EditableText).first, 'demo@finora.ch');
+    await tester.enterText(fields.at(1), 'anna.muster@finora.ch');
+    await tester.enterText(fields.at(2), 'Matterhorn2026');
     await tester.pump();
-    await tester.tap(find.text('Create mock account'));
+    expect(find.text('Strong'), findsOneWidget);
+    await tester.ensureVisible(find.byType(Checkbox).first);
+    await tester.tap(find.byType(Checkbox).first);
+    await tester.pump();
+    await tester.tap(find.text('Create account'));
+    await tester.pumpAndSettle();
+
+    // The 6-digit code confirms the address (the demo code is shown).
+    expect(find.text('Check your inbox'), findsOneWidget);
+    await tester.enterText(find.byType(EditableText).first, '123456');
     await tester.pumpAndSettle();
 
     expect(find.text('What do you have?'), findsOneWidget);

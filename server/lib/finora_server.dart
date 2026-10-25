@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -11,15 +13,84 @@ class InstallationStore {
   final devices = <String, Map<String, Object?>>{};
 }
 
+/// Accounts for `/v1/auth/*`. In memory: the reference server shows the
+/// contract, a production server keeps them in a database and e-mails the
+/// codes. The verification code is always [devCode] here.
+class AccountRegistry {
+  AccountRegistry({Random? random}) : _random = random ?? Random.secure();
+
+  static const devCode = '123456';
+  static const maxAttempts = 5;
+
+  final Random _random;
+  final users = <String, Map<String, Object?>>{};
+  final tokens = <String, String>{};
+  final _failures = <String, int>{};
+
+  String _randomId(int bytes) => base64Url
+      .encode([for (var i = 0; i < bytes; i++) _random.nextInt(256)])
+      .replaceAll('=', '');
+
+  static String hash(String password, String salt) =>
+      sha256.convert(utf8.encode('$salt:$password')).toString();
+
+  static bool acceptsPassword(String password, String email) {
+    final local = email.split('@').first;
+    return password.length >= 10 &&
+        RegExp('[A-Za-z]').hasMatch(password) &&
+        RegExp(r'\d').hasMatch(password) &&
+        !(local.length >= 3 && password.toLowerCase().contains(local));
+  }
+
+  Map<String, Object?> publicUser(Map<String, Object?> user) => {
+    'id': user['id'],
+    'email': user['email'],
+    'firstName': user['firstName'],
+    'emailVerified': user['verified'],
+  };
+
+  String issueToken(String email) {
+    final token = _randomId(24);
+    tokens[token] = email;
+    return token;
+  }
+
+  bool lockedOut(String key) => (_failures[key] ?? 0) >= maxAttempts;
+  void fail(String key) => _failures[key] = (_failures[key] ?? 0) + 1;
+  void clear(String key) => _failures.remove(key);
+
+  Map<String, Object?> create({
+    required String email,
+    required String firstName,
+    required String password,
+    required String termsVersion,
+    required bool marketing,
+  }) {
+    final salt = _randomId(12);
+    return users[email] = {
+      'id': 'usr_${_randomId(9)}',
+      'email': email,
+      'firstName': firstName,
+      'salt': salt,
+      'hash': hash(password, salt),
+      'verified': false,
+      'termsVersion': termsVersion,
+      'marketing': marketing,
+    };
+  }
+}
+
 /// Builds the v1 API over [fixtures], a JSON map produced from the app's
 /// demo data (`fixtures/demo.json`). When [accessToken] is set, every
 /// request must send it as a bearer token.
 Handler buildHandler(
   Map<String, Object?> fixtures, {
   InstallationStore? store,
+  AccountRegistry? accounts,
   String? accessToken,
 }) {
   final installations = store ?? InstallationStore();
+  final registry = accounts ?? AccountRegistry();
   final router = Router();
 
   Response reply(Object? body, {int status = 200}) => Response(
@@ -29,11 +100,89 @@ Handler buildHandler(
   );
   Response problem(int status, String message) =>
       reply({'error': message}, status: status);
+  // Auth errors carry a machine-readable code the app maps to its texts.
+  Response authProblem(int status, String code, String message) =>
+      reply({'error': message, 'code': code}, status: status);
+  String email(Map<String, Object?> body) =>
+      '${body['email'] ?? ''}'.trim().toLowerCase();
+  final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]{2,}$');
 
   Map<String, Object?> section(String key) =>
       (fixtures[key] as Map?)?.cast<String, Object?>() ?? const {};
 
   router
+    ..post('/v1/auth/register', (Request request) async {
+      final body = await _object(request) ?? const {};
+      final address = email(body);
+      final password = '${body['password'] ?? ''}';
+      final firstName = '${body['firstName'] ?? ''}'.trim();
+      if (!emailPattern.hasMatch(address) || firstName.isEmpty) {
+        return authProblem(422, 'invalidEmail', 'Name and e-mail are required');
+      }
+      if (body['termsVersion'] is! String) {
+        return problem(422, 'The terms must be accepted');
+      }
+      if (!AccountRegistry.acceptsPassword(password, address)) {
+        return authProblem(422, 'weakPassword', 'Password too weak');
+      }
+      if (registry.users.containsKey(address)) {
+        return authProblem(409, 'emailTaken', 'E-mail already registered');
+      }
+      final user = registry.create(
+        email: address,
+        firstName: firstName,
+        password: password,
+        termsVersion: body['termsVersion']! as String,
+        marketing: body['marketing'] == true,
+      );
+      return reply({'user': registry.publicUser(user)}, status: 201);
+    })
+    ..post('/v1/auth/verify', (Request request) async {
+      final body = await _object(request) ?? const {};
+      final address = email(body);
+      final key = 'code:$address';
+      if (registry.lockedOut(key)) {
+        return authProblem(429, 'tooManyAttempts', 'Request a new code');
+      }
+      final user = registry.users[address];
+      if (user == null || body['code'] != AccountRegistry.devCode) {
+        registry.fail(key);
+        return authProblem(400, 'invalidCode', 'Wrong code');
+      }
+      registry.clear(key);
+      user['verified'] = true;
+      return reply({
+        'user': registry.publicUser(user),
+        'accessToken': registry.issueToken(address),
+      });
+    })
+    ..post('/v1/auth/resend', (Request request) async {
+      final body = await _object(request) ?? const {};
+      registry.clear('code:${email(body)}');
+      return Response(204);
+    })
+    ..post('/v1/auth/login', (Request request) async {
+      final body = await _object(request) ?? const {};
+      final address = email(body);
+      final key = 'login:$address';
+      if (registry.lockedOut(key)) {
+        return authProblem(429, 'tooManyAttempts', 'Try again later');
+      }
+      final user = registry.users[address];
+      final password = '${body['password'] ?? ''}';
+      if (user == null ||
+          AccountRegistry.hash(password, '${user['salt']}') != user['hash']) {
+        registry.fail(key);
+        return authProblem(401, 'invalidCredentials', 'Wrong e-mail or password');
+      }
+      registry.clear(key);
+      return reply({
+        'user': registry.publicUser(user),
+        'accessToken': registry.issueToken(address),
+      });
+    })
+    // Same answer whether or not the address exists.
+    ..post('/v1/auth/password-reset', (Request _) => Response(204))
     ..get('/v1/institutions', (Request _) => reply(fixtures['institutions']))
     ..get('/v1/connections', (Request _) => reply(fixtures['connections']))
     ..get('/v1/accounts', (Request _) => reply(fixtures['accounts']))
@@ -121,9 +270,12 @@ Handler buildHandler(
     });
 
   Middleware auth() => (inner) => (request) {
-    if (accessToken == null) return inner(request);
-    final header = request.headers['authorization'];
-    if (header != 'Bearer $accessToken') {
+    if (accessToken == null || request.url.path.startsWith('v1/auth/')) {
+      return inner(request);
+    }
+    final header = request.headers['authorization'] ?? '';
+    final token = header.startsWith('Bearer ') ? header.substring(7) : '';
+    if (token != accessToken && !registry.tokens.containsKey(token)) {
       return problem(401, 'Sign in again');
     }
     return inner(request);

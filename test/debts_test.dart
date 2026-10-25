@@ -192,12 +192,14 @@ void main() {
     await tester.tap(save);
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.text('Car leasing'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
+    // Named in the payoff order on the plan card and in the list.
     expect(find.text('Car leasing'), findsWidgets);
+    expect(
+      ProviderScope.containerOf(
+        tester.element(find.byType(DebtsScreen)),
+      ).read(sessionProvider).debts,
+      hasLength(2),
+    );
     expect(tester.takeException(), isNull);
   });
 

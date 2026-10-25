@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/household.dart';
@@ -238,6 +239,19 @@ class SessionController extends Notifier<UserSession> {
 
   void restoreOpportunities() =>
       _update(state.copyWith(dismissedOpportunities: const {}));
+
+  /// The anonymous installation id, created on first use.
+  String ensureInstallationId() {
+    final existing = state.installationId;
+    if (existing != null) return existing;
+    final random = Random.secure();
+    final id = [
+      for (var i = 0; i < 16; i++)
+        random.nextInt(256).toRadixString(16).padLeft(2, '0'),
+    ].join();
+    _update(state.copyWith(installationId: id));
+    return id;
+  }
 
   void setHousehold(Household? household) =>
       _update(state.copyWith(household: household));

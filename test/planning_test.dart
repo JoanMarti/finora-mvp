@@ -218,7 +218,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Balances on'), findsOneWidget);
-    expect(find.text('BANK ACCOUNTS'), findsOneWidget);
+    expect(find.text('Bank accounts'), findsOneWidget);
 
     await tester.tap(find.text('2026'));
     await tester.pumpAndSettle();

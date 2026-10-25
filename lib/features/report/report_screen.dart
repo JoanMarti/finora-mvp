@@ -119,8 +119,7 @@ class _ReportBody extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Card(
-          color: finoraInk,
+        HeroCard(
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

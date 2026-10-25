@@ -176,7 +176,7 @@ void main() {
     await tester.tap(find.text('Suggest budgets from my spending'));
     await tester.pumpAndSettle();
 
-    expect(find.text('THIS MONTH'), findsOneWidget);
+    expect(find.text('This month'), findsOneWidget);
     expect(_session(tester, BudgetsScreen).budgets, isNotEmpty);
     expect(tester.takeException(), isNull);
   });

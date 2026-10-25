@@ -1,11 +1,18 @@
+import 'dart:math' as math;
+
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 
+/// Hero card with the net worth, its trend and what it is made of.
 class BalanceOverviewCard extends StatelessWidget {
-  const BalanceOverviewCard({required this.overview, required this.onRefresh, super.key});
+  const BalanceOverviewCard({
+    required this.overview,
+    required this.onRefresh,
+    super.key,
+  });
 
   final FinancialOverview overview;
   final VoidCallback onRefresh;
@@ -13,195 +20,264 @@ class BalanceOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final changeRate = overview.monthlyChangeRate;
-    final hasDebt = !overview.liabilities.isZero;
     final l10n = context.l10n;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    final parts = [
+      (l10n.allocationCash, overview.cash),
+      (l10n.allocationInvestments, overview.investments),
+      (l10n.allocationPillar3a, overview.retirement),
+      if (!overview.otherAssets.isZero)
+        (l10n.allocationOther, overview.otherAssets),
+      if (!overview.liabilities.isZero)
+        (l10n.allocationDebt, -overview.liabilities),
+    ];
+    final up = (changeRate ?? 0) >= 0;
+    return HeroCard(
+      gradient: finoraBrandGradient,
+      child: Stack(
+        children: [
+          // Soft decorative glow in the corner.
+          Positioned(
+            right: -60,
+            top: -70,
+            child: Container(
+              width: 190,
+              height: 190,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0x1AFFFFFF),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 14, 12, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
                         l10n.totalWealth.toUpperCase(),
                         style: const TextStyle(
-                          color: finoraInk,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: .4,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        hasDebt
-                            ? l10n.wealthComponentsWithDebt
-                            : l10n.wealthComponents,
-                        style: const TextStyle(
-                          color: finoraMutedInk,
+                          color: Color(0xCCFFFFFF),
                           fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: .6,
                         ),
                       ),
+                    ),
+                    IconButton(
+                      tooltip: l10n.refreshAllConnections,
+                      onPressed: onRefresh,
+                      style: IconButton.styleFrom(
+                        backgroundColor: const Color(0x26FFFFFF),
+                        foregroundColor: Colors.white,
+                      ),
+                      icon: const Icon(Icons.sync, size: 20),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            formatMoney(overview.total),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 36,
+                              height: 1.1,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -1,
+                              fontFeatures: finoraTabular,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (changeRate != null) ...[
+                        const SizedBox(width: 8),
+                        Semantics(
+                          label: l10n.netWorthChangedThisMonth(
+                            formatPercentChange(changeRate),
+                          ),
+                          child: ExcludeSemantics(
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(6, 5, 10, 5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(99),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    up
+                                        ? Icons.arrow_upward_rounded
+                                        : Icons.arrow_downward_rounded,
+                                    size: 14,
+                                    color: up ? finoraGreen : finoraDanger,
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    formatPercentChange(changeRate),
+                                    style: TextStyle(
+                                      color: up ? finoraGreen : finoraDanger,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
-                IconButton.filledTonal(
-                  tooltip: l10n.refreshAllConnections,
-                  onPressed: onRefresh,
-                  style: IconButton.styleFrom(
-                    backgroundColor: finoraSoftBlue,
-                    foregroundColor: finoraBlue,
-                  ),
-                  icon: const Icon(Icons.sync, size: 20),
+                const SizedBox(height: 2),
+                Text(
+                  l10n.netWorth,
+                  style: const TextStyle(color: Color(0xB3FFFFFF), fontSize: 13),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.netWorth,
-              style: const TextStyle(color: finoraMutedInk, fontSize: 13),
-            ),
-            const SizedBox(height: 3),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      formatMoney(overview.total),
-                      style: const TextStyle(
-                        color: finoraInk,
-                        fontSize: 32,
-                        height: 1.1,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -.8,
-                      ),
-                    ),
-                  ),
-                ),
-                if (changeRate != null)
-                  Semantics(
-                    label: l10n.netWorthChangedThisMonth(
-                      formatPercentChange(changeRate),
-                    ),
+                if (overview.history.length >= 2) ...[
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
                     child: ExcludeSemantics(
-                      child: ValuePill(
-                        label: formatPercentChange(changeRate),
-                        color: changeRate < 0 ? finoraDanger : finoraGreen,
+                      child: SizedBox(
+                        height: 44,
+                        width: double.infinity,
+                        child: CustomPaint(
+                          painter: _SparklinePainter([
+                            for (final point in overview.history)
+                              point.balance.amount,
+                          ]),
+                        ),
                       ),
                     ),
                   ),
+                ],
+                const SizedBox(height: 14),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final (label, money) in parts)
+                        Semantics(
+                          label: '$label ${formatMoney(money)}',
+                          child: ExcludeSemantics(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0x1FFFFFFF),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    label,
+                                    style: const TextStyle(
+                                      color: Color(0xB3FFFFFF),
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  Text(
+                                    formatCompactMoney(money),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                      fontFeatures: finoraTabular,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 20),
-            const Divider(height: 1),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                _BalancePart(
-                  color: finoraBlue,
-                  label: l10n.allocationCash,
-                  money: overview.cash,
-                ),
-                _BalancePart(
-                  color: finoraInk,
-                  label: l10n.allocationInvestments,
-                  money: overview.investments,
-                ),
-                _BalancePart(
-                  color: finoraSlate,
-                  label: l10n.allocationPillar3a,
-                  money: overview.retirement,
-                ),
-                if (!overview.otherAssets.isZero)
-                  _BalancePart(
-                    color: finoraGreen,
-                    label: l10n.allocationOther,
-                    money: overview.otherAssets,
-                  ),
-                if (hasDebt)
-                  _BalancePart(
-                    color: finoraDanger,
-                    label: l10n.allocationDebt,
-                    money: -overview.liabilities,
-                  ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _BalancePart extends StatelessWidget {
-  const _BalancePart({
-    required this.color,
-    required this.label,
-    required this.money,
-  });
-
-  final Color color;
-  final String label;
-  final Money money;
+/// Smooth white trend line with a fading fill, drawn on the hero card.
+class _SparklinePainter extends CustomPainter {
+  const _SparklinePainter(this.values);
+  final List<double> values;
 
   @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Semantics(
-        label: '$label ${formatMoney(money)}',
-        child: ExcludeSemantics(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 4,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: finoraMutedInk,
-                        fontSize: 11,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        formatCompactMoney(money),
-                        style: const TextStyle(
-                          color: finoraInk,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+  void paint(Canvas canvas, Size size) {
+    if (values.length < 2) return;
+    final minValue = values.reduce(math.min);
+    final maxValue = values.reduce(math.max);
+    final range = math.max(1.0, maxValue - minValue);
+    final points = [
+      for (var i = 0; i < values.length; i++)
+        Offset(
+          size.width * i / (values.length - 1),
+          size.height - 4 - (values[i] - minValue) / range * (size.height - 8),
         ),
-      ),
-    );
+    ];
+    final line = smoothPath(points);
+    final fill = Path.from(line)
+      ..lineTo(points.last.dx, size.height)
+      ..lineTo(points.first.dx, size.height)
+      ..close();
+    canvas
+      ..drawPath(
+        fill,
+        Paint()
+          ..shader = const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0x40FFFFFF), Color(0x00FFFFFF)],
+          ).createShader(Offset.zero & size),
+      )
+      ..drawPath(
+        line,
+        Paint()
+          ..color = Colors.white
+          ..strokeWidth = 2.5
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round,
+      )
+      ..drawCircle(points.last, 4, Paint()..color = Colors.white);
   }
+
+  @override
+  bool shouldRepaint(covariant _SparklinePainter oldDelegate) =>
+      oldDelegate.values != values;
+}
+
+/// A curve through [points] using midpoint quadratic segments, so trend
+/// lines read as smooth rather than jagged.
+Path smoothPath(List<Offset> points) {
+  final path = Path()..moveTo(points.first.dx, points.first.dy);
+  if (points.length == 2) return path..lineTo(points.last.dx, points.last.dy);
+  for (var i = 1; i < points.length - 1; i++) {
+    final mid = Offset(
+      (points[i].dx + points[i + 1].dx) / 2,
+      (points[i].dy + points[i + 1].dy) / 2,
+    );
+    path.quadraticBezierTo(points[i].dx, points[i].dy, mid.dx, mid.dy);
+  }
+  return path..lineTo(points.last.dx, points.last.dy);
 }

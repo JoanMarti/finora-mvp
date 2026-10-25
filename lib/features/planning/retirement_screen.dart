@@ -127,8 +127,7 @@ class _ProjectionSummary extends StatelessWidget {
     final l10n = context.l10n;
     final onTrack = projection.onTrack;
     final statusColor = onTrack ? finoraGreen : finoraWarning;
-    return Card(
-      color: finoraInk,
+    return HeroCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

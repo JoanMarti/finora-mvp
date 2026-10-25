@@ -844,5 +844,8 @@
   "reportSubscriptionsSaved": "Gekündigte Abos sparen Ihnen {amount} pro Jahr.",
   "reportSummaryLine": "Einnahmen {income}, Ausgaben {spending}, gespart {saved} ({percent} %).",
   "reportCopy": "Zusammenfassung kopieren",
-  "reportCopied": "Zusammenfassung kopiert."
+  "reportCopied": "Zusammenfassung kopiert.",
+  "greetingMorning": "Guten Morgen, {name}",
+  "greetingAfternoon": "Guten Tag, {name}",
+  "greetingEvening": "Guten Abend, {name}"
 }

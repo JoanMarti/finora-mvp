@@ -114,3 +114,20 @@ How it works:
 - On every start, a store build checks that the subscription is still active. A subscription cancelled or refunded in Google Play ends Premium. An offline check keeps it.
 - To test purchases: add the testers as **license testers** in Play Console. Purchases from license testers are free and the trial is shortened.
 - Build: the CI `android` job already builds the bundle with `--dart-define=FINORA_PURCHASES=play`. Locally: `flutter build appbundle --release --dart-define=FINORA_PURCHASES=play`.
+
+## 9. GitHub Releases (testers outside Google Play)
+
+The `Release` workflow (`.github/workflows/release.yml`) publishes a GitHub Release with:
+
+- `finora-<version>.apk`, installable by hand (no Play Billing, so nothing is charged);
+- `finora-<version>-play.aab`, the Google Play bundle;
+- `SHA256SUMS.txt`.
+
+It runs in either of two ways:
+
+- **From GitHub:** go to Actions → Release → Run workflow, and enter the version, for example `v1.0.0-beta.1`. The workflow file must be on `main`.
+- **From a terminal:** `git tag v1.0.0-beta.1 && git push origin v1.0.0-beta.1`.
+
+A version with a hyphen (`-beta.1`) is published as a pre-release. The install steps shown on the release come from `docs/release-notes.md`.
+
+Every pull request also builds the APK. You can download it from the run's `finora-android-<run>` artifact; it is kept for 14 days.

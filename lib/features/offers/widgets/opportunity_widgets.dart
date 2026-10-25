@@ -183,7 +183,7 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
     final saving = l10n.opportunitySaving(opportunity);
     final canContinue = !opportunity.isSponsored || _shareConsent;
     final links = ref.watch(partnerLinksProvider).value;
-    final link = opportunity.isSponsored ? links?[opportunity.kind] : null;
+    final link = opportunity.isSponsored ? (links?[opportunity.kind]) : null;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),

@@ -9,7 +9,7 @@ enum FinoraPlan { free, plus }
 
 /// What Finora Plus adds. Everyday analysis never moves behind the paywall:
 /// Plus only adds deeper planning and exports.
-enum PlusFeature { retirementScenarios, taxExport }
+enum PlusFeature { retirementScenarios, taxExport, household }
 
 /// Price shown on the Plus screen. CHF 59 a year is the business-plan
 /// assumption and still has to be validated with users.

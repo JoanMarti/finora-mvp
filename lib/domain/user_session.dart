@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
@@ -26,6 +27,7 @@ class UserSession {
     this.funnel = const FunnelStats(),
     this.manualAssets = const [],
     this.hideAmounts = false,
+    this.household,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -87,6 +89,9 @@ class UserSession {
   /// Masks every amount so the app can be used in public.
   final bool hideAmounts;
 
+  /// The partner's figures for the household view (Finora Plus).
+  final Household? household;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -131,6 +136,7 @@ class UserSession {
     FunnelStats? funnel,
     List<ManualAsset>? manualAssets,
     bool? hideAmounts,
+    Object? household = _unset,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -156,6 +162,9 @@ class UserSession {
       funnel: funnel ?? this.funnel,
       manualAssets: manualAssets ?? this.manualAssets,
       hideAmounts: hideAmounts ?? this.hideAmounts,
+      household: identical(household, _unset)
+          ? this.household
+          : household as Household?,
     );
   }
 
@@ -178,6 +187,7 @@ class UserSession {
     'funnel': funnel.toJson(),
     'manualAssets': [for (final asset in manualAssets) asset.toJson()],
     'hideAmounts': hideAmounts,
+    'household': household?.toJson(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -227,6 +237,7 @@ class UserSession {
           ?ManualAsset.fromJson(raw),
       ],
       hideAmounts: json['hideAmounts'] as bool? ?? false,
+      household: Household.fromJson(json['household']),
     );
   }
 

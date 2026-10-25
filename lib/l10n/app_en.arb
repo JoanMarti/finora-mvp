@@ -1269,7 +1269,7 @@
   "plusFeatureHouseholdTitle": "Shared household",
   "plusFeatureHouseholdBody": "One view of your and your partner’s finances.",
   "plusFeatureHistoryTitle": "24 months of history",
-  "plusFeatureHistoryBody": "Longer trends for wealth and spending.",
+  "plusFeatureHistoryBody": "Longer trends for your net worth and every account.",
   "comingSoon": "Soon",
   "plusFreeForever": "Your overview, spending analysis, goals, alerts and savings ideas stay free.",
   "plusNoOfferInfluence": "Plus never changes which offers you see or their order.",
@@ -1712,5 +1712,68 @@
   "partnerPillar3aLabel": "Pillar 3a",
   "partnerDebtsLabel": "Debts",
   "partnerPensionSection": "Pension (optional)",
-  "partnerPensionInvalid": "Enter a plausible birth year and a salary"
+  "partnerPensionInvalid": "Enter a plausible birth year and a salary",
+  "monthsShort": "{count} M",
+  "@monthsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appLockSetting": "App lock",
+  "appLockSettingBody": "Ask for a PIN when Finora opens",
+  "autoLockSetting": "Lock again",
+  "autoLockImmediately": "Immediately",
+  "autoLockAfterMinutes": "{minutes, plural, =1{After 1 minute} other{After {minutes} minutes}}",
+  "@autoLockAfterMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "appLockOn": "App lock is on.",
+  "appLockOff": "App lock is off.",
+  "lockTitle": "Enter your PIN",
+  "lockDigitsEntered": "{count} digits entered",
+  "@lockDigitsEntered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lockWrongPin": "{count, plural, =1{Wrong PIN. 1 attempt left before a pause.} other{Wrong PIN. {count} attempts left before a pause.}}",
+  "@lockWrongPin": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lockWrongPinShort": "Wrong PIN.",
+  "lockBlocked": "Too many attempts. Try again in {seconds} s.",
+  "@lockBlocked": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "lockDelete": "Delete digit",
+  "lockUnlock": "Unlock",
+  "lockForgot": "Forgot PIN?",
+  "lockResetTitle": "Reset Finora?",
+  "lockResetBody": "Your PIN cannot be recovered. Resetting removes the lock and everything stored on this device; your accounts at the banks are not affected and you can connect them again.",
+  "lockResetAction": "Reset and start again",
+  "lockSetTitle": "Choose a PIN",
+  "lockSetBody": "4 to 6 digits. It is stored only as a protected hash on this device.",
+  "lockNewPin": "New PIN",
+  "lockRepeatPin": "Repeat PIN",
+  "lockPinInvalid": "Use 4 to 6 digits",
+  "lockPinMismatch": "The PINs do not match",
+  "lockSetAction": "Turn on",
+  "lockCurrentTitle": "Enter your current PIN",
+  "lockCurrentPin": "Current PIN"
 }

@@ -44,9 +44,15 @@ class RemoteFinancialRepository implements FinancialRepository {
       _list('v1/accounts', ApiJson.account);
 
   @override
-  Future<AccountAnalytics> getAccountAnalytics(String accountId) => _read(
+  Future<AccountAnalytics> getAccountAnalytics(
+    String accountId, {
+    int historyMonths = 6,
+  }) => _read(
     () async => ApiJson.analytics(
-      await _api.get('v1/accounts/${Uri.encodeComponent(accountId)}/analytics'),
+      await _api.get(
+        'v1/accounts/${Uri.encodeComponent(accountId)}/analytics',
+        query: {'months': '$historyMonths'},
+      ),
     ),
   );
 

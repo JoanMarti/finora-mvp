@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
@@ -252,6 +253,8 @@ class SessionController extends Notifier<UserSession> {
     _update(state.copyWith(installationId: id));
     return id;
   }
+
+  void setAppLock(AppLock? lock) => _update(state.copyWith(appLock: lock));
 
   void setHousehold(Household? household) =>
       _update(state.copyWith(household: household));

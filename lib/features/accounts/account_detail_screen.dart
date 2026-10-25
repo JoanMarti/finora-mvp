@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
@@ -58,6 +60,13 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     final connection = connections
         .where((item) => item.institutionId == institution.id)
         .firstOrNull;
+    // 24 months of history (Finora Plus) unlock the longer periods.
+    final periods = analytics.balanceHistory.length >= 24
+        ? const [3, 6, 12, 24]
+        : const [1, 3, 6];
+    final selectedMonths = periods.contains(_selectedMonths)
+        ? _selectedMonths
+        : 6;
     final insurance = analytics.insurancePayments;
     final debtAccounts = accounts
         .where((item) => item.type.isLiability)
@@ -83,14 +92,15 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             if (analytics.hasBalanceHistory) ...[
               SectionTitle(l10n.accountHealthSection),
               _PeriodSelector(
-                selectedMonths: _selectedMonths,
+                options: periods,
+                selectedMonths: selectedMonths,
                 onSelected: (months) =>
                     setState(() => _selectedMonths = months),
               ),
               const SizedBox(height: 12),
               BalanceEvolutionCard(
                 analytics: analytics,
-                months: _selectedMonths,
+                months: selectedMonths,
               ),
             ] else ...[
               SectionTitle(l10n.accountHealthSection),
@@ -103,7 +113,11 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             ],
             if (analytics.hasCashFlow) ...[
               SectionTitle(l10n.cashFlowSection),
-              CashFlowCard(analytics: analytics, months: _selectedMonths),
+              CashFlowCard(
+              analytics: analytics,
+              // Cash flow is kept for six months, whatever the plan.
+              months: math.min(selectedMonths, 6),
+            ),
             ],
             if (analytics.spendingCategories.isNotEmpty) ...[
               SectionTitle(l10n.spendingSection),
@@ -421,9 +435,13 @@ class _PeriodSelector extends StatelessWidget {
   const _PeriodSelector({
     required this.selectedMonths,
     required this.onSelected,
+    required this.options,
   });
   final int selectedMonths;
   final ValueChanged<int> onSelected;
+
+  /// Plus members get 12 and 24 months on top of the free periods.
+  final List<int> options;
 
   @override
   Widget build(BuildContext context) {
@@ -433,10 +451,14 @@ class _PeriodSelector extends StatelessWidget {
         width: double.infinity,
         child: SegmentedButton<int>(
           segments: [
-            for (final months in const [1, 3, 6])
+            for (final months in options)
               ButtonSegment(
                 value: months,
-                label: Text(context.l10n.monthsCount(months)),
+                label: Text(
+                  options.length > 3
+                      ? context.l10n.monthsShort(months)
+                      : context.l10n.monthsCount(months),
+                ),
               ),
           ],
           selected: {selectedMonths},

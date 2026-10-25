@@ -77,22 +77,7 @@ class BalanceEvolutionCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (final point in points)
-                  Text(
-                    formatMonthShort(point.month),
-                    style: TextStyle(
-                      color: point == points.last
-                          ? finoraBlueText
-                          : finoraMutedInk,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-              ],
-            ),
+            MonthAxis(months: [for (final point in points) point.month]),
           ],
         ),
       ),

@@ -219,6 +219,7 @@ void main() {
     final storeSession = UserSession.demo().copyWith(
       languageCode: locale.substring(0, 2),
       offersConsent: true,
+      firstName: 'Anna',
     );
     for (final entry in storeScreens.entries) {
       testWidgets('store $locale ${entry.key}', (tester) async {

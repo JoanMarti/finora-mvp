@@ -92,3 +92,4 @@ The texts can be uploaded by hand or with `fastlane supply` (`fastlane supply --
 - **Bank data:** connect bLink and OpenWealth through the backend, or keep the early-access label and the demo data clearly marked.
 - **Translations:** a native review of the DE, FR and IT app and store texts.
 - **Store screenshots:** French and Italian sets (add `fr-FR` and `it-IT` to the screenshot test).
+- **Bank names in the demo:** the demo and the store screenshots show real Swiss bank names and colours. Before production, get written permission or switch the store screenshots to neutral demo institutions, so the listing does not suggest an affiliation (Google Play impersonation and IP policies).

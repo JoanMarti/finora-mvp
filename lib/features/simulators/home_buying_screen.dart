@@ -70,9 +70,8 @@ class _HomeBuyingScreenState extends ConsumerState<HomeBuyingScreen> {
         backgroundColor: Colors.transparent,
         title: Text(l10n.homeTitle),
       ),
-      body: FinoraPage(
-        child: ListView(
-          children: [
+      body: SimulatorLayout(
+        summary: [
             HeroCard(
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -109,6 +108,8 @@ class _HomeBuyingScreenState extends ConsumerState<HomeBuyingScreen> {
                 ),
               ),
             ),
+        ],
+        inputs: [
             SectionTitle(l10n.homeYourFiguresSection),
             MoneyField(
               label: l10n.homeIncomeLabel,
@@ -141,6 +142,8 @@ class _HomeBuyingScreenState extends ConsumerState<HomeBuyingScreen> {
               value: _price,
               onChanged: (value) => setState(() => _price = value),
             ),
+        ],
+        details: [
             if (!_price.isZero) _PriceCheck(inputs: inputs, price: _price),
             const SizedBox(height: 16),
             FilledButton.icon(
@@ -149,8 +152,7 @@ class _HomeBuyingScreenState extends ConsumerState<HomeBuyingScreen> {
               label: Text(l10n.homeCompareMortgages),
             ),
             SimulatorNote(l10n.homeDisclaimer),
-          ],
-        ),
+        ],
       ),
     );
   }

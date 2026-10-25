@@ -65,6 +65,24 @@ class ProfileScreen extends ConsumerWidget {
                               : session.email,
                           style: const TextStyle(color: finoraMutedInk),
                         ),
+                        const SizedBox(height: 6),
+                        if (session.hasAccount)
+                          ValuePill(
+                            label: session.emailVerified
+                                ? l10n.emailVerified
+                                : l10n.emailNotVerified,
+                            color: session.emailVerified
+                                ? finoraGreen
+                                : finoraWarning,
+                          )
+                        else
+                          Text(
+                            '${l10n.demoProfile} · ${l10n.demoProfileBody}',
+                            style: const TextStyle(
+                              color: finoraMutedInk,
+                              fontSize: 12,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -282,10 +300,20 @@ class ProfileScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              TextButton(
-                onPressed: () => _confirmRestart(context, ref),
-                child: Text(l10n.restartOnboarding),
-              ),
+              if (session.hasAccount)
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: finoraDanger,
+                  ),
+                  onPressed: () => _confirmSignOut(context, ref),
+                  icon: const Icon(Icons.logout),
+                  label: Text(l10n.signOut),
+                )
+              else
+                TextButton(
+                  onPressed: () => _confirmRestart(context, ref),
+                  child: Text(l10n.restartOnboarding),
+                ),
             ],
           ),
         ),
@@ -319,6 +347,29 @@ Future<void> _toggleAppLock(
   }
   session.setAppLock(null);
   messenger.showSnackBar(SnackBar(content: Text(l10n.appLockOff)));
+}
+
+Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(dialogContext.l10n.signOutTitle),
+      content: Text(dialogContext.l10n.signOutBody),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: Text(dialogContext.l10n.commonCancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: Text(dialogContext.l10n.signOut),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true) return;
+  ref.read(onboardingProvider.notifier).reset();
+  ref.read(sessionProvider.notifier).signOut();
 }
 
 Future<void> _confirmRestart(BuildContext context, WidgetRef ref) async {

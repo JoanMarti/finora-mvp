@@ -106,7 +106,7 @@
   "exploreDemoData": "Explore with demo data",
   "privateDemoNote": "Private demo · no real bank data",
   "createAccountTitle": "Create your account",
-  "createAccountBody": "This is a mock sign-up. Nothing leaves this device.",
+  "createAccountBody": "Your account keeps your settings safe. Bank data is only ever read, never moved.",
   "emailLabel": "Email",
   "emailInvalid": "Enter a valid e-mail address",
   "passwordLabel": "Password",
@@ -2329,5 +2329,83 @@
   "activityColCategory": "Category",
   "activityColAccount": "Account",
   "activityColAmount": "Amount",
-  "accountsSelectHint": "Select an account to see its balance, history and suggestions."
+  "accountsSelectHint": "Select an account to see its balance, history and suggestions.",
+  "firstNameLabel": "First name",
+  "firstNameRequired": "Tell us what to call you",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "passwordRuleLength": "At least {count} characters",
+  "@passwordRuleLength": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "passwordRuleLetter": "A letter",
+  "passwordRuleDigit": "A number",
+  "passwordRuleNotEmail": "Not based on your e-mail",
+  "passwordStrengthWeak": "Too weak",
+  "passwordStrengthFair": "Good",
+  "passwordStrengthStrong": "Strong",
+  "acceptTermsPrefix": "I accept the ",
+  "termsLink": "terms of use",
+  "acceptTermsMiddle": " and have read the ",
+  "privacyLink": "privacy notice",
+  "acceptTermsSuffix": ".",
+  "termsRequired": "Please accept the terms to continue",
+  "marketingOptIn": "Send me occasional product news by e-mail (optional)",
+  "createAccountAction": "Create account",
+  "haveAccount": "I already have an account",
+  "termsSheetTitle": "Terms of use, in short",
+  "termsSheetBody": "Finora shows your finances read-only and never moves money. It gives information, not financial advice. Offers from partners are always labelled and only shown with your consent. You can close your account at any time.",
+  "privacySheetTitle": "Privacy notice, in short",
+  "privacySheetBody": "Your data is processed in Switzerland under the revised Federal Act on Data Protection (FADP). Bank data is read through bLink and OpenWealth with your bank’s consent. Nothing is sold. Analysis for offers needs your separate, express consent, which you can withdraw at any time under Privacy.",
+  "verifyTitle": "Check your inbox",
+  "verifyBody": "We sent a 6-digit code to {email}.",
+  "@verifyBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyDemoHint": "Demo: the code is {code}",
+  "@verifyDemoHint": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyCodeLabel": "Verification code",
+  "verifyAction": "Confirm e-mail",
+  "resendCode": "Send a new code",
+  "codeResent": "A new code is on its way.",
+  "changeEmail": "Use another e-mail",
+  "authErrorEmailTaken": "This e-mail already has an account.",
+  "authErrorInvalidCredentials": "E-mail or password is not correct.",
+  "authErrorInvalidCode": "That code is not right. Check the e-mail and try again.",
+  "authErrorWeakPassword": "Choose a stronger password.",
+  "authErrorTooManyAttempts": "Too many attempts. Wait a moment or request a new code.",
+  "authErrorUnavailable": "We could not reach Finora. Check your connection and try again.",
+  "signInInstead": "Sign in instead",
+  "signInTitle": "Welcome back",
+  "signInBody": "Sign in to continue where you left off.",
+  "signInAction": "Sign in",
+  "forgotPassword": "Forgot password?",
+  "resetPasswordTitle": "Reset your password",
+  "resetPasswordBody": "Enter your e-mail and we will send you a link to choose a new password.",
+  "resetPasswordAction": "Send link",
+  "resetPasswordSent": "If an account exists for this e-mail, a reset link is on its way.",
+  "noAccountYet": "New to Finora? Create an account",
+  "accountSection": "Account",
+  "emailVerified": "E-mail confirmed",
+  "emailNotVerified": "E-mail not confirmed yet",
+  "demoProfileBody": "Create an account to keep your setup.",
+  "signOut": "Sign out",
+  "signOutTitle": "Sign out of Finora?",
+  "signOutBody": "Your bank connections and settings on this device are removed. Sign in again to reconnect.",
+  "consentPurposeTerms": "Terms of use and privacy notice",
+  "consentPurposeMarketing": "Product news by e-mail"
 }

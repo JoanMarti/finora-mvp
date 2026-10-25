@@ -28,6 +28,12 @@ enum ConsentPurpose {
 
   /// Passing name, e-mail and the figures behind one offer to one partner.
   partnerSharing,
+
+  /// Terms of use and privacy notice, accepted when creating the account.
+  terms,
+
+  /// Optional product news by e-mail.
+  marketing,
 }
 
 /// One answer the user gave, kept so Finora can show (and prove) what was

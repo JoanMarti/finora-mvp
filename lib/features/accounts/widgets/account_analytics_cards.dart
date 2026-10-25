@@ -299,7 +299,7 @@ class _SpendingCategoryRow extends StatelessWidget {
             ),
             const SizedBox(height: 7),
             ClipRRect(
-              borderRadius: BorderRadius.circular(99),
+              borderRadius: BorderRadius.circular(finoraRadiusSmall),
               child: LinearProgressIndicator(
                 value: share,
                 minHeight: 7,
@@ -330,7 +330,7 @@ class _CashFlowMetric extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color.withValues(alpha: .08),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),

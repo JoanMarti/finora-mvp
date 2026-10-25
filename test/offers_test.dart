@@ -3,6 +3,7 @@ import 'package:finora/application/offers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:finora/features/analysis/analysis_screen.dart';
 import 'package:finora/features/offers/opportunities_screen.dart';
@@ -156,14 +157,17 @@ void main() {
   });
 
   group('Offer tracking', () {
-    test('counts funnel events without personal data', () {
-      final container = createTestContainer();
-      final tracker = container.read(offerTrackerProvider.notifier);
-      tracker
-        ..track(OpportunityKind.telecomPlan, OfferEventType.viewed)
-        ..track(OpportunityKind.telecomPlan, OfferEventType.partnerClicked);
-      expect(tracker.count(OfferEventType.viewed), 1);
-      expect(tracker.count(OfferEventType.partnerClicked), 1);
+    test('opening and following an offer is counted without personal data', () async {
+      final container = createTestContainer(session: _consented);
+      final telecom = (await container.read(opportunitiesProvider.future))
+          .firstWhere((item) => item.kind == OpportunityKind.telecomPlan);
+      container.read(sessionProvider.notifier)
+        ..recordOfferEvent(telecom, OfferEventType.viewed)
+        ..recordOfferEvent(telecom, OfferEventType.partnerClicked);
+      final funnel = container.read(funnelProvider);
+      expect(funnel.count(OfferEventType.viewed), 1);
+      expect(funnel.count(OfferEventType.partnerClicked), 1);
+      expect(funnel.pursuedSavingHigh, telecom.savingHigh);
     });
   });
 
@@ -226,6 +230,14 @@ void main() {
     await tester.tap(action);
     await tester.pumpAndSettle();
     expect(find.text('Demo'), findsOneWidget);
+    final session = ProviderScope.containerOf(
+      tester.element(find.byType(OpportunitiesScreen)),
+    ).read(sessionProvider);
+    expect(
+      session.consentLog.last.purpose,
+      ConsentPurpose.partnerSharing,
+    );
+    expect(session.consentLog.last.offerKind, OpportunityKind.healthInsuranceSwitch);
     expect(tester.takeException(), isNull);
   });
 

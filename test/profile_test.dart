@@ -124,6 +124,7 @@ void main() {
     expect(find.text('Profile 0% complete'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, '1990');
+    await tester.pump();
     await tester.tap(find.text('Self-employed'));
     await tester.pumpAndSettle();
     final profile = container.read(sessionProvider).profile;

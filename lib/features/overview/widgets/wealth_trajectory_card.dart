@@ -198,7 +198,7 @@ class _WealthTrendPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0x402F6BFF), Color(0x002F6BFF)],
+          colors: [Color(0x40027DB9), Color(0x00027DB9)],
         ).createShader(chartRect),
     );
     canvas.drawPath(

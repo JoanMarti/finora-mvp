@@ -8,6 +8,7 @@ import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Spending analysis across every everyday account.
 class AnalysisScreen extends ConsumerStatefulWidget {
@@ -84,6 +85,16 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                     analytics: combined,
                     showAll: _showAllBills,
                     now: now,
+                  ),
+                  const SizedBox(height: 10),
+                  Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.subscriptions_outlined),
+                      title: Text(l10n.subscriptionsTitle),
+                      subtitle: Text(l10n.subscriptionsToolSubtitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/subscriptions'),
+                    ),
                   ),
                 ],
                 if (opportunities.isNotEmpty) ...[

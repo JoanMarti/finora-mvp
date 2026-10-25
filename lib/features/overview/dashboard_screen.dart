@@ -360,6 +360,18 @@ class _PlanningTools extends ConsumerWidget {
         '/household',
       ),
       (
+        Icons.calculate_outlined,
+        l10n.taxSavingsTitle,
+        l10n.taxSavingsToolSubtitle,
+        '/tax-savings',
+      ),
+      (
+        Icons.house_outlined,
+        l10n.homeTitle,
+        l10n.homeToolSubtitle,
+        '/home-buying',
+      ),
+      (
         Icons.receipt_long_outlined,
         l10n.taxTitle,
         l10n.taxToolSubtitle('$lastYear'),

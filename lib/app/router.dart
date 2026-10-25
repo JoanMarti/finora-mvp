@@ -19,6 +19,8 @@ import 'package:finora/features/planning/tax_summary_screen.dart';
 import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/features/privacy/privacy_screen.dart';
 import 'package:finora/features/profile/profile_screen.dart';
+import 'package:finora/features/simulators/home_buying_screen.dart';
+import 'package:finora/features/simulators/tax_savings_screen.dart';
 import 'package:finora/features/shell/app_shell.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +79,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const OpportunitiesScreen(),
       ),
       GoRoute(path: '/health', builder: (_, _) => const HealthScreen()),
+      GoRoute(path: '/home-buying', builder: (_, _) => const HomeBuyingScreen()),
+      GoRoute(
+        path: '/tax-savings',
+        builder: (_, _) => const TaxSavingsScreen(),
+      ),
       GoRoute(path: '/calendar', builder: (_, _) => const CalendarScreen()),
       GoRoute(
         path: '/household',

@@ -1804,5 +1804,90 @@
         "type": "String"
       }
     }
-  }
+  },
+  "homeTitle": "Can I buy a home?",
+  "homeToolSubtitle": "Price range with Swiss bank rules",
+  "homeMaxPrice": "Highest affordable price",
+  "homeLimitEquity": "Limited by your equity: banks ask for at least 20% of the price.",
+  "homeLimitHardEquity": "Limited by your hard equity: at least 10% of the price must come from savings or Pillar 3a, not the pension fund.",
+  "homeLimitIncome": "Limited by your income: interest at 5%, 1% upkeep and amortisation must stay within a third of gross income.",
+  "homeYourFiguresSection": "Your figures",
+  "homeIncomeLabel": "Gross household income per year",
+  "homeIncomeHelp": "Add your partner’s income if you buy together.",
+  "homeCashLabel": "Savings you would bring in",
+  "homeCashHelp": "Keep a reserve for moving costs, notary fees and emergencies.",
+  "homePillar3aLabel": "Pillar 3a withdrawal",
+  "homePensionLabel": "Pension fund advance withdrawal",
+  "homePensionHelp": "Your certificate shows {balance}. A withdrawal lowers your pension and is taxed separately.",
+  "@homePensionHelp": {
+    "placeholders": {
+      "balance": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCheckSection": "Check a specific price",
+  "homePriceLabel": "Purchase price",
+  "homeFits": "This price is within the usual bank rules.",
+  "homeDoesNotFit": "This price is beyond the usual bank rules.",
+  "homeEquityNeeded": "Equity needed (20%)",
+  "homeMortgage": "Mortgage · loan-to-value",
+  "homeMonthlyCost": "Calculated cost per month",
+  "homeCostShare": "Share of gross income",
+  "homeIncomeNeeded": "The bank would expect a gross income of about {amount} a year.",
+  "@homeIncomeNeeded": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "homeEquityShort": "You would need {amount} of equity, at least half of it from savings or Pillar 3a.",
+  "@homeEquityShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCompareMortgages": "Compare mortgage offers",
+  "homeDisclaimer": "Rules of thumb used by most Swiss banks; each lender decides individually. Actual interest is usually far below the 5% used in the test.",
+  "taxSavingsTitle": "Tax savings",
+  "taxSavingsToolSubtitle": "Pillar 3a and pension fund buy-ins",
+  "taxSavingsResult": "Estimated tax saving this year",
+  "taxSavingsDeductions": "Deductions",
+  "taxSavingsNetCost": "Net cost after tax",
+  "taxSavingsExtraPension": "Extra pension from the buy-in",
+  "taxSavingsPillarLabel": "Pillar 3a contribution",
+  "taxSavingsPillarHelp": "{amount} of room left this year.",
+  "@taxSavingsPillarHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSavingsOverLimit": "Above the yearly limit: the excess is not deductible.",
+  "taxSavingsBuyInSection": "Pension fund buy-in",
+  "taxSavingsBuyInLabel": "Buy-in amount",
+  "taxSavingsBuyInHelp": "Your pension fund certificate shows the maximum possible buy-in.",
+  "taxSavingsRateSection": "Your marginal tax rate",
+  "taxSavingsRateLabel": "{percent}% of each extra franc goes to tax",
+  "@taxSavingsRateLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "taxSavingsRateHelp": "Depends on canton, commune, income and civil status; usually 15–40%. The federal tax calculator (ESTV) or your last assessment gives a precise figure.",
+  "taxSavingsBuyInLock": "Money bought in cannot be withdrawn as a lump sum for {years} years.",
+  "@taxSavingsBuyInLock": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "taxSavingsDisclaimer": "An estimate: the actual saving depends on your full tax return."
 }

@@ -107,9 +107,13 @@ class OpportunityInput {
     required this.pillar3aContributionsThisYear,
     required this.now,
     this.facts = SwissMarketFacts.current,
+    this.propertyValue = Money.zero,
   });
 
   final List<FinancialAccount> accounts;
+
+  /// Property value the user entered; zero when unknown.
+  final Money propertyValue;
   final Map<String, AccountAnalytics> analytics;
   final Money pillar3aContributionsThisYear;
   final DateTime now;
@@ -276,6 +280,10 @@ abstract final class OpportunityEngine {
       savingLow: _round(debt * .001),
       savingHigh: _round(debt * .003),
       amount: debt,
+      // Loan-to-value in percent: lenders price lower ratios better.
+      percent: input.propertyValue.isZero
+          ? null
+          : (debt.cents * 100 / input.propertyValue.cents).round(),
     );
   }
 

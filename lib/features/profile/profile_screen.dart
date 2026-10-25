@@ -162,6 +162,16 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const Divider(height: 1),
                     SwitchListTile(
+                      value: session.hideAmounts,
+                      onChanged: ref
+                          .read(sessionProvider.notifier)
+                          .setHideAmounts,
+                      secondary: const Icon(Icons.visibility_off_outlined),
+                      title: Text(l10n.hideAmounts),
+                      subtitle: Text(l10n.hideAmountsBody),
+                    ),
+                    const Divider(height: 1),
+                    SwitchListTile(
                       value: session.dataHealthAlerts,
                       onChanged: ref
                           .read(sessionProvider.notifier)

@@ -1063,5 +1063,13 @@
   "interestFamily": "Familie planen",
   "interestTravel": "Reisen",
   "taxRateFromProfile": "Geschätzt aus Kanton, Einkommen und Zivilstand. Für ein genaues Ergebnis den Satz aus Ihrer letzten Steuerveranlagung verwenden.",
-  "pillar3aSelfEmployedNote": "Als Selbständige ohne Pensionskasse können Sie dieses Jahr bis {amount} einzahlen."
+  "pillar3aSelfEmployedNote": "Als Selbständige ohne Pensionskasse können Sie dieses Jahr bis {amount} einzahlen.",
+  "offerRentDepositTitle": "Mietkaution freisetzen",
+  "offerRentDepositReason": "Auf Ihrem Mietkautionskonto sind {amount} blockiert. Eine Mietkautionsversicherung setzt das Geld für rund {percent} % der Kaution pro Jahr frei. Das lohnt sich nur, wenn Sie das Geld brauchen, etwa um eine Kreditkartenschuld zu tilgen oder Ihre Reserve aufzubauen.",
+  "offerRentDepositAction": "Mietkautionsversicherungen vergleichen",
+  "offerFamilyTitle": "Familienzulagen prüfen",
+  "offerFamilyReason": "{count, plural, =1{Mit 1 Kind} other{Mit {count} Kindern}} stehen Ihnen mindestens {amount} pro Monat Kinderzulagen zu; viele Kantone zahlen mehr, ab 16 Jahren ist die Ausbildungszulage höher. Prüfen Sie, ob Arbeitgeber oder Ausgleichskasse sie auszahlen.",
+  "offerFamilyAction": "Familienangaben anpassen",
+  "partnerContinueTo": "Weiter zu {partner}",
+  "partnerLinkNote": "Öffnet {partner} im Browser. Finora erhält bei einem Abschluss eventuell eine Vergütung; das ändert nie, welche Angebote Sie sehen."
 }

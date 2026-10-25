@@ -70,6 +70,7 @@ List<Override> backendOverrides(
     backendEnabledProvider.overrideWithValue(true),
     funnelReporterProvider.overrideWithValue(services),
     reminderServiceProvider.overrideWithValue(services),
+    partnerDirectoryProvider.overrideWithValue(services),
   ];
 }
 

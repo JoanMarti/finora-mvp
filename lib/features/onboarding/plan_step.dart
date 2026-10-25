@@ -58,9 +58,9 @@ class _PlanStepState extends ConsumerState<PlanStep> {
                 ? null
                 : (
                     label: l10n.trialStart(PlusPricing.trialDays),
-                    onPressed: () {
-                      ref.read(sessionProvider.notifier).startTrial();
-                      widget.onContinue();
+                    onPressed: () async {
+                      await startPremiumTrial(context, ref, period: _period);
+                      if (mounted) widget.onContinue();
                     },
                   ),
             premiumFootnote: session.trialUsed

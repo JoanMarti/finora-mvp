@@ -30,10 +30,14 @@ class _FakeStore implements PurchaseService {
   @override
   Future<PurchaseResult> buyPlus({
     BillingPeriod period = BillingPeriod.yearly,
+    bool withTrial = false,
   }) async => buy;
 
   @override
   Future<PurchaseResult> restore() async => restoreResult;
+
+  @override
+  Future<Map<BillingPeriod, StorePrice>> prices() async => const {};
 }
 
 class _NoPermission implements NotificationPermissions {

@@ -63,6 +63,7 @@ class _PlusScreenState extends ConsumerState<PlusScreen> {
                 PlanCards(
                   period: _period,
                   wide: wide,
+                  storePrice: ref.watch(storePricesProvider).value?[_period],
                   currentIsPremium: isPremium,
                   freeAction: null,
                   premiumAction: isPremium
@@ -127,18 +128,14 @@ class _PlusScreenState extends ConsumerState<PlusScreen> {
     );
   }
 
-  String _priceLabel(AppLocalizations l10n) => _period == BillingPeriod.yearly
-      ? l10n.planPerYear(formatMoneyWhole(PlusPricing.yearly))
-      : l10n.planPerMonth(formatMoney(PlusPricing.monthly));
+  String _priceLabel(AppLocalizations l10n) => premiumPriceLabel(
+    l10n,
+    _period,
+    ref.read(storePricesProvider).value?[_period],
+  );
 
-  void _startTrial(BuildContext context) {
-    ref.read(sessionProvider.notifier).startTrial();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.trialStarted(PlusPricing.trialDays)),
-      ),
-    );
-  }
+  void _startTrial(BuildContext context) =>
+      startPremiumTrial(context, ref, period: _period);
 
   Future<void> _confirmSubscribe(BuildContext context) async {
     final period = _period;
@@ -274,9 +271,13 @@ class PlanCards extends StatelessWidget {
     required this.freeAction,
     required this.premiumAction,
     this.premiumFootnote,
+    this.storePrice,
     super.key,
   });
 
+  /// The store's own price for [period], shown instead of the reference
+  /// price on store builds.
+  final StorePrice? storePrice;
   final BillingPeriod period;
   final bool wide;
   final bool currentIsPremium;
@@ -306,13 +307,18 @@ class PlanCards extends StatelessWidget {
       fillHeight: wide,
     );
     final yearly = period == BillingPeriod.yearly;
+    final store = storePrice;
     final premium = _PlanCard(
       name: l10n.plusTitle,
       tagline: l10n.planPremiumTagline,
-      price: yearly
+      price: store != null
+          ? store.formattedPrice
+          : yearly
           ? formatMoney(PlusPricing.yearlyPerMonth)
           : formatMoney(PlusPricing.monthly),
-      priceNote: yearly
+      priceNote: store != null
+          ? (yearly ? l10n.billingYearly : l10n.billingMonthly)
+          : yearly
           ? l10n.planYearlyEquivalent(formatMoneyWhole(PlusPricing.yearly))
           : l10n.planBilledMonthly,
       current: currentIsPremium,
@@ -805,14 +811,10 @@ class _Paywall extends ConsumerWidget {
             if (!trialUsed) ...[
               FilledButton(
                 onPressed: () {
-                  final messenger = ScaffoldMessenger.of(context);
-                  ref.read(sessionProvider.notifier).startTrial();
-                  Navigator.pop(context);
-                  messenger.showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.trialStarted(PlusPricing.trialDays)),
-                    ),
-                  );
+                  final navigator = Navigator.of(context);
+                  final outer = navigator.context;
+                  navigator.pop();
+                  startPremiumTrial(outer, ref);
                 },
                 child: Text(l10n.trialStart(PlusPricing.trialDays)),
               ),
@@ -881,5 +883,53 @@ class PlusLockedCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Price of Premium for [period]: the store's price when there is one,
+/// otherwise the reference price.
+String premiumPriceLabel(
+  AppLocalizations l10n,
+  BillingPeriod period,
+  StorePrice? store,
+) {
+  final yearly = period == BillingPeriod.yearly;
+  if (store != null) {
+    return yearly
+        ? l10n.planPerYear(store.formattedPrice)
+        : l10n.planPerMonth(store.formattedPrice);
+  }
+  return yearly
+      ? l10n.planPerYear(formatMoneyWhole(PlusPricing.yearly))
+      : l10n.planPerMonth(formatMoney(PlusPricing.monthly));
+}
+
+/// Starts the free Premium trial. The demo starts it in the app; a store
+/// build subscribes through Google Play with the free-trial offer, so the
+/// store reminds and bills (or not) at the end.
+Future<void> startPremiumTrial(
+  BuildContext context,
+  WidgetRef ref, {
+  BillingPeriod period = BillingPeriod.yearly,
+}) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
+  final service = ref.read(purchaseServiceProvider);
+  final session = ref.read(sessionProvider.notifier);
+  if (!service.isStore) {
+    session.startTrial();
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.trialStarted(PlusPricing.trialDays))),
+    );
+    return;
+  }
+  final result = await service.buyPlus(period: period, withTrial: true);
+  if (result.isActive) {
+    session.startPlus(since: result.since, period: period);
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.trialStarted(PlusPricing.trialDays))),
+    );
+  } else if (result.status == PurchaseStatus.failed) {
+    messenger.showSnackBar(SnackBar(content: Text(l10n.plusPurchaseFailed)));
   }
 }

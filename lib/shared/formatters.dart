@@ -13,6 +13,17 @@ String formatMoney(Money money, {bool signed = false}) {
   return '${money.isNegative ? '−' : '+'} $value';
 }
 
+/// Whole francs, e.g. `CHF 3'250`, for estimates that should not look
+/// more precise than they are.
+String formatMoneyWhole(Money money) {
+  final formatter = NumberFormat.currency(
+    locale: 'de_CH',
+    symbol: money.currency,
+    decimalDigits: 0,
+  );
+  return formatter.format(money.amount.abs()).replaceAll('’', "'");
+}
+
 /// Short amount for tight layouts, e.g. `CHF 44.8k` or `CHF 1.2M`.
 String formatCompactMoney(Money money, {bool signed = false}) {
   final absolute = money.amount.abs();

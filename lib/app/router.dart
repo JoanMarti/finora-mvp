@@ -3,8 +3,10 @@ import 'package:finora/features/accounts/account_detail_screen.dart';
 import 'package:finora/features/accounts/accounts_screen.dart';
 import 'package:finora/features/accounts/institution_detail_screen.dart';
 import 'package:finora/features/activity/activity_screen.dart';
+import 'package:finora/features/analysis/analysis_screen.dart';
 import 'package:finora/features/connections/connection_screen.dart';
 import 'package:finora/features/onboarding/onboarding_screen.dart';
+import 'package:finora/features/offers/opportunities_screen.dart';
 import 'package:finora/features/overview/dashboard_screen.dart';
 import 'package:finora/features/planning/goals_screen.dart';
 import 'package:finora/features/planning/retirement_screen.dart';
@@ -62,6 +64,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const RetirementScreen(),
       ),
       GoRoute(path: '/tax', builder: (_, _) => const TaxSummaryScreen()),
+      GoRoute(path: '/analysis', builder: (_, _) => const AnalysisScreen()),
+      GoRoute(
+        path: '/offers',
+        builder: (_, _) => const OpportunitiesScreen(),
+      ),
       GoRoute(
         path: '/institution/:institutionId',
         builder: (_, state) => InstitutionDetailScreen(

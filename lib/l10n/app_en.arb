@@ -1047,5 +1047,204 @@
       }
     }
   },
-  "taxDisclaimer": "Helps you fill in your return; compare with your banks’ tax statements. Demo figures, not tax advice."
+  "taxDisclaimer": "Helps you fill in your return; compare with your banks’ tax statements. Demo figures, not tax advice.",
+  "analysisTitle": "Spending analysis",
+  "analysisToolSubtitle": "Where your money goes, across all banks",
+  "analysisHeadline": "Your money, month by month",
+  "analysisSubtitle": "{count, plural, =1{Based on 1 everyday account.} other{Based on {count} everyday accounts.}}",
+  "@analysisSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisEmpty": "Connect a current account to see where your money goes.",
+  "savingsRateLabel": "Savings rate",
+  "fixedCostShareLabel": "Fixed costs share",
+  "recurringYearlyLabel": "Recurring bills a year",
+  "largestCategoryLabel": "Largest category",
+  "fixedCostsSection": "Fixed costs",
+  "waysToSaveSection": "Ways to save",
+  "potentialSaving": "Up to {amount} a year",
+  "@potentialSaving": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offersSubtitle": "{count, plural, =1{1 opportunity found in your data.} other{{count} opportunities found in your data.}}",
+  "@offersSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noOffers": "Nothing in this category right now.",
+  "offersConsentTitle": "Find ways to save?",
+  "offersConsentBody": "Finora can look at your bills and balances to suggest cheaper insurance, banking and other services. Some suggestions come from partners who pay Finora; we always say so, and nothing is shared without your OK.",
+  "offersConsentAccept": "Yes, show me",
+  "offersConsentDecline": "Not now",
+  "offersSetting": "Personalised savings offers",
+  "offersSettingBody": "Analyse my data to suggest cheaper services",
+  "hiddenOffers": "{count, plural, =1{1 hidden offer} other{{count} hidden offers}}",
+  "@hiddenOffers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "showAgain": "Show again",
+  "offerPartnerLabel": "Partner offer",
+  "offerSavingRange": "Save {low} – {high} a year",
+  "@offerSavingRange": {
+    "placeholders": {
+      "low": {
+        "type": "String"
+      },
+      "high": {
+        "type": "String"
+      }
+    }
+  },
+  "offerWhyTitle": "Why you see this",
+  "offerEstimateTitle": "About the estimate",
+  "offerEstimateBody": "Based on your data and typical Swiss market prices. It is a range, not a promise.",
+  "offerHowPaidTitle": "How Finora is paid",
+  "offerDisclosureLeadFee": "If a contract is signed, the partner pays Finora a fixed fee (for basic health insurance at most CHF 70, set by the binding industry agreement). You pay nothing extra.",
+  "offerDisclosureCommission": "If you sign a contract, Finora receives part of the partner’s commission. You pay nothing extra.",
+  "offerDisclosureAffiliate": "If you open the product, the partner pays Finora a referral fee. You pay nothing extra.",
+  "offerDisclosureNone": "No partner and no payment: this tip only helps you.",
+  "offerShareConsent": "I agree that Finora passes my name, e-mail and the facts above to the partner so they can contact me about this offer.",
+  "offerNotInterested": "Not interested",
+  "offerDemoTitle": "Demo",
+  "offerDemoBody": "In the live app you would now continue to the partner. In this demo nothing has been shared.",
+  "offerPrinciplesTitle": "How offers work",
+  "offerPrincipleData": "Offers are worked out by Finora from your own data. A partner sees nothing unless you agree for that one offer.",
+  "offerPrincipleRanking": "Offers are ordered by deadline and how much you could save, never by what a partner pays.",
+  "offerPrincipleConsent": "You can switch personalised offers off at any time in Profile.",
+  "offerPrincipleRegulated": "Insurance offers go through a FINMA-registered intermediary, and Finora discloses every payment it receives.",
+  "offerCategoryInsurance": "Insurance",
+  "offerCategoryBanking": "Banking",
+  "offerCategoryPensions": "Pensions",
+  "offerCategoryMortgage": "Mortgage",
+  "offerCategoryTelecom": "Phone & internet",
+  "offerCategoryBudget": "Budget",
+  "offerHealthTitle": "Compare health insurance before 30 November",
+  "offerHealthReason": "You pay {amount} a month to {merchant}. Premiums rise by {percent}% on average next year; comparing insurers, models and deductibles often lowers the bill.",
+  "@offerHealthReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "merchant": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "offerHealthAction": "Compare offers",
+  "offerInsuranceReviewTitle": "Review your insurance in one place",
+  "offerInsuranceReviewReason": "{count} insurance bills come to {amount} a month. A coverage check can reveal overlaps or a better deductible.",
+  "@offerInsuranceReviewReason": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerInsuranceReviewAction": "Start a coverage check",
+  "offerIdleCashTitle": "Put idle cash to work",
+  "offerIdleCashReason": "About {amount} more than three months of spending sits in your current accounts without interest.",
+  "@offerIdleCashReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerIdleCashAction": "Compare savings accounts",
+  "offerPillarRoomTitle": "Use your Pillar 3a room before year end",
+  "offerPillarRoomReason": "You can still pay in {amount} this year. Contributions reduce your taxable income.",
+  "@offerPillarRoomReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerPillarOpenTitle": "Open a Pillar 3a",
+  "offerPillarOpenReason": "No Pillar 3a is connected. Paying in up to {amount} a year reduces your taxable income.",
+  "@offerPillarOpenReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerPillarAction": "Compare 3a providers",
+  "offerMortgageTitle": "Compare mortgage offers before renewal",
+  "offerMortgageReason": "On a mortgage of {amount}, even a slightly lower rate saves money every year.",
+  "@offerMortgageReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerMortgageAction": "Get mortgage offers",
+  "offerCardTitle": "Check your card fees",
+  "offerCardReason": "Cards without an annual fee or foreign-currency charges can save money on {name} spending abroad or online.",
+  "@offerCardReason": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "offerCardAction": "Compare cards",
+  "offerTelecomTitle": "Pay less for phone & internet",
+  "offerTelecomReason": "You pay {amount} a month to {merchant}. Comparable plans often cost less.",
+  "@offerTelecomReason": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "offerTelecomAction": "Compare plans",
+  "offerSubscriptionsTitle": "Review your subscriptions",
+  "offerSubscriptionsReason": "{count} subscriptions cost {amount} a year. Cancelling one you rarely use is the easiest saving.",
+  "@offerSubscriptionsReason": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerSubscriptionsAction": "See my subscriptions",
+  "offerBankFeesTitle": "Simplify your everyday banking",
+  "offerBankFeesReason": "You keep current accounts at {count} banks. Each can charge account and card fees.",
+  "@offerBankFeesReason": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offerBankFeesAction": "Compare bank accounts"
 }

@@ -3,10 +3,10 @@
     "short_name": "Finora",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#F4F7F5",
-    "theme_color": "#0E6B5B",
+    "background_color": "#F7F6F5",
+    "theme_color": "#014164",
     "description": "Your Swiss finances in one clear, read-only view.",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

@@ -13,18 +13,22 @@ class FinoraPage extends StatelessWidget {
   const FinoraPage({
     required this.child,
     this.padding = const EdgeInsets.fromLTRB(20, 16, 20, 32),
+    this.maxWidth = 720,
     super.key,
   });
 
   final Widget child;
   final EdgeInsets padding;
 
+  /// Readable width for single-column pages; wide layouts pass more.
+  final double maxWidth;
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 560),
+        constraints: BoxConstraints(maxWidth: maxWidth),
         child: Padding(padding: padding, child: child),
       ),
     );

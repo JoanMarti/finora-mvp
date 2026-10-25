@@ -1092,5 +1092,12 @@
   "priceAlertSince": "Dal {date}",
   "alertPriceTitle": "{merchant} costa di più",
   "alertPriceBody": "Da {before} a {after}: {yearly} in più all’anno.",
-  "featurePriceAlerts": "Avvisi di aumento prezzo"
+  "featurePriceAlerts": "Avvisi di aumento prezzo",
+  "biometricSetting": "Sblocca con impronta o volto",
+  "biometricSettingBody": "Il PIN funziona sempre se il riconoscimento non riesce.",
+  "biometricReason": "Sblocca Finora",
+  "biometricEnableReason": "Conferma per attivare lo sblocco con impronta o volto",
+  "biometricButton": "Usa impronta o volto",
+  "biometricOn": "Lo sblocco con impronta o volto è attivo.",
+  "biometricNotRecognised": "Non riconosciuto. Inserisci il PIN."
 }

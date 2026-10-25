@@ -41,6 +41,7 @@ dependencies:
   go_router: ^18.0.1
   url_launcher: ^6.3.1
   in_app_purchase: ^3.2.0
+  local_auth: ^3.0.0
   in_app_purchase_android: any
   http: ^1.2.0
   intl: any # version is pinned by flutter_localizations

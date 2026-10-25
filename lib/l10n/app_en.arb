@@ -2798,5 +2798,12 @@
       }
     }
   },
-  "featurePriceAlerts": "Price-increase alerts"
+  "featurePriceAlerts": "Price-increase alerts",
+  "biometricSetting": "Unlock with fingerprint or face",
+  "biometricSettingBody": "Your PIN still works if recognition fails.",
+  "biometricReason": "Unlock Finora",
+  "biometricEnableReason": "Confirm to turn on fingerprint or face unlock",
+  "biometricButton": "Use fingerprint or face",
+  "biometricOn": "Fingerprint or face unlock is on.",
+  "biometricNotRecognised": "Not recognised. Enter your PIN."
 }

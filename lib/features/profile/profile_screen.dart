@@ -1,5 +1,6 @@
 import 'package:finora/app/links.dart';
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/app_lock.dart';
 import 'package:finora/application/auth.dart';
 import 'package:finora/application/backend.dart';
 import 'package:finora/application/offers.dart';
@@ -220,6 +221,19 @@ class ProfileScreen extends ConsumerWidget {
                       title: Text(l10n.appLockSetting),
                       subtitle: Text(l10n.appLockSettingBody),
                     ),
+                    if (session.appLock != null &&
+                        (ref.watch(biometricsAvailableProvider).value ??
+                            false)) ...[
+                      const Divider(height: 1),
+                      SwitchListTile(
+                        value: session.appLock!.biometrics,
+                        onChanged: (enabled) =>
+                            _toggleBiometrics(context, ref, enabled: enabled),
+                        secondary: const Icon(Icons.fingerprint),
+                        title: Text(l10n.biometricSetting),
+                        subtitle: Text(l10n.biometricSettingBody),
+                      ),
+                    ],
                     if (session.appLock != null) ...[
                       const Divider(height: 1),
                       ListTile(
@@ -354,6 +368,30 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Turning biometrics on needs one successful check, so nobody else can
+/// enrol their finger through an unlocked phone without the user noticing.
+Future<void> _toggleBiometrics(
+  BuildContext context,
+  WidgetRef ref, {
+  required bool enabled,
+}) async {
+  final session = ref.read(sessionProvider.notifier);
+  final lock = ref.read(sessionProvider).appLock;
+  if (lock == null) return;
+  if (!enabled) {
+    session.setAppLock(lock.copyWith(biometrics: false));
+    return;
+  }
+  final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
+  final ok = await ref
+      .read(biometricAuthProvider)
+      .authenticate(l10n.biometricEnableReason);
+  if (!ok) return;
+  session.setAppLock(lock.copyWith(biometrics: true));
+  messenger.showSnackBar(SnackBar(content: Text(l10n.biometricOn)));
 }
 
 Future<void> _toggleAppLock(

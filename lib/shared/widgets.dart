@@ -90,17 +90,20 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 26, bottom: 12),
+      padding: const EdgeInsets.only(top: 28, bottom: 12),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 12,
-                letterSpacing: .35,
-                fontWeight: FontWeight.w800,
-                color: finoraInk,
+            child: Semantics(
+              header: true,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  letterSpacing: -.3,
+                  fontWeight: FontWeight.w800,
+                  color: finoraInk,
+                ),
               ),
             ),
           ),
@@ -213,17 +216,17 @@ class ValuePill extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: .1),
+        color: color.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(99),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         child: Text(
           label,
           style: TextStyle(
             color: finoraAccessibleAccent(color),
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
@@ -331,4 +334,52 @@ class MonthAxis extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Dark gradient card for summaries at the top of detail screens. Texts
+/// inside use light colours (white, [finoraSilver]).
+class HeroCard extends StatelessWidget {
+  const HeroCard({
+    required this.child,
+    this.gradient = finoraInkGradient,
+    super.key,
+  });
+  final Widget child;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      gradient: gradient,
+      borderRadius: BorderRadius.circular(finoraRadius),
+      boxShadow: finoraShadow,
+    ),
+    child: Material(type: MaterialType.transparency, child: child),
+  );
+}
+
+/// Icon on a soft tinted circle, used for lists, tools and actions.
+class TonalIcon extends StatelessWidget {
+  const TonalIcon(
+    this.icon, {
+    this.color = finoraBlueText,
+    this.background = finoraSoftBlue,
+    this.size = 44,
+    super.key,
+  });
+  final IconData icon;
+  final Color color;
+  final Color background;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(size * .36),
+    ),
+    child: Icon(icon, color: color, size: size * .5),
+  );
 }

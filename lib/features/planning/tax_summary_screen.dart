@@ -150,8 +150,7 @@ class _TaxSummaryBody extends StatelessWidget {
           style: const TextStyle(color: finoraMutedInk),
         ),
         const SizedBox(height: 12),
-        Card(
-          color: finoraInk,
+        HeroCard(
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

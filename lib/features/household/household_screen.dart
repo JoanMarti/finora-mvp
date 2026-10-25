@@ -136,8 +136,7 @@ class _NetWorthCard extends ConsumerWidget {
     final total = summary.netWorth.cents;
     int flex(Money part) =>
         total <= 0 ? 1 : (part.cents * 1000 ~/ total).clamp(1, 1000);
-    return Card(
-      color: finoraInk,
+    return HeroCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

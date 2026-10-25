@@ -1,5 +1,7 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/health.dart';
 import 'package:finora/application/providers.dart';
+import 'package:finora/domain/assets.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/accounts/widgets/account_actions.dart';
@@ -148,6 +150,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                     icon: const Icon(Icons.add),
                     label: Text(l10n.addInstitutionTitle),
                   ),
+                  SectionTitle(l10n.otherAssetsSection),
+                  const _OtherAssetsTile(),
                 ],
               );
             },
@@ -643,4 +647,35 @@ class _EmptyAccountsState extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Entry point to property, vehicles, crypto and other manual assets.
+class _OtherAssetsTile extends ConsumerWidget {
+  const _OtherAssetsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final assets = ref.watch(manualAssetsProvider);
+    return Card(
+      child: ListTile(
+        leading: const CircleAvatar(
+          backgroundColor: finoraSoftBlue,
+          foregroundColor: finoraBlueText,
+          child: Icon(Icons.home_work_outlined, size: 20),
+        ),
+        title: Text(
+          l10n.assetsTitle,
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+        subtitle: Text(
+          assets.isEmpty
+              ? l10n.assetsTileEmpty
+              : l10n.assetsSummary(assets.length, formatMoneyWhole(assets.total)),
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => context.push('/assets'),
+      ),
+    );
+  }
 }

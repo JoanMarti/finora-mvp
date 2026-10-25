@@ -850,5 +850,13 @@
   "greetingEvening": "Guten Abend, {name}",
   "quickAnalysis": "Analyse",
   "quickCalendar": "Kalender",
-  "quickSave": "Sparen"
+  "quickSave": "Sparen",
+  "hintSaveUpTo": "Bis zu {amount} pro Jahr sparen",
+  "offerSavingsRateTitle": "Mehr Zins auf Ihrem Sparkonto",
+  "offerSavingsRateReason": "Auf {account} liegen {amount}. Grossbanken zahlen oft rund 0,25 %, während Sparkonten mit bis zu {percent} % breit verfügbar sind.",
+  "offerPillarFeesTitle": "Gebühren Ihrer Säule 3a senken",
+  "offerPillarFeesReason": "Auf {account} liegen {amount}. Bank-3a-Fonds kosten oft rund 1,2 % Gebühren pro Jahr; günstige Anbieter etwa 0,45 %, und die Differenz summiert sich bis zur Pensionierung.",
+  "offerHouseholdTitle": "Hausratversicherung vergleichen",
+  "offerHouseholdReason": "Sie zahlen {merchant} {amount} pro Monat. Hausrat- und Haftpflichtschutz mit gleicher Deckung kostet anderswo oft 10–25 % weniger.",
+  "offerHouseholdAction": "Angebote vergleichen"
 }

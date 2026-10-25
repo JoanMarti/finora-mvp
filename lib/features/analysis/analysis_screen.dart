@@ -87,6 +87,13 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                     analytics: combined,
                     showAll: _showAllBills,
                     now: now,
+                    hintBuilder: (bill) => switch (hintForBill(
+                      opportunities,
+                      bill,
+                    )) {
+                      final hint? => InlineOfferHint(opportunity: hint),
+                      null => null,
+                    },
                   ),
                   const SizedBox(height: 10),
                   Card(

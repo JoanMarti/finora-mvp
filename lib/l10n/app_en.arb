@@ -1560,5 +1560,81 @@
   "taxOtherAssetsSection": "Assets you entered",
   "taxOtherAssetsNote": "These are your current market estimates; the tax return asks for values at 31 December.",
   "taxPropertyNote": "For property, declare the cantonal tax value (usually below market value) and the imputed rental value as income; mortgage interest and upkeep are deductible.",
-  "taxCryptoNote": "Crypto is taxable wealth at the year-end rate published by the Federal Tax Administration."
+  "taxCryptoNote": "Crypto is taxable wealth at the year-end rate published by the Federal Tax Administration.",
+  "calendarScreenTitle": "Financial calendar",
+  "calendarToolSubtitle": "Deadlines, bills and reviews ahead",
+  "comingUpSection": "Coming up",
+  "calendarIntro": "Swiss deadlines, your bills for the next month, goal dates and value reviews for the next twelve months.",
+  "calendarExport": "Add to my calendar",
+  "calendarExportNote": "Copies the deadlines as a calendar file (.ics) with a reminder one week before each. Paste it into a new .ics file or your calendar app; bills stay in Finora.",
+  "calendarCopied": "{count, plural, =1{1 deadline copied as a calendar file.} other{{count} deadlines copied as a calendar file.}}",
+  "@calendarCopied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarHealthTitle": "Last day to switch health insurance",
+  "calendarHealthDetail": "Your cancellation must reach {merchant} by today to switch on 1 January.",
+  "@calendarHealthDetail": {
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarPillarTitle": "Pillar 3a: last day of the tax year",
+  "calendarPillarDetail": "{amount} of room left. Pay in by mid-December so it is credited in time.",
+  "@calendarPillarDetail": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarTaxTitle": "Tax return {year}",
+  "@calendarTaxTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarTaxDetail": "Usual deadline in most cantons; extensions can be requested.",
+  "calendarBillDetail": "{amount} due",
+  "@calendarBillDetail": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarGoalTitle": "Goal: {name}",
+  "@calendarGoalTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarGoalDetail": "Target {amount}",
+  "@calendarGoalDetail": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarAssetTitle": "Review the value of {name}",
+  "@calendarAssetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarAssetDetail": "Keeps your net worth realistic.",
+  "calendarPlusTitle": "Finora Plus renews",
+  "calendarPlusDetail": "Cancel before this date if you no longer need it."
 }

@@ -10,6 +10,7 @@ import 'package:finora/data/remote_financial_repository.dart';
 import 'package:finora/domain/calendar.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/reminders.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -268,7 +269,10 @@ void main() {
           ...backendOverrides(
             api(),
             sessionStore: InMemorySessionStore(
-              UserSession.demo().copyWith(connectedInstitutionIds: {'ubs'}),
+              UserSession.demo().copyWith(
+                connectedInstitutionIds: {'ubs'},
+                reminders: const ReminderPreferences(enabled: true),
+              ),
             ),
           ),
           clockProvider.overrideWithValue(() => DateTime(2026, 10, 23, 12)),

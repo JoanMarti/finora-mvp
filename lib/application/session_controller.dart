@@ -9,6 +9,7 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/reminders.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -226,8 +227,11 @@ class SessionController extends Notifier<UserSession> {
 
   /// Demo purchase: a real build would confirm the payment with the App
   /// Store or Google Play before switching the plan.
-  void startPlus() =>
-      _update(state.copyWith(plan: FinoraPlan.plus, plusSince: _now));
+  /// Unlocks Plus after a successful purchase or restore; [since] is the
+  /// subscription start reported by the store.
+  void startPlus({DateTime? since}) => _update(
+    state.copyWith(plan: FinoraPlan.plus, plusSince: since ?? _now),
+  );
 
   void cancelPlus() =>
       _update(state.copyWith(plan: FinoraPlan.free, plusSince: null));
@@ -253,6 +257,9 @@ class SessionController extends Notifier<UserSession> {
     _update(state.copyWith(installationId: id));
     return id;
   }
+
+  void setReminders(ReminderPreferences reminders) =>
+      _update(state.copyWith(reminders: reminders));
 
   void setAppLock(AppLock? lock) => _update(state.copyWith(appLock: lock));
 

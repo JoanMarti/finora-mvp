@@ -1775,5 +1775,34 @@
   "lockPinMismatch": "The PINs do not match",
   "lockSetAction": "Turn on",
   "lockCurrentTitle": "Enter your current PIN",
-  "lockCurrentPin": "Current PIN"
+  "lockCurrentPin": "Current PIN",
+  "plusRestore": "Restore purchase",
+  "plusRestored": "Your Finora Plus subscription was restored.",
+  "plusNothingToRestore": "No Finora Plus purchase was found for this account.",
+  "plusPurchaseFailed": "The purchase did not go through. Nothing was charged.",
+  "plusStoreNote": "Billed yearly through your App Store or Google Play account. Cancel at any time in your store settings.",
+  "remindersAskTitle": "Get reminders on your phone",
+  "remindersAskBody": "A week before each deadline, so you have time to compare offers or pay into your 3a.",
+  "remindersTurnOn": "Turn on reminders",
+  "remindersTurnOff": "Turn off reminders",
+  "remindersOn": "Reminders are on.",
+  "remindersBlocked": "Notifications are blocked. You can allow them in your phone’s settings.",
+  "remindersOnTitle": "Reminders on",
+  "remindersOnBody": "Choose which dates you want to hear about",
+  "remindersSettingsTitle": "Remind me about",
+  "reminderHealth": "Health insurance switch",
+  "reminderPillar": "Pillar 3a year end",
+  "reminderTax": "Tax return",
+  "reminderGoals": "Goal dates",
+  "reminderAssets": "Value reviews",
+  "reminderPlus": "Finora Plus renewal",
+  "remindersPrivacy": "Only the type and date of each reminder are sent to Finora’s server; goal and asset names stay on your phone.",
+  "plusConfirmBodyStore": "You will confirm a yearly subscription of {price} with Apple or Google. You can cancel it at any time in your store settings.",
+  "@plusConfirmBodyStore": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  }
 }

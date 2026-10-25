@@ -6,6 +6,7 @@ import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/reminders.dart';
 import 'package:finora/domain/trust.dart';
 
 /// Everything Finora needs to remember about the user between launches.
@@ -31,6 +32,7 @@ class UserSession {
     this.household,
     this.installationId,
     this.appLock,
+    this.reminders = const ReminderPreferences(),
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -102,6 +104,9 @@ class UserSession {
   /// PIN lock; `null` when the app is not locked.
   final AppLock? appLock;
 
+  /// Push reminder choices for the financial calendar.
+  final ReminderPreferences reminders;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -149,6 +154,7 @@ class UserSession {
     Object? household = _unset,
     String? installationId,
     Object? appLock = _unset,
+    ReminderPreferences? reminders,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -179,6 +185,7 @@ class UserSession {
           : household as Household?,
       installationId: installationId ?? this.installationId,
       appLock: identical(appLock, _unset) ? this.appLock : appLock as AppLock?,
+      reminders: reminders ?? this.reminders,
     );
   }
 
@@ -204,6 +211,7 @@ class UserSession {
     'household': household?.toJson(),
     'installationId': installationId,
     'appLock': appLock?.toJson(),
+    'reminders': reminders.toJson(),
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -256,6 +264,7 @@ class UserSession {
       household: Household.fromJson(json['household']),
       installationId: json['installationId'] as String?,
       appLock: AppLock.fromJson(json['appLock']),
+      reminders: ReminderPreferences.fromJson(json['reminders']),
     );
   }
 

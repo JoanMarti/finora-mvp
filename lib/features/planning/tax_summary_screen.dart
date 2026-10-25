@@ -1,9 +1,12 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/health.dart';
 import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
+import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
 import 'package:finora/l10n/l10n.dart';
+import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,6 +64,7 @@ class _TaxSummaryScreenState extends ConsumerState<TaxSummaryScreen> {
     final summary = ref.watch(taxSummaryProvider(_year));
     final institutions =
         ref.watch(institutionsProvider).value ?? const <Institution>[];
+    final assets = ref.watch(manualAssetsProvider);
     String institutionName(String id) =>
         institutions.where((item) => item.id == id).firstOrNull?.name ?? id;
 
@@ -101,6 +105,10 @@ class _TaxSummaryScreenState extends ConsumerState<TaxSummaryScreen> {
                     : () => context.push('/plus'),
               ),
             ),
+            if (assets.isNotEmpty) ...[
+              SectionTitle(l10n.taxOtherAssetsSection),
+              _OtherAssetsCard(assets: assets),
+            ],
           ],
         ),
       ),
@@ -362,6 +370,48 @@ class _TaxSection extends StatelessWidget {
                 ),
         ),
       ],
+    );
+  }
+}
+
+/// Assets the user entered, with what the tax return asks for instead of
+/// the market value.
+class _OtherAssetsCard extends StatelessWidget {
+  const _OtherAssetsCard({required this.assets});
+  final List<ManualAsset> assets;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final hasProperty = assets.any(
+      (asset) => asset.kind == ManualAssetKind.property,
+    );
+    final hasCrypto = assets.any(
+      (asset) => asset.kind == ManualAssetKind.crypto,
+    );
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final asset in assets)
+              _LineRow(
+                label: '${asset.name} · ${l10n.assetKind(asset.kind)}',
+                value: formatMoneyWhole(asset.value),
+              ),
+            const SizedBox(height: 6),
+            Text(
+              [
+                l10n.taxOtherAssetsNote,
+                if (hasProperty) l10n.taxPropertyNote,
+                if (hasCrypto) l10n.taxCryptoNote,
+              ].join(' '),
+              style: const TextStyle(color: finoraMutedInk, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -89,6 +89,7 @@ extension FinoraLabels on AppLocalizations {
     AlertKind.consentRequired => alertConsentTitle(alert.subject),
     AlertKind.staleConnection => alertStaleTitle(alert.subject),
     AlertKind.manualValueOutdated => alertManualTitle(alert.subject),
+    AlertKind.assetValueOutdated => alertAssetTitle(alert.subject),
     AlertKind.billDue => alertBillTitle(alert.subject),
   };
 
@@ -96,6 +97,7 @@ extension FinoraLabels on AppLocalizations {
     AlertKind.consentRequired => alertConsentBody,
     AlertKind.staleConnection => alertStaleBody,
     AlertKind.manualValueOutdated => alertManualBody,
+    AlertKind.assetValueOutdated => alertAssetBody,
     AlertKind.billDue => alertBillBody(
       alert.bill == null ? '' : billCategory(alert.bill!),
       alert.amount == null ? '' : formatMoney(alert.amount!),
@@ -145,7 +147,13 @@ extension OpportunityLabels on AppLocalizations {
       OpportunityKind.idleCash => offerIdleCashReason(amount),
       OpportunityKind.pillar3aRoom => offerPillarRoomReason(amount),
       OpportunityKind.pillar3aOpen => offerPillarOpenReason(amount),
-      OpportunityKind.mortgageRenewal => offerMortgageReason(amount),
+      OpportunityKind.mortgageRenewal => [
+        offerMortgageReason(amount),
+        if (item.percent != null) offerMortgageLtv(item.percent!),
+        // Above two thirds the second mortgage must be paid down; indirect
+        // amortisation through Pillar 3a is the usual Swiss way.
+        if ((item.percent ?? 0) > 67) offerMortgageAmortisation,
+      ].join(' '),
       OpportunityKind.cardFees => offerCardReason(item.subject ?? ''),
       OpportunityKind.telecomPlan => offerTelecomReason(
         amount,

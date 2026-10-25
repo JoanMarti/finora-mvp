@@ -590,5 +590,16 @@
   "saveAsset": "Salva",
   "deleteAsset": "Elimina bene",
   "assetValuedOn": "stimato il {date}",
-  "assetOutdated": "Valore forse superato: tocca per aggiornare"
+  "assetOutdated": "Valore forse superato: tocca per aggiornare",
+  "alertAssetTitle": "Aggiorna il valore di {name}",
+  "alertAssetBody": "Una stima non aggiornata falsa il patrimonio netto.",
+  "offerMortgageLtv": "Il tuo anticipo è del {percent}%; di solito i finanziatori offrono tassi migliori ai rapporti più bassi.",
+  "offerMortgageAmortisation": "Oltre il 67% la seconda ipoteca va ammortizzata entro 15 anni; l’ammortamento indiretto tramite il pilastro 3a fa anche risparmiare imposte.",
+  "hideAmounts": "Nascondi importi",
+  "showAmounts": "Mostra importi",
+  "hideAmountsBody": "Nascondi tutti gli importi quando usi Finora in pubblico",
+  "taxOtherAssetsSection": "Beni che hai inserito",
+  "taxOtherAssetsNote": "Sono le tue stime di mercato attuali; la dichiarazione chiede i valori al 31 dicembre.",
+  "taxPropertyNote": "Per gli immobili dichiara il valore fiscale cantonale (di solito inferiore al mercato) e il valore locativo come reddito; interessi ipotecari e manutenzione sono deducibili.",
+  "taxCryptoNote": "Le cripto sono patrimonio imponibile al corso di fine anno pubblicato dall’Amministrazione federale delle contribuzioni."
 }

@@ -1,6 +1,8 @@
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/app_lock.dart';
+import 'package:finora/data/local_biometrics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LockState {
@@ -18,6 +20,16 @@ class LockState {
 }
 
 enum UnlockResult { unlocked, wrongPin, blocked }
+
+/// Fingerprint or face check; none on the web.
+final biometricAuthProvider = Provider<BiometricAuth>(
+  (ref) => kIsWeb ? const NoBiometrics() : LocalBiometrics(),
+);
+
+/// Whether this device offers fingerprint or face unlock.
+final biometricsAvailableProvider = FutureProvider<bool>(
+  (ref) => ref.watch(biometricAuthProvider).isAvailable(),
+);
 
 final appLockProvider = NotifierProvider<AppLockController, LockState>(
   AppLockController.new,
@@ -41,6 +53,20 @@ class AppLockController extends Notifier<LockState> {
     );
     // A cold start with a PIN set begins locked.
     return LockState(locked: ref.read(sessionProvider).appLock != null);
+  }
+
+  /// Unlocks after a successful fingerprint or face check, when the user
+  /// turned it on and is not blocked after wrong PINs.
+  Future<bool> unlockWithBiometrics(String reason) async {
+    final lock = _lock;
+    if (lock == null || !lock.biometrics || !state.locked) return false;
+    final blockedUntil = state.blockedUntil;
+    if (blockedUntil != null && _now.isBefore(blockedUntil)) return false;
+    final recognised = await ref
+        .read(biometricAuthProvider)
+        .authenticate(reason);
+    if (recognised) state = const LockState(locked: false);
+    return recognised;
   }
 
   UnlockResult unlock(String pin) {

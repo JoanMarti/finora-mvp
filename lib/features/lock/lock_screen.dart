@@ -72,10 +72,30 @@ class _LockScreenState extends ConsumerState<LockScreen> {
   bool _confirmReset = false;
   Timer? _ticker;
 
+  bool _biometricsFailed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Offer the fingerprint or face check straight away when it is on.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _biometrics());
+  }
+
   @override
   void dispose() {
     _ticker?.cancel();
     super.dispose();
+  }
+
+  bool get _biometricsOn =>
+      ref.read(sessionProvider).appLock?.biometrics ?? false;
+
+  Future<void> _biometrics() async {
+    if (!mounted || !_biometricsOn) return;
+    final ok = await ref
+        .read(appLockProvider.notifier)
+        .unlockWithBiometrics(context.l10n.biometricReason);
+    if (!ok && mounted) setState(() => _biometricsFailed = true);
   }
 
   void _press(String digit) {
@@ -132,8 +152,11 @@ class _LockScreenState extends ConsumerState<LockScreen> {
         AppLock.maxAttempts - state.failedAttempts,
       ),
       UnlockResult.blocked => l10n.lockBlocked(seconds),
-      _ => '',
+      _ => _biometricsFailed ? l10n.biometricNotRecognised : '',
     };
+    final biometricsOn = ref.watch(
+      sessionProvider.select((s) => s.appLock?.biometrics ?? false),
+    );
     return Material(
       color: finoraCanvas,
       child: SafeArea(
@@ -201,7 +224,15 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                           deleteLabel: l10n.lockDelete,
                           submitLabel: l10n.lockUnlock,
                         ),
-                        const SizedBox(height: 12),
+                        if (biometricsOn) ...[
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: _biometrics,
+                            icon: const Icon(Icons.fingerprint),
+                            label: Text(l10n.biometricButton),
+                          ),
+                        ],
+                        const SizedBox(height: 4),
                         TextButton(
                           onPressed: () => setState(() => _confirmReset = true),
                           child: Text(l10n.lockForgot),

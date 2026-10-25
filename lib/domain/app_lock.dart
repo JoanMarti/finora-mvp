@@ -10,6 +10,7 @@ class AppLock {
     required this.salt,
     required this.pinHash,
     this.autoLockAfter = const Duration(minutes: 1),
+    this.biometrics = false,
   });
 
   /// Creates the lock for a new [pin] with a fresh random salt.
@@ -40,6 +41,9 @@ class AppLock {
   /// Time in the background after which the app locks again.
   final Duration autoLockAfter;
 
+  /// Fingerprint or face can unlock; the PIN always works as a fallback.
+  final bool biometrics;
+
   static bool isValidPin(String pin) =>
       RegExp(r'^\d+$').hasMatch(pin) &&
       pin.length >= minLength &&
@@ -57,16 +61,18 @@ class AppLock {
 
   bool verify(String pin) => hashPin(pin, salt) == pinHash;
 
-  AppLock copyWith({Duration? autoLockAfter}) => AppLock(
+  AppLock copyWith({Duration? autoLockAfter, bool? biometrics}) => AppLock(
     salt: salt,
     pinHash: pinHash,
     autoLockAfter: autoLockAfter ?? this.autoLockAfter,
+    biometrics: biometrics ?? this.biometrics,
   );
 
   Map<String, Object?> toJson() => {
     'salt': salt,
     'pinHash': pinHash,
     'autoLockSeconds': autoLockAfter.inSeconds,
+    'biometrics': biometrics,
   };
 
   static AppLock? fromJson(Object? raw) {
@@ -79,6 +85,28 @@ class AppLock {
       salt: salt,
       pinHash: hash,
       autoLockAfter: Duration(seconds: seconds is int ? seconds : 60),
+      biometrics: raw['biometrics'] == true,
     );
   }
+}
+
+/// The device's fingerprint or face check.
+abstract interface class BiometricAuth {
+  /// Whether the device can check a fingerprint or face right now (hardware
+  /// present and at least one enrolled).
+  Future<bool> isAvailable();
+
+  /// Shows the system prompt; `true` when the user was recognised.
+  Future<bool> authenticate(String reason);
+}
+
+/// No biometrics (web, tests): the PIN is the only way in.
+class NoBiometrics implements BiometricAuth {
+  const NoBiometrics();
+
+  @override
+  Future<bool> isAvailable() async => false;
+
+  @override
+  Future<bool> authenticate(String reason) async => false;
 }

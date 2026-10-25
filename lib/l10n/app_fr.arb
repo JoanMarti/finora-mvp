@@ -1092,5 +1092,12 @@
   "priceAlertSince": "Depuis le {date}",
   "alertPriceTitle": "{merchant} coûte plus cher",
   "alertPriceBody": "De {before} à {after} : {yearly} de plus par an.",
-  "featurePriceAlerts": "Alertes de hausse de prix"
+  "featurePriceAlerts": "Alertes de hausse de prix",
+  "biometricSetting": "Déverrouiller par empreinte ou visage",
+  "biometricSettingBody": "Votre PIN fonctionne toujours si la reconnaissance échoue.",
+  "biometricReason": "Déverrouiller Finora",
+  "biometricEnableReason": "Confirmez pour activer le déverrouillage par empreinte ou visage",
+  "biometricButton": "Utiliser l’empreinte ou le visage",
+  "biometricOn": "Le déverrouillage par empreinte ou visage est activé.",
+  "biometricNotRecognised": "Non reconnu. Saisissez votre PIN."
 }

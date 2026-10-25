@@ -1,0 +1,72 @@
+name: Release
+
+# Publishes a GitHub Release with an installable APK and the Google Play
+# bundle. Run it by pushing a tag such as v1.0.0 (or v1.0.0-beta.1 for a
+# pre-release): git tag v1.0.0 && git push origin v1.0.0
+# It can also be started from GitHub: Actions -> Release -> Run workflow,
+# giving the version (the tag is then created by the workflow).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag, for example v1.0.0-beta.1'
+        required: true
+        default: 'v1.0.0-beta.1'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - name: Restore the upload key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+          else
+            echo "::notice::No upload key configured: the builds are signed with the debug key."
+          fi
+      - name: Build
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          TAG: ${{ inputs.version || github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          NAME="${VERSION%%-*}"
+          # The APK is installed by hand, outside Google Play, so it has no
+          # Play Billing; the bundle is the store build.
+          flutter build apk --release --build-name="$NAME" --build-number=${{ github.run_number }}
+          cp build/app/outputs/flutter-apk/app-release.apk "finora-$VERSION.apk"
+          flutter build appbundle --release --build-name="$NAME" --build-number=${{ github.run_number }} --dart-define=FINORA_PURCHASES=play
+          cp build/app/outputs/bundle/release/app-release.aab "finora-$VERSION-play.aab"
+          sha256sum finora-*.apk finora-*.aab > SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.version || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          prerelease: ${{ contains(inputs.version || github.ref_name, '-') }}
+          body_path: docs/release-notes.md
+          generate_release_notes: true
+          files: |
+            finora-*.apk
+            finora-*.aab
+            SHA256SUMS.txt

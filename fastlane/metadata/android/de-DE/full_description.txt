@@ -1,0 +1,31 @@
+Finora bringt Ihre Schweizer Finanzen in eine klare Übersicht: Konten, Sparen, Anlagen, Säule 3a, Hypothek und die Rechnungen, die jeden Monat wiederkommen. Nur lesend: Finora bewegt nie Geld und fragt nie nach Ihrem E-Banking-Passwort.
+
+EARLY ACCESS
+Diese erste Version ist eine Vorschau. Bankverbindungen laufen mit erzeugten Demodaten, während die Anbindung über bLink und OpenWealth fertiggestellt wird. Alles andere funktioniert mit Ihren eigenen Zahlen: Ziele, Budgets, Vermögenswerte, Simulatoren und Finanzkalender.
+
+ALLES AUF EINEN BLICK
+• Nettovermögen und Verlauf über alle Banken
+• Ausgabenanalyse, wiederkehrende Rechnungen und Abos
+• Monatsbericht: was Sie gespart haben und wohin das Geld ging
+
+VORAUSPLANEN
+• Sparziele und Vermögensplan
+• Vorsorge-Ausblick über AHV, Pensionskasse und Säule 3a
+• «Kann ich mir Wohneigentum leisten?» nach den Regeln der Schweizer Banken
+• Steuerersparnis mit Säule 3a und PK-Einkauf
+• Finanzkalender: Krankenkassenwechsel bis 30. November, Säule 3a bis 31. Dezember, Steuererklärung
+
+GELD SPAREN
+• Klare Hinweise direkt bei der Rechnung oder dem Konto: Kranken- und Hausratversicherung, Handy-Abo, Sparzins, Gebühren der Säule 3a
+• Jede Schätzung erklärt, worauf sie beruht
+• Angebote nur mit Ihrer ausdrücklichen Einwilligung; Partnerangebote sind gekennzeichnet und nie nach Vergütung sortiert
+
+DATENSCHUTZ ZUERST
+• Profil, Ziele und Einstellungen bleiben auf Ihrem Handy
+• Keine Werbung, keine Tracking-SDKs, kein Datenverkauf
+• PIN-Sperre und ein Modus, der alle Beträge ausblendet
+
+GRATIS UND PREMIUM
+Gratis ist zeitlich unbegrenzt und umfasst bis zu 3 Banken, 6 Monate Verlauf und 2 Ziele. Finora Premium bietet unbegrenzt Banken und Ziele, 24 Monate Verlauf, Vorsorge-Szenarien, die Haushaltsansicht und den Steuerexport. Während Early Access wird nichts belastet.
+
+Finora informiert, berät aber nicht. Aus der Schweiz, auf Deutsch, Französisch, Italienisch und Englisch.

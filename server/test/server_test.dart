@@ -252,6 +252,30 @@ void main() {
       expect(((loginBody! as Map)['user'] as Map)['emailVerified'], isTrue);
     });
 
+    test('a signed-in account can delete itself', () async {
+      await call('POST', '/v1/auth/register', body: signUp);
+      final (_, verified) = await call(
+        'POST',
+        '/v1/auth/verify',
+        body: {'email': 'anna@example.ch', 'code': AccountRegistry.devCode},
+      );
+      final token = (verified! as Map)['accessToken'] as String;
+      final (denied, _) = await call('DELETE', '/v1/auth/account');
+      expect(denied, 401);
+      final (deleted, _) = await call(
+        'DELETE',
+        '/v1/auth/account',
+        headers: {'authorization': 'Bearer $token'},
+      );
+      expect(deleted, 204);
+      final (login, _) = await call(
+        'POST',
+        '/v1/auth/login',
+        body: {'email': 'anna@example.ch', 'password': 'Matterhorn2026'},
+      );
+      expect(login, 401);
+    });
+
     test('weak passwords and repeated wrong codes are refused', () async {
       final (weak, weakBody) = await call(
         'POST',

@@ -95,6 +95,16 @@ class HttpAuthService implements AuthService {
   );
 
   @override
+  Future<void> deleteAccount(String email) async {
+    try {
+      await _api.delete('/v1/auth/account');
+    } on ApiException catch (error) {
+      throw AuthException(_errorFor(error));
+    }
+    _tokens.token = null;
+  }
+
+  @override
   Future<void> requestPasswordReset(String email) async {
     await _call('/v1/auth/password-reset', {'email': normalizeEmail(email)});
   }

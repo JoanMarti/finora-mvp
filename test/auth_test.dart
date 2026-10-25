@@ -112,6 +112,23 @@ void main() {
       expect(verified.emailVerified, isTrue);
     });
 
+    test('a deleted account can no longer sign in', () async {
+      await auth.register(_anna);
+      await auth.deleteAccount('ANNA.MUSTER@finora.ch');
+      await expectLater(
+        auth.signIn(_anna.email, _anna.password),
+        throwsA(
+          isA<AuthException>().having(
+            (e) => e.error,
+            'error',
+            AuthError.invalidCredentials,
+          ),
+        ),
+      );
+      // The address can be used again.
+      expect((await auth.register(_anna)).emailVerified, isFalse);
+    });
+
     test('weak passwords never create an account', () async {
       await expectLater(
         auth.register(

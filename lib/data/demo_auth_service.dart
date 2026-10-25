@@ -136,4 +136,10 @@ class DemoAuthService implements AuthService {
 
   @override
   Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> deleteAccount(String email) async {
+    final accounts = _accounts()..remove(normalizeEmail(email));
+    await _save(accounts);
+  }
 }

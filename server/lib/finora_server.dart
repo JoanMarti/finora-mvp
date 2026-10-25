@@ -184,6 +184,17 @@ Handler buildHandler(
     })
     // Same answer whether or not the address exists.
     ..post('/v1/auth/password-reset', (Request _) => Response(204))
+    // Deletes the signed-in account and its tokens (Google Play requires
+    // deletion from inside the app and from the web).
+    ..delete('/v1/auth/account', (Request request) {
+      final header = request.headers['authorization'] ?? '';
+      final token = header.startsWith('Bearer ') ? header.substring(7) : '';
+      final email = registry.tokens[token];
+      if (email == null) return problem(401, 'Sign in again');
+      registry.users.remove(email);
+      registry.tokens.removeWhere((_, owner) => owner == email);
+      return Response(204);
+    })
     ..get('/v1/institutions', (Request _) => reply(fixtures['institutions']))
     ..get('/v1/connections', (Request _) => reply(fixtures['connections']))
     ..get('/v1/accounts', (Request _) => reply(fixtures['accounts']))

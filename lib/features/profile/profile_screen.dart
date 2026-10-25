@@ -1,9 +1,14 @@
+import 'package:finora/app/links.dart';
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/auth.dart';
+import 'package:finora/application/backend.dart';
 import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/domain/app_lock.dart';
+import 'package:finora/domain/auth.dart';
+import 'package:finora/features/onboarding/account_steps.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/lock/lock_screen.dart';
 import 'package:finora/features/plus/plus_screen.dart';
@@ -330,6 +335,19 @@ class ProfileScreen extends ConsumerWidget {
                   onPressed: () => _confirmRestart(context, ref),
                   child: Text(l10n.restartOnboarding),
                 ),
+              if (session.hasAccount)
+                TextButton(
+                  style: TextButton.styleFrom(foregroundColor: finoraDanger),
+                  onPressed: () => _confirmDeleteAccount(context, ref),
+                  child: Text(l10n.deleteAccount),
+                ),
+              Center(
+                child: TextButton.icon(
+                  onPressed: () => ref.read(linkOpenerProvider)(privacyPolicyUrl),
+                  icon: const Icon(Icons.open_in_new, size: 16),
+                  label: Text(l10n.privacyPolicyLink),
+                ),
+              ),
             ],
           ),
         ),
@@ -386,6 +404,44 @@ Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
   if (confirmed != true) return;
   ref.read(onboardingProvider.notifier).reset();
   ref.read(sessionProvider.notifier).signOut();
+}
+
+/// Deletes the account on the server, then everything on the device.
+Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(dialogContext.l10n.deleteAccountTitle),
+      content: Text(dialogContext.l10n.deleteAccountBody),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: Text(dialogContext.l10n.commonCancel),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(backgroundColor: finoraDanger),
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: Text(dialogContext.l10n.deleteAccountConfirm),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return;
+  final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
+  try {
+    await ref
+        .read(authServiceProvider)
+        .deleteAccount(ref.read(sessionProvider).email);
+  } on AuthException catch (error) {
+    messenger.showSnackBar(
+      SnackBar(content: Text(authErrorMessage(l10n, error.error))),
+    );
+    return;
+  }
+  ref.read(onboardingProvider.notifier).reset();
+  ref.read(sessionProvider.notifier).signOut();
+  messenger.showSnackBar(SnackBar(content: Text(l10n.deleteAccountDone)));
 }
 
 Future<void> _confirmRestart(BuildContext context, WidgetRef ref) async {

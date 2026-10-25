@@ -1071,5 +1071,13 @@
   "offerFamilyReason": "{count, plural, =1{Mit 1 Kind} other{Mit {count} Kindern}} stehen Ihnen mindestens {amount} pro Monat Kinderzulagen zu; viele Kantone zahlen mehr, ab 16 Jahren ist die Ausbildungszulage höher. Prüfen Sie, ob Arbeitgeber oder Ausgleichskasse sie auszahlen.",
   "offerFamilyAction": "Familienangaben anpassen",
   "partnerContinueTo": "Weiter zu {partner}",
-  "partnerLinkNote": "Öffnet {partner} im Browser. Finora erhält bei einem Abschluss eventuell eine Vergütung; das ändert nie, welche Angebote Sie sehen."
+  "partnerLinkNote": "Öffnet {partner} im Browser. Finora erhält bei einem Abschluss eventuell eine Vergütung; das ändert nie, welche Angebote Sie sehen.",
+  "deleteAccount": "Konto löschen",
+  "deleteAccountTitle": "Finora-Konto löschen?",
+  "deleteAccountBody": "Ihr Konto, Profil, Ziele, Budgets, Einwilligungen und Einstellungen werden gelöscht – auf diesem Gerät und auf unseren Servern. Ihre Bankkonten sind nicht betroffen. Nur was wir gesetzlich aufbewahren müssen, etwa Belege von Premium-Zahlungen, bleibt für die gesetzliche Frist.",
+  "deleteAccountConfirm": "Endgültig löschen",
+  "deleteAccountDone": "Ihr Konto wurde gelöscht.",
+  "legalSection": "Rechtliches",
+  "privacyPolicyLink": "Datenschutzerklärung",
+  "appVersion": "Version {version}"
 }

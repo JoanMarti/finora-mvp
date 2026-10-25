@@ -10,7 +10,7 @@ Future<void> main() async {
   final preferences = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
-      overrides: demoOverrides(
+      overrides: appOverrides(
         sessionStore: SharedPreferencesSessionStore(preferences),
       ),
       child: const FinoraApp(),

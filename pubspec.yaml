@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^3.4.3
   go_router: ^18.0.1
+  http: ^1.2.0
   intl: any # version is pinned by flutter_localizations
   shared_preferences: ^2.3.0
 

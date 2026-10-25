@@ -1,5 +1,6 @@
 import 'package:finora/app/router.dart';
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/backend.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/shared/formatters.dart';
@@ -15,6 +16,8 @@ class FinoraApp extends ConsumerWidget {
     final languageCode = ref.watch(
       sessionProvider.select((session) => session.languageCode),
     );
+    // Keeps reminders and funnel counts in step with a configured backend.
+    ref.watch(backendSyncProvider);
     final hideAmounts = ref.watch(
       sessionProvider.select((session) => session.hideAmounts),
     );

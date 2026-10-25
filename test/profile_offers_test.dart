@@ -94,8 +94,8 @@ void main() {
       int position(List<Opportunity> items, OpportunityKind kind) =>
           items.indexWhere((item) => item.kind == kind);
       expect(
-        position(saver, OpportunityKind.subscriptionsReview),
-        lessThan(position(base, OpportunityKind.subscriptionsReview)),
+        position(saver, OpportunityKind.savingsRate),
+        lessThan(position(base, OpportunityKind.savingsRate)),
       );
       expect(saver.first.kind, OpportunityKind.healthInsuranceSwitch);
     });

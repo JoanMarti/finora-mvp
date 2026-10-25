@@ -261,9 +261,13 @@ class _Welcome extends StatelessWidget {
         const Spacer(),
         FilledButton(onPressed: onContinue, child: Text(l10n.getStarted)),
         const SizedBox(height: 8),
-        OutlinedButton(
-          onPressed: () => context.push('/sign-in'),
-          child: Text(l10n.haveAccount),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(minimumSize: const Size(64, 50)),
+            onPressed: () => context.push('/sign-in'),
+            child: Text(l10n.haveAccount),
+          ),
         ),
         const SizedBox(height: 4),
         Center(

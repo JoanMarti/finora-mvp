@@ -70,22 +70,13 @@ class AuthFrame extends StatelessWidget {
                       letterSpacing: -1,
                     ),
                   ),
-                  const SizedBox(height: 18),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 440),
-                    child: Text(
-                      l10n.welcomeBody,
-                      style: const TextStyle(
-                        color: finoraSilver,
-                        fontSize: 16,
-                        height: 1.5,
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 28),
+                  // What the app does; the form beside it covers trust.
                   for (final (icon, text) in [
-                    (Icons.visibility_outlined, l10n.trustReadOnly),
-                    (Icons.lock_outline, l10n.trustControl),
+                    (Icons.donut_small_outlined, l10n.featureAnalysis),
+                    (Icons.savings_outlined, l10n.featureHints),
+                    (Icons.calendar_month_outlined, l10n.featureCalendar),
+                    (Icons.calculate_outlined, l10n.featureSimulators),
                   ])
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),

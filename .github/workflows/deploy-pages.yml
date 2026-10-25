@@ -50,6 +50,23 @@ jobs:
             echo "::error title=Failing tests::${details}"
           fi
           exit $status
+      - name: Contract fixture
+        if: ${{ !cancelled() }}
+        # The reference backend serves a fixture generated from the demo
+        # data; the "fixture" job below commits it when it changes.
+        run: UPDATE_FIXTURES=1 flutter test --no-pub test/contract_test.dart
+      - name: Reference backend
+        if: ${{ !cancelled() }}
+        working-directory: server
+        run: |
+          dart pub get
+          status=0
+          dart analyze --fatal-infos > analyze.txt 2>&1 || status=$?
+          cat analyze.txt
+          grep -E '^ *(error|warning|info) - ' analyze.txt \
+            | sed -E 's/^ *(error|warning|info) - ([^:]+):([0-9]+):([0-9]+) - (.*)$/::error file=server\/\2,line=\3,col=\4::\5/' || true
+          if [ "$status" -ne 0 ]; then exit $status; fi
+          dart test --reporter expanded
       - run: flutter build web --release --base-href /finora-mvp/
       - if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
@@ -69,3 +86,33 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Keeps server/fixtures/demo.json in step with the app's demo data on
+  # pull requests, so nobody has to regenerate it by hand.
+  fixture:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - name: Regenerate and commit the backend fixture
+        run: |
+          UPDATE_FIXTURES=1 flutter test --no-pub test/contract_test.dart
+          git add server/fixtures/demo.json
+          if git diff --cached --quiet; then
+            echo "Fixture is up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: update the reference backend fixture"
+          git push

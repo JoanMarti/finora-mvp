@@ -1,3 +1,4 @@
+import 'package:finora/app/layout.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
@@ -7,6 +8,7 @@ import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class ActivityScreen extends ConsumerStatefulWidget {
   const ActivityScreen({super.key});
@@ -59,7 +61,16 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: FinoraPage(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+          final wide = constraints.maxWidth >= finoraWideContentWidth;
+          final accountNames = {
+            for (final account
+                in ref.watch(accountsProvider).value ?? const <FinancialAccount>[])
+              account.id: account.name,
+          };
+          return FinoraPage(
+          maxWidth: wide ? 1100 : 720,
           child: transactions.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, _) => Center(child: Text(l10n.activityUnavailable)),
@@ -99,13 +110,24 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
                         ),
                       ),
                     ),
+                  if (wide && filtered.isNotEmpty) ...[
+                    const SizedBox(height: 20),
+                    const _TableHeader(),
+                  ],
                   for (final entry in groups.entries) ...[
                     SectionTitle(formatMonthYear(entry.key)),
                     Card(
                       child: Column(
                         children: [
-                          for (final item in entry.value)
-                            TransactionTile(transaction: item),
+                          for (final (index, item) in entry.value.indexed)
+                            if (wide) ...[
+                              if (index > 0) const Divider(height: 1),
+                              _TransactionRow(
+                                transaction: item,
+                                accountName: accountNames[item.accountId],
+                              ),
+                            ] else
+                              TransactionTile(transaction: item),
                         ],
                       ),
                     ),
@@ -122,7 +144,120 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
               );
             },
           ),
+          );
+          },
         ),
+      ),
+    );
+  }
+}
+
+const _dateWidth = 96.0;
+const _categoryWidth = 170.0;
+const _accountWidth = 200.0;
+const _amountWidth = 130.0;
+
+/// Column labels above the desktop transaction table.
+class _TableHeader extends StatelessWidget {
+  const _TableHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    const style = TextStyle(
+      color: finoraSlate,
+      fontSize: 11,
+      fontWeight: FontWeight.w700,
+      letterSpacing: .6,
+    );
+    Text label(String text, {TextAlign? align}) =>
+        Text(text.toUpperCase(), style: style, textAlign: align);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Row(
+        children: [
+          SizedBox(width: _dateWidth, child: label(l10n.activityColDate)),
+          Expanded(child: label(l10n.activityColMerchant)),
+          SizedBox(
+            width: _categoryWidth,
+            child: label(l10n.activityColCategory),
+          ),
+          SizedBox(width: _accountWidth, child: label(l10n.activityColAccount)),
+          SizedBox(
+            width: _amountWidth,
+            child: label(l10n.activityColAmount, align: TextAlign.end),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One transaction as a table row, for wide screens.
+class _TransactionRow extends StatelessWidget {
+  const _TransactionRow({required this.transaction, this.accountName});
+  final FinancialTransaction transaction;
+  final String? accountName;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final positive = !transaction.amount.isNegative;
+    const muted = TextStyle(color: finoraMutedInk, fontSize: 13);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+      child: Row(
+        children: [
+          SizedBox(
+            width: _dateWidth,
+            child: Text(
+              DateFormat.MMMd(l10n.localeName).format(transaction.bookedAt),
+              style: muted.copyWith(fontFeatures: finoraTabular),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              transaction.merchant,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: finoraInk,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: _categoryWidth,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ValuePill(
+                label: l10n.transactionCategory(transaction.category),
+                color: positive ? finoraGreen : finoraBlueText,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: _accountWidth,
+            child: Text(
+              accountName ?? transaction.accountId,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: muted,
+            ),
+          ),
+          SizedBox(
+            width: _amountWidth,
+            child: Text(
+              formatMoney(transaction.amount, signed: true),
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                color: positive ? finoraGreen : finoraInk,
+                fontWeight: FontWeight.w700,
+                fontFeatures: finoraTabular,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -2305,5 +2305,29 @@
       }
     }
   },
-  "offerHouseholdAction": "Compare offers"
+  "offerHouseholdAction": "Compare offers",
+  "navGroupOverview": "Overview",
+  "navGroupPlan": "Plan",
+  "navGroupSave": "Save",
+  "navGroupYou": "You",
+  "navAnalysis": "Spending",
+  "navOffers": "Savings offers",
+  "navGoals": "Goals",
+  "navRetirement": "Retirement",
+  "navCalendar": "Calendar",
+  "navHomeBuying": "Home buying",
+  "navTaxSavings": "Tax savings",
+  "navTax": "Tax summary",
+  "navDebts": "Debts",
+  "navReport": "Monthly report",
+  "navAssets": "Assets",
+  "navHealth": "Health score",
+  "navMore": "More",
+  "sidebarTagline": "Your Swiss wealth, in one place",
+  "activityColDate": "Date",
+  "activityColMerchant": "Description",
+  "activityColCategory": "Category",
+  "activityColAccount": "Account",
+  "activityColAmount": "Amount",
+  "accountsSelectHint": "Select an account to see its balance, history and suggestions."
 }

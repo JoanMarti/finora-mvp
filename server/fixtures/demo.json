@@ -1,0 +1,3235 @@
+{
+  "generatedFor": "2026-10-23T12:00:00.000",
+  "institutions": [
+    {
+      "id": "ubs",
+      "name": "UBS",
+      "shortName": "UBS",
+      "color": 4293263360,
+      "connectionMethod": "bLink",
+      "productTypes": [
+        "currentAccount",
+        "savings",
+        "creditCard",
+        "investments",
+        "pillar3a"
+      ]
+    },
+    {
+      "id": "zkb",
+      "name": "Zürcher Kantonalbank",
+      "shortName": "ZKB",
+      "color": 4279465912,
+      "connectionMethod": "bLink",
+      "productTypes": [
+        "currentAccount",
+        "savings"
+      ]
+    },
+    {
+      "id": "raiffeisen",
+      "name": "Raiffeisen",
+      "shortName": "RA",
+      "color": 4281019179,
+      "connectionMethod": "bLink",
+      "productTypes": [
+        "currentAccount",
+        "mortgage"
+      ]
+    },
+    {
+      "id": "swissquote",
+      "name": "Swissquote",
+      "shortName": "SQ",
+      "color": 4293600043,
+      "connectionMethod": "openWealth",
+      "productTypes": [
+        "investments"
+      ]
+    },
+    {
+      "id": "frankly",
+      "name": "frankly",
+      "shortName": "fr",
+      "color": 4279308561,
+      "connectionMethod": "manual",
+      "productTypes": [
+        "pillar3a"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "institutionId": "ubs",
+      "status": "connected",
+      "lastSyncedAt": "2026-10-23T11:53:00.000"
+    },
+    {
+      "institutionId": "zkb",
+      "status": "stale",
+      "lastSyncedAt": "2026-10-22T10:00:00.000"
+    },
+    {
+      "institutionId": "raiffeisen",
+      "status": "connected",
+      "lastSyncedAt": "2026-10-23T11:46:00.000"
+    },
+    {
+      "institutionId": "swissquote",
+      "status": "connected",
+      "lastSyncedAt": "2026-10-23T11:46:00.000"
+    },
+    {
+      "institutionId": "frankly",
+      "status": "manual",
+      "lastSyncedAt": "2026-10-20T12:00:00.000"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "ubs-personal",
+      "institutionId": "ubs",
+      "name": "Personal account",
+      "type": "currentAccount",
+      "balance": {
+        "cents": 842035,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "•••• 8472",
+      "monthlyChange": {
+        "cents": 90000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "ubs-savings",
+      "institutionId": "ubs",
+      "name": "Savings",
+      "type": "savings",
+      "balance": {
+        "cents": 2000000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "•••• 1209",
+      "monthlyChange": {
+        "cents": 30000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "ubs-card",
+      "institutionId": "ubs",
+      "name": "Visa Platinum",
+      "type": "creditCard",
+      "balance": {
+        "cents": -184550,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "•••• 5531",
+      "monthlyChange": {
+        "cents": -21040,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "ubs-invest",
+      "institutionId": "ubs",
+      "name": "Manage portfolio",
+      "type": "investments",
+      "balance": {
+        "cents": 1560000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "Mandate 2210",
+      "monthlyChange": {
+        "cents": 41200,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "ubs-3a",
+      "institutionId": "ubs",
+      "name": "Vitainvest 3a",
+      "type": "pillar3a",
+      "balance": {
+        "cents": 1520000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "3a •••• 0918",
+      "monthlyChange": {
+        "cents": 24300,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "zkb-private",
+      "institutionId": "zkb",
+      "name": "Private account",
+      "type": "currentAccount",
+      "balance": {
+        "cents": 1640005,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "•••• 3601",
+      "monthlyChange": {
+        "cents": -48240,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "zkb-savings",
+      "institutionId": "zkb",
+      "name": "Savings plus",
+      "type": "savings",
+      "balance": {
+        "cents": 850000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "•••• 7745",
+      "monthlyChange": {
+        "cents": 20000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "raiffeisen-member",
+      "institutionId": "raiffeisen",
+      "name": "Member account",
+      "type": "currentAccount",
+      "balance": {
+        "cents": 734000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "•••• 2289",
+      "monthlyChange": {
+        "cents": 18800,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "raiffeisen-mortgage",
+      "institutionId": "raiffeisen",
+      "name": "Fixed-rate mortgage",
+      "type": "mortgage",
+      "balance": {
+        "cents": -48000000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "10-year fixed",
+      "monthlyChange": {
+        "cents": 0,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "swissquote-portfolio",
+      "institutionId": "swissquote",
+      "name": "Investment portfolio",
+      "type": "investments",
+      "balance": {
+        "cents": 4230000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "Portfolio 1847",
+      "monthlyChange": {
+        "cents": 184020,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "frankly-3a",
+      "institutionId": "frankly",
+      "name": "Pillar 3a",
+      "type": "pillar3a",
+      "balance": {
+        "cents": 2936000,
+        "currency": "CHF"
+      },
+      "maskedIdentifier": "3a portfolio",
+      "monthlyChange": {
+        "cents": 51080,
+        "currency": "CHF"
+      }
+    }
+  ],
+  "analytics": {
+    "ubs-personal": {
+      "monthlyIncome": {
+        "cents": 685000,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 412800,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": -1257965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": -1092965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": -1032965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": -972965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": -912965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": -747965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": -687965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": -627965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": -462965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": -402965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": -342965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": -282965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": -117965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": -57965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 2035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 167035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 227035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 287035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 347035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 512035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 572035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 632035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 797035,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 842035,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "income": {
+            "cents": 685000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 436000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "income": {
+            "cents": 685000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 512000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "income": {
+            "cents": 714000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 469000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "income": {
+            "cents": 685000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 532000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "income": {
+            "cents": 685000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 448000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "income": {
+            "cents": 685000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 412800,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "recurringPayments": [
+        {
+          "merchant": "CSS Insurance",
+          "category": "healthInsurance",
+          "amount": {
+            "cents": -34820,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-10-28T12:00:00.000"
+        },
+        {
+          "merchant": "AXA",
+          "category": "householdInsurance",
+          "amount": {
+            "cents": -7240,
+            "currency": "CHF"
+          },
+          "cadence": "monthlyEquivalent",
+          "nextDueAt": "2026-11-01T12:00:00.000"
+        },
+        {
+          "merchant": "Swisscom",
+          "category": "phoneInternet",
+          "amount": {
+            "cents": -8990,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-11-03T12:00:00.000"
+        },
+        {
+          "merchant": "PureGym",
+          "category": "membership",
+          "amount": {
+            "cents": -5490,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-11-06T12:00:00.000"
+        },
+        {
+          "merchant": "Netflix",
+          "category": "streaming",
+          "amount": {
+            "cents": -2490,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-11-10T12:00:00.000"
+        }
+      ],
+      "spendingCategories": [
+        {
+          "category": "housing",
+          "amount": {
+            "cents": 145000,
+            "currency": "CHF"
+          },
+          "color": 4282160383
+        },
+        {
+          "category": "groceries",
+          "amount": {
+            "cents": 74000,
+            "currency": "CHF"
+          },
+          "color": 4280756265
+        },
+        {
+          "category": "utilities",
+          "amount": {
+            "cents": 67240,
+            "currency": "CHF"
+          },
+          "color": 4286349698
+        },
+        {
+          "category": "shopping",
+          "amount": {
+            "cents": 46500,
+            "currency": "CHF"
+          },
+          "color": 4286101247
+        },
+        {
+          "category": "insurance",
+          "amount": {
+            "cents": 42060,
+            "currency": "CHF"
+          },
+          "color": 4288850604
+        },
+        {
+          "category": "transport",
+          "amount": {
+            "cents": 38000,
+            "currency": "CHF"
+          },
+          "color": 4290955980
+        }
+      ]
+    },
+    "ubs-savings": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 1300000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 1355000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 1375000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 1395000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1415000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1470000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1490000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1510000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1565000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1585000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1605000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1625000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 1680000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 1700000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 1720000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 1775000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1795000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1815000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1835000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1890000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1910000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1930000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1985000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 2000000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    },
+    "ubs-card": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 184550,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 306383,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 278330,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 250277,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 246770,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 218716,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 190664,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 162610,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 159103,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 131050,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 102997,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 99490,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 71436,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 43384,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 15330,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 11823,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": -16230,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": -44283,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": -47790,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": -75844,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": -103896,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": -131950,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": -135457,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": -163510,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": -184550,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [
+        {
+          "merchant": "Spotify",
+          "category": "streaming",
+          "amount": {
+            "cents": -1295,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-10-29T12:00:00.000"
+        }
+      ],
+      "spendingCategories": [
+        {
+          "category": "shopping",
+          "amount": {
+            "cents": 96400,
+            "currency": "CHF"
+          },
+          "color": 4286101247
+        },
+        {
+          "category": "dining",
+          "amount": {
+            "cents": 52150,
+            "currency": "CHF"
+          },
+          "color": 4282160383
+        },
+        {
+          "category": "transport",
+          "amount": {
+            "cents": 36000,
+            "currency": "CHF"
+          },
+          "color": 4290955980
+        }
+      ]
+    },
+    "ubs-invest": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 598667,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 674200,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 701666,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 729134,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 756600,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 832133,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 859600,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 887067,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 962600,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 990066,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1017534,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1045000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 1120533,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 1148000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 1175467,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 1251000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1278466,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1305934,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1333400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1408933,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1436400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1463867,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1539400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1560000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    },
+    "ubs-3a": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 957050,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 973250,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 1017800,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 1034000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1050200,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1094750,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1110950,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1127150,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1143350,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1187900,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1204100,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1220300,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 1264850,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 1281050,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 1297250,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 1313450,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1358000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1374200,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1390400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1434950,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1451150,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1467350,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1483550,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1520000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    },
+    "zkb-private": {
+      "monthlyIncome": {
+        "cents": 250000,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 229800,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 2765605,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 2701285,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 2636965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 2628925,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 2564605,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 2500285,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 2435965,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 2427925,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 2363605,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 2299285,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 2291245,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 2226925,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 2162605,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 2098285,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 2090245,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 2025925,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1961605,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1953565,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1889245,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1824925,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1760605,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1752565,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1688245,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1640005,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 231000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 244500,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 226000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 238800,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 241200,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 229800,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "recurringPayments": [
+        {
+          "merchant": "EWZ",
+          "category": "electricity",
+          "amount": {
+            "cents": -6400,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-10-31T12:00:00.000"
+        },
+        {
+          "merchant": "Serafe",
+          "category": "radioTvFee",
+          "amount": {
+            "cents": -2790,
+            "currency": "CHF"
+          },
+          "cadence": "monthlyEquivalent",
+          "nextDueAt": "2026-11-12T12:00:00.000"
+        }
+      ],
+      "spendingCategories": [
+        {
+          "category": "groceries",
+          "amount": {
+            "cents": 98000,
+            "currency": "CHF"
+          },
+          "color": 4280756265
+        },
+        {
+          "category": "dining",
+          "amount": {
+            "cents": 61500,
+            "currency": "CHF"
+          },
+          "color": 4282160383
+        },
+        {
+          "category": "utilities",
+          "amount": {
+            "cents": 39100,
+            "currency": "CHF"
+          },
+          "color": 4286349698
+        },
+        {
+          "category": "other",
+          "amount": {
+            "cents": 31200,
+            "currency": "CHF"
+          },
+          "color": 4290955980
+        }
+      ]
+    },
+    "zkb-savings": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 396666,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 410000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 423334,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 460000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 473333,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 486667,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 500000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 536666,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 550000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 563334,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 600000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 613333,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 626667,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 640000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 676666,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 690000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 703334,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 740000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 753333,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 766667,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 780000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 816666,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 830000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 850000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    },
+    "raiffeisen-member": {
+      "monthlyIncome": {
+        "cents": 250000,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 229800,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 304733,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 317267,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 329800,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 364266,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 376800,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 389334,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 423800,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 436333,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 448867,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 461400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 495866,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 508400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 520934,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 555400,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 567933,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 580467,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 593000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 627466,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 640000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 652534,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 687000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 699533,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 712067,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 734000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 231000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 244500,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 226000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 238800,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 241200,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "income": {
+            "cents": 250000,
+            "currency": "CHF"
+          },
+          "spending": {
+            "cents": 229800,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "recurringPayments": [
+        {
+          "merchant": "EWZ",
+          "category": "electricity",
+          "amount": {
+            "cents": -6400,
+            "currency": "CHF"
+          },
+          "cadence": "monthly",
+          "nextDueAt": "2026-10-31T12:00:00.000"
+        },
+        {
+          "merchant": "Serafe",
+          "category": "radioTvFee",
+          "amount": {
+            "cents": -2790,
+            "currency": "CHF"
+          },
+          "cadence": "monthlyEquivalent",
+          "nextDueAt": "2026-11-12T12:00:00.000"
+        }
+      ],
+      "spendingCategories": [
+        {
+          "category": "groceries",
+          "amount": {
+            "cents": 98000,
+            "currency": "CHF"
+          },
+          "color": 4280756265
+        },
+        {
+          "category": "dining",
+          "amount": {
+            "cents": 61500,
+            "currency": "CHF"
+          },
+          "color": 4282160383
+        },
+        {
+          "category": "utilities",
+          "amount": {
+            "cents": 39100,
+            "currency": "CHF"
+          },
+          "color": 4286349698
+        },
+        {
+          "category": "other",
+          "amount": {
+            "cents": 31200,
+            "currency": "CHF"
+          },
+          "color": 4290955980
+        }
+      ]
+    },
+    "raiffeisen-mortgage": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": -48040000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": -48120000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": -47920000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": -48000000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": -48080000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": -47880000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": -47960000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": -48040000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": -48120000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": -47920000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": -48000000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": -48080000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": -47880000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": -47960000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": -48040000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": -48120000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": -47920000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": -48000000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": -48080000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": -47880000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": -47960000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": -48040000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": -48120000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": -48000000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    },
+    "swissquote-portfolio": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": -2460,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 120220,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 457590,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 580270,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 702950,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 825630,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 1163000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 1285680,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 1408360,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 1745730,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 1868410,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 1991090,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 2113770,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 2451140,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 2573820,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 2696500,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 3033870,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 3156550,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 3279230,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 3401910,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 3739280,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 3861960,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 3984640,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 4230000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    },
+    "frankly-3a": {
+      "monthlyIncome": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "monthlySpending": {
+        "cents": 0,
+        "currency": "CHF"
+      },
+      "balanceHistory": [
+        {
+          "month": "2024-11-01T00:00:00.000",
+          "balance": {
+            "cents": 1769673,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2024-12-01T00:00:00.000",
+          "balance": {
+            "cents": 1803727,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-01-01T00:00:00.000",
+          "balance": {
+            "cents": 1837780,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-02-01T00:00:00.000",
+          "balance": {
+            "cents": 1931426,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-03-01T00:00:00.000",
+          "balance": {
+            "cents": 1965480,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-04-01T00:00:00.000",
+          "balance": {
+            "cents": 1999534,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-05-01T00:00:00.000",
+          "balance": {
+            "cents": 2093180,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-06-01T00:00:00.000",
+          "balance": {
+            "cents": 2127233,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-07-01T00:00:00.000",
+          "balance": {
+            "cents": 2161287,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-08-01T00:00:00.000",
+          "balance": {
+            "cents": 2195340,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-09-01T00:00:00.000",
+          "balance": {
+            "cents": 2288986,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-10-01T00:00:00.000",
+          "balance": {
+            "cents": 2323040,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-11-01T00:00:00.000",
+          "balance": {
+            "cents": 2357094,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2025-12-01T00:00:00.000",
+          "balance": {
+            "cents": 2450740,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-01-01T00:00:00.000",
+          "balance": {
+            "cents": 2484793,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-02-01T00:00:00.000",
+          "balance": {
+            "cents": 2518847,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-03-01T00:00:00.000",
+          "balance": {
+            "cents": 2552900,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-04-01T00:00:00.000",
+          "balance": {
+            "cents": 2646546,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-05-01T00:00:00.000",
+          "balance": {
+            "cents": 2680600,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-06-01T00:00:00.000",
+          "balance": {
+            "cents": 2714654,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-07-01T00:00:00.000",
+          "balance": {
+            "cents": 2808300,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-08-01T00:00:00.000",
+          "balance": {
+            "cents": 2842353,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-09-01T00:00:00.000",
+          "balance": {
+            "cents": 2876407,
+            "currency": "CHF"
+          }
+        },
+        {
+          "month": "2026-10-01T00:00:00.000",
+          "balance": {
+            "cents": 2936000,
+            "currency": "CHF"
+          }
+        }
+      ],
+      "cashFlowHistory": [],
+      "recurringPayments": [],
+      "spendingCategories": []
+    }
+  },
+  "transactions": [
+    {
+      "id": "t1",
+      "accountId": "ubs-personal",
+      "merchant": "Migros",
+      "category": "groceries",
+      "bookedAt": "2026-10-23T12:00:00.000",
+      "amount": {
+        "cents": -8640,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t2",
+      "accountId": "ubs-personal",
+      "merchant": "SBB Mobile",
+      "category": "transport",
+      "bookedAt": "2026-10-22T12:00:00.000",
+      "amount": {
+        "cents": -4200,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t11",
+      "accountId": "zkb-private",
+      "merchant": "Denner",
+      "category": "groceries",
+      "bookedAt": "2026-10-21T12:00:00.000",
+      "amount": {
+        "cents": -3215,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t15",
+      "accountId": "raiffeisen-member",
+      "merchant": "Volg",
+      "category": "groceries",
+      "bookedAt": "2026-10-21T12:00:00.000",
+      "amount": {
+        "cents": -2945,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t8",
+      "accountId": "ubs-card",
+      "merchant": "Digitec Galaxus",
+      "category": "shopping",
+      "bookedAt": "2026-10-20T12:00:00.000",
+      "amount": {
+        "cents": -24900,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t9",
+      "accountId": "ubs-card",
+      "merchant": "Hiltl",
+      "category": "dining",
+      "bookedAt": "2026-10-17T12:00:00.000",
+      "amount": {
+        "cents": -6850,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t3",
+      "accountId": "ubs-personal",
+      "merchant": "Salary",
+      "category": "income",
+      "bookedAt": "2026-10-15T12:00:00.000",
+      "amount": {
+        "cents": 685000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t10",
+      "accountId": "zkb-private",
+      "merchant": "Swisscom",
+      "category": "utilities",
+      "bookedAt": "2026-10-14T12:00:00.000",
+      "amount": {
+        "cents": -8990,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t4",
+      "accountId": "ubs-personal",
+      "merchant": "Coop City",
+      "category": "shopping",
+      "bookedAt": "2026-10-12T12:00:00.000",
+      "amount": {
+        "cents": -15425,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t5",
+      "accountId": "ubs-personal",
+      "merchant": "CSS Insurance",
+      "category": "insurance",
+      "bookedAt": "2026-10-09T12:00:00.000",
+      "amount": {
+        "cents": -34820,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t12",
+      "accountId": "zkb-private",
+      "merchant": "Transfer from UBS",
+      "category": "income",
+      "bookedAt": "2026-10-08T12:00:00.000",
+      "amount": {
+        "cents": 250000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t16",
+      "accountId": "raiffeisen-member",
+      "merchant": "Mortgage interest",
+      "category": "housing",
+      "bookedAt": "2026-10-05T12:00:00.000",
+      "amount": {
+        "cents": -98000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t6",
+      "accountId": "ubs-personal",
+      "merchant": "Rent",
+      "category": "housing",
+      "bookedAt": "2026-10-01T12:00:00.000",
+      "amount": {
+        "cents": -145000,
+        "currency": "CHF"
+      }
+    },
+    {
+      "id": "t7",
+      "accountId": "ubs-personal",
+      "merchant": "Salary",
+      "category": "income",
+      "bookedAt": "2026-09-15T12:00:00.000",
+      "amount": {
+        "cents": 685000,
+        "currency": "CHF"
+      }
+    }
+  ],
+  "pillar3aContributions": {
+    "2025": {
+      "cents": 725800,
+      "currency": "CHF"
+    },
+    "2026": {
+      "cents": 605000,
+      "currency": "CHF"
+    }
+  },
+  "tax": {
+    "2025": {
+      "year": 2025,
+      "asOf": "2025-12-31T00:00:00.000",
+      "isComplete": true,
+      "pillar3aContributions": {
+        "cents": 725800,
+        "currency": "CHF"
+      },
+      "accounts": [
+        {
+          "accountId": "ubs-personal",
+          "closingBalance": {
+            "cents": -57965,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-savings",
+          "closingBalance": {
+            "cents": 1700000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 8500,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-card",
+          "closingBalance": {
+            "cents": 25850,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-invest",
+          "closingBalance": {
+            "cents": 1148000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 20664,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-3a",
+          "closingBalance": {
+            "cents": 1277000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "zkb-private",
+          "closingBalance": {
+            "cents": 2122405,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "zkb-savings",
+          "closingBalance": {
+            "cents": 650000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 3250,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "raiffeisen-member",
+          "closingBalance": {
+            "cents": 546000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "raiffeisen-mortgage",
+          "closingBalance": {
+            "cents": -48000000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 768000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "swissquote-portfolio",
+          "closingBalance": {
+            "cents": 2389800,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 43016,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "frankly-3a",
+          "closingBalance": {
+            "cents": 2425200,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        }
+      ]
+    },
+    "2026": {
+      "year": 2026,
+      "asOf": "2026-10-23T12:00:00.000",
+      "isComplete": false,
+      "pillar3aContributions": {
+        "cents": 605000,
+        "currency": "CHF"
+      },
+      "accounts": [
+        {
+          "accountId": "ubs-personal",
+          "closingBalance": {
+            "cents": 842035,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-savings",
+          "closingBalance": {
+            "cents": 2000000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 8333,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-card",
+          "closingBalance": {
+            "cents": -184550,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-invest",
+          "closingBalance": {
+            "cents": 1560000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 23400,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "ubs-3a",
+          "closingBalance": {
+            "cents": 1520000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "zkb-private",
+          "closingBalance": {
+            "cents": 1640005,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "zkb-savings",
+          "closingBalance": {
+            "cents": 850000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 3542,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "raiffeisen-member",
+          "closingBalance": {
+            "cents": 734000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "raiffeisen-mortgage",
+          "closingBalance": {
+            "cents": -48000000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 640000,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "swissquote-portfolio",
+          "closingBalance": {
+            "cents": 4230000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 63450,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        },
+        {
+          "accountId": "frankly-3a",
+          "closingBalance": {
+            "cents": 2936000,
+            "currency": "CHF"
+          },
+          "income": {
+            "cents": 0,
+            "currency": "CHF"
+          },
+          "interestPaid": {
+            "cents": 0,
+            "currency": "CHF"
+          }
+        }
+      ]
+    }
+  }
+}

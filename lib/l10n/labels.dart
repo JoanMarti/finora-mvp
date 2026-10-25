@@ -143,6 +143,9 @@ extension OpportunityLabels on AppLocalizations {
     OpportunityKind.telecomPlan => offerTelecomTitle,
     OpportunityKind.subscriptionsReview => offerSubscriptionsTitle,
     OpportunityKind.bankFees => offerBankFeesTitle,
+    OpportunityKind.savingsRate => offerSavingsRateTitle,
+    OpportunityKind.pillar3aFees => offerPillarFeesTitle,
+    OpportunityKind.householdInsurance => offerHouseholdTitle,
   };
 
   String opportunityReason(Opportunity item) {
@@ -177,6 +180,19 @@ extension OpportunityLabels on AppLocalizations {
         amount,
       ),
       OpportunityKind.bankFees => offerBankFeesReason(item.count ?? 0),
+      OpportunityKind.savingsRate => offerSavingsRateReason(
+        amount,
+        item.subject ?? '',
+        item.percent ?? 0,
+      ),
+      OpportunityKind.pillar3aFees => offerPillarFeesReason(
+        amount,
+        item.subject ?? '',
+      ),
+      OpportunityKind.householdInsurance => offerHouseholdReason(
+        amount,
+        item.subject ?? '',
+      ),
     };
   }
 
@@ -191,6 +207,9 @@ extension OpportunityLabels on AppLocalizations {
     OpportunityKind.telecomPlan => offerTelecomAction,
     OpportunityKind.subscriptionsReview => offerSubscriptionsAction,
     OpportunityKind.bankFees => offerBankFeesAction,
+    OpportunityKind.savingsRate => offerIdleCashAction,
+    OpportunityKind.pillar3aFees => offerPillarAction,
+    OpportunityKind.householdInsurance => offerHouseholdAction,
   };
 
   String opportunityCategory(OpportunityCategory category) =>

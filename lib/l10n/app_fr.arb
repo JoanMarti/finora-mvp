@@ -850,5 +850,13 @@
   "greetingEvening": "Bonsoir, {name}",
   "quickAnalysis": "Analyse",
   "quickCalendar": "Calendrier",
-  "quickSave": "Économiser"
+  "quickSave": "Économiser",
+  "hintSaveUpTo": "Économisez jusqu’à {amount} par an",
+  "offerSavingsRateTitle": "Plus d’intérêts sur votre épargne",
+  "offerSavingsRateReason": "{account} contient {amount}. Les grandes banques versent souvent environ 0,25 %, alors que des comptes d’épargne jusqu’à {percent} % sont largement disponibles.",
+  "offerPillarFeesTitle": "Réduire les frais de votre pilier 3a",
+  "offerPillarFeesReason": "{account} contient {amount}. Les fonds 3a bancaires coûtent souvent environ 1,2 % de frais par an ; les prestataires à bas coûts environ 0,45 %, et l’écart se cumule jusqu’à la retraite.",
+  "offerHouseholdTitle": "Comparer l’assurance ménage",
+  "offerHouseholdReason": "Vous payez {amount} par mois à {merchant}. Une couverture ménage et RC équivalente coûte souvent 10–25 % de moins ailleurs.",
+  "offerHouseholdAction": "Comparer les offres"
 }

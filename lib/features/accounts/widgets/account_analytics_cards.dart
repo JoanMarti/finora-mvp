@@ -369,11 +369,15 @@ class RecurringPaymentsCard extends StatelessWidget {
     required this.analytics,
     required this.showAll,
     required this.now,
+    this.hintBuilder,
     super.key,
   });
   final AccountAnalytics analytics;
   final bool showAll;
   final DateTime now;
+
+  /// Optional suggestion shown under a bill, e.g. a cheaper offer.
+  final Widget? Function(RecurringPayment payment)? hintBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -411,6 +415,11 @@ class RecurringPaymentsCard extends StatelessWidget {
           const Divider(height: 1),
           for (var index = 0; index < payments.length; index++) ...[
             _RecurringPaymentTile(payment: payments[index], now: now),
+            if (hintBuilder?.call(payments[index]) case final hint?)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+                child: hint,
+              ),
             if (index != payments.length - 1) const Divider(height: 1),
           ],
         ],

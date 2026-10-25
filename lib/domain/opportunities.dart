@@ -17,6 +17,9 @@ enum OpportunityKind {
   telecomPlan,
   subscriptionsReview,
   bankFees,
+  savingsRate,
+  pillar3aFees,
+  householdInsurance,
 }
 
 /// How Finora would be paid if the user continues with a partner. It drives
@@ -50,6 +53,7 @@ class Opportunity {
     this.count,
     this.percent,
     this.deadline,
+    this.accountId,
   });
 
   final OpportunityKind kind;
@@ -72,10 +76,14 @@ class Opportunity {
   /// Last useful day to act, if any.
   final DateTime? deadline;
 
+  /// The account the offer is about, so it can be shown next to it.
+  final String? accountId;
+
   bool get isSponsored => revenue != RevenueModel.none;
 
-  /// Stable id used to remember dismissals.
-  String get id => kind.name;
+  /// Stable id used to remember dismissals: per account when the offer is
+  /// about one account.
+  String get id => accountId == null ? kind.name : '${kind.name}:$accountId';
 }
 
 /// Market facts the rules rely on. Updated once a year.
@@ -85,6 +93,11 @@ class SwissMarketFacts {
     this.healthSwitchDeadlineMonth = 11,
     this.healthSwitchDeadlineDay = 30,
     this.pillar3aLimit = const Money.cents(725800),
+    this.savingsRateTypical = .0025,
+    this.savingsRateBest = .0075,
+    this.pillar3aFeeTypical = .012,
+    this.pillar3aFeeLowCost = .0045,
+    this.lowCostPillar3aProviders = const {'viac', 'frankly', 'finpension'},
   });
 
   /// Average basic health insurance premium increase announced for 2027.
@@ -94,6 +107,20 @@ class SwissMarketFacts {
   final int healthSwitchDeadlineMonth;
   final int healthSwitchDeadlineDay;
   final Money pillar3aLimit;
+
+  /// Savings rates with the SNB rate at 0 %: what big banks typically pay
+  /// against the best widely available offers (assumptions, reviewed
+  /// quarterly).
+  final double savingsRateTypical;
+  final double savingsRateBest;
+
+  /// Yearly all-in fees of a typical bank 3a fund against low-cost digital
+  /// providers (assumptions).
+  final double pillar3aFeeTypical;
+  final double pillar3aFeeLowCost;
+
+  /// Institutions already counted as low-cost 3a providers.
+  final Set<String> lowCostPillar3aProviders;
 
   static const current = SwissMarketFacts();
 }
@@ -135,6 +162,9 @@ abstract final class OpportunityEngine {
       ?_telecomPlan(input),
       ?_subscriptionsReview(input),
       ?_bankFees(input),
+      ..._savingsRate(input),
+      ..._pillar3aFees(input),
+      ?_householdInsurance(input),
     ];
     found.sort((a, b) {
       final byPriority = b.priority.compareTo(a.priority);
@@ -274,6 +304,7 @@ abstract final class OpportunityEngine {
     final debt = Money.sum(mortgages.map((account) => account.balance)).abs();
     return Opportunity(
       kind: OpportunityKind.mortgageRenewal,
+      accountId: mortgages.length == 1 ? mortgages.first.id : null,
       category: OpportunityCategory.mortgage,
       revenue: RevenueModel.commission,
       priority: 50,
@@ -284,6 +315,68 @@ abstract final class OpportunityEngine {
       percent: input.propertyValue.isZero
           ? null
           : (debt.cents * 100 / input.propertyValue.cents).round(),
+    );
+  }
+
+  /// Savings accounts that probably earn the typical big-bank rate.
+  static Iterable<Opportunity> _savingsRate(OpportunityInput input) sync* {
+    final gap = input.facts.savingsRateBest - input.facts.savingsRateTypical;
+    for (final account in _ofType(input, FinancialProductType.savings)) {
+      if (account.balance.cents < 500000) continue;
+      yield Opportunity(
+        kind: OpportunityKind.savingsRate,
+        category: OpportunityCategory.banking,
+        revenue: RevenueModel.affiliate,
+        priority: 28,
+        savingLow: _round(account.balance * (gap * .5)),
+        savingHigh: _round(account.balance * gap),
+        amount: account.balance,
+        subject: account.name,
+        percent: (input.facts.savingsRateBest * 100).round(),
+        accountId: account.id,
+      );
+    }
+  }
+
+  /// Pillar 3a funds at typical bank fees; low-cost providers are skipped.
+  static Iterable<Opportunity> _pillar3aFees(OpportunityInput input) sync* {
+    final facts = input.facts;
+    final gap = facts.pillar3aFeeTypical - facts.pillar3aFeeLowCost;
+    for (final account in _ofType(input, FinancialProductType.pillar3a)) {
+      if (facts.lowCostPillar3aProviders.contains(account.institutionId)) {
+        continue;
+      }
+      if (account.balance.cents < 500000) continue;
+      yield Opportunity(
+        kind: OpportunityKind.pillar3aFees,
+        category: OpportunityCategory.pensions,
+        revenue: RevenueModel.leadFee,
+        priority: 22,
+        savingLow: _round(account.balance * (gap * .6)),
+        savingHigh: _round(account.balance * gap),
+        amount: account.balance,
+        subject: account.name,
+        accountId: account.id,
+      );
+    }
+  }
+
+  /// Household contents and liability insurance: offers differ by 10–25 %.
+  static Opportunity? _householdInsurance(OpportunityInput input) {
+    final bill = _bills(input)
+        .where((item) => item.category == BillCategory.householdInsurance)
+        .firstOrNull;
+    if (bill == null) return null;
+    final yearly = bill.amount.abs() * 12;
+    return Opportunity(
+      kind: OpportunityKind.householdInsurance,
+      category: OpportunityCategory.insurance,
+      revenue: RevenueModel.leadFee,
+      priority: 18,
+      savingLow: _round(yearly * .1),
+      savingHigh: _round(yearly * .25),
+      amount: bill.amount.abs(),
+      subject: bill.merchant,
     );
   }
 
@@ -299,6 +392,7 @@ abstract final class OpportunityEngine {
       savingLow: const Money.cents(5000),
       savingHigh: const Money.cents(15000),
       subject: cards.first.name,
+      accountId: cards.first.id,
     );
   }
 

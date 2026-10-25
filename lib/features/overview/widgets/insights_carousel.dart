@@ -217,7 +217,7 @@ class _PersonalInsightCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [insight.color.withValues(alpha: .13), Colors.white],
         ),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(finoraRadius),
         border: Border.all(color: insight.color.withValues(alpha: .2)),
       ),
       child: Column(
@@ -294,7 +294,7 @@ class MarketDataNote extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: finoraSoftBlue,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(finoraRadius),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

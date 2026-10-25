@@ -392,7 +392,7 @@ class _AccountBalanceCard extends StatelessWidget {
                               ? finoraDanger
                               : finoraGreen)
                           .withValues(alpha: .18),
-                      borderRadius: BorderRadius.circular(99),
+                      borderRadius: BorderRadius.circular(finoraRadiusSmall),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

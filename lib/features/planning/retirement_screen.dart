@@ -162,7 +162,7 @@ class _ProjectionSummary extends StatelessWidget {
             DecoratedBox(
               decoration: BoxDecoration(
                 color: statusColor.withValues(alpha: .2),
-                borderRadius: BorderRadius.circular(99),
+                borderRadius: BorderRadius.circular(finoraRadiusSmall),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(

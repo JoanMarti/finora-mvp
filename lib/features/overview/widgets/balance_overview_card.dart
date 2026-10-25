@@ -35,19 +35,6 @@ class BalanceOverviewCard extends StatelessWidget {
       gradient: finoraBrandGradient,
       child: Stack(
         children: [
-          // Soft decorative glow in the corner.
-          Positioned(
-            right: -60,
-            top: -70,
-            child: Container(
-              width: 190,
-              height: 190,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0x1AFFFFFF),
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 14, 12, 20),
             child: Column(
@@ -109,7 +96,7 @@ class BalanceOverviewCard extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(6, 5, 10, 5),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(99),
+                                borderRadius: BorderRadius.circular(finoraRadiusSmall),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -183,7 +170,7 @@ class BalanceOverviewCard extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0x1FFFFFFF),
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(finoraRadiusControl),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

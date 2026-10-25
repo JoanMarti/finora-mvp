@@ -140,7 +140,7 @@ class WealthPlanCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: statusColor.withValues(alpha: .1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(finoraRadius),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

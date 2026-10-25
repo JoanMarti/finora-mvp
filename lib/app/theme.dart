@@ -1,46 +1,46 @@
 import 'package:flutter/material.dart';
 
-// Finora design tokens (2026 refresh): a deep ink, an electric blue, soft
-// cool surfaces and semantic colours that keep AA contrast on white.
+// Finora design tokens: neutral greys (zinc), one calm accent blue and
+// semantic colours with AA contrast on white. Kept deliberately sober so the
+// same tokens work in other contexts (web, documents, partner screens).
 const finoraWhite = Color(0xFFFFFFFF);
-const finoraSilver = Color(0xFFCBD5E1);
-const finoraSlate = Color(0xFF94A3B8);
-const finoraInk = Color(0xFF0F172A);
-const finoraBlue = Color(0xFF2F6BFF);
+const finoraSilver = Color(0xFFD4D4D8);
+const finoraSlate = Color(0xFFA1A1AA);
+const finoraInk = Color(0xFF18181B);
+const finoraBlue = Color(0xFF2B59C3);
 
-const finoraCanvas = Color(0xFFF4F6FA);
-const finoraBorder = Color(0xFFE6EAF0);
-const finoraSoftBlue = Color(0xFFEBF1FF);
-const finoraMutedInk = Color(0xFF5B6475);
-const finoraBlueText = Color(0xFF2456E6);
-const finoraGreen = Color(0xFF0B8457);
-const finoraMint = Color(0xFFE8F7F0);
-const finoraWarning = Color(0xFF9A5B00);
-const finoraDanger = Color(0xFFD92D20);
+const finoraCanvas = Color(0xFFF7F7F8);
+const finoraBorder = Color(0xFFE4E4E7);
+const finoraSoftBlue = Color(0xFFEEF2FA);
+const finoraMutedInk = Color(0xFF52525B);
+const finoraBlueText = Color(0xFF2450B5);
+const finoraGreen = Color(0xFF15803D);
+const finoraMint = Color(0xFFF0F7F2);
+const finoraWarning = Color(0xFFA16207);
+const finoraDanger = Color(0xFFB91C1C);
 
 /// Fill for inputs, chips and quiet surfaces.
-const finoraFill = Color(0xFFEEF2F7);
+const finoraFill = Color(0xFFF1F1F3);
 
-/// Brand gradient for the main hero (net worth).
+/// Graphite for the main hero (net worth): a barely visible gradient.
 const finoraBrandGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [Color(0xFF2F6BFF), Color(0xFF5B3FE0)],
+  colors: [Color(0xFF18181B), Color(0xFF2E2E33)],
 );
 
-/// Dark gradient for secondary hero cards (summaries on detail screens).
-const finoraInkGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [Color(0xFF0F172A), Color(0xFF1E2A55)],
-);
+/// Same graphite for summary cards on detail screens.
+const finoraInkGradient = finoraBrandGradient;
 
-/// Soft shadow used by hero cards and floating elements.
+/// Subtle neutral shadow for raised elements.
 const finoraShadow = [
-  BoxShadow(color: Color(0x1A2F3FBF), blurRadius: 20, offset: Offset(0, 6)),
+  BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
 ];
 
-const finoraRadius = 24.0;
+/// Corner radii: cards and sheets, controls, and small tags.
+const finoraRadius = 12.0;
+const finoraRadiusControl = 10.0;
+const finoraRadiusSmall = 6.0;
 
 /// Monospaced digits so amounts line up and do not jump when they change.
 const finoraTabular = [FontFeature.tabularFigures()];
@@ -75,7 +75,7 @@ ThemeData buildFinoraTheme() {
   );
 
   final rounded = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(16),
+    borderRadius: BorderRadius.circular(finoraRadiusControl),
   );
 
   return ThemeData(
@@ -117,7 +117,7 @@ ThemeData buildFinoraTheme() {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(finoraRadius)),
-        side: BorderSide(color: Color(0x0D0F172A)),
+        side: BorderSide(color: finoraBorder),
       ),
     ),
     filledButtonTheme: FilledButtonThemeData(
@@ -126,7 +126,9 @@ ThemeData buildFinoraTheme() {
         foregroundColor: finoraWhite,
         minimumSize: const Size.fromHeight(54),
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(finoraRadiusControl),
+        ),
         textStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 16),
       ),
     ),
@@ -136,7 +138,9 @@ ThemeData buildFinoraTheme() {
         backgroundColor: finoraWhite,
         minimumSize: const Size(64, 50),
         side: const BorderSide(color: finoraBorder),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(finoraRadiusControl),
+        ),
         textStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700),
       ),
     ),
@@ -150,27 +154,29 @@ ThemeData buildFinoraTheme() {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: finoraInk,
       foregroundColor: finoraWhite,
-      elevation: 2,
-      shape: StadiumBorder(),
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(finoraRadius)),
+      ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: finoraFill,
       contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
         borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
         borderSide: const BorderSide(color: finoraBlue, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
         borderSide: const BorderSide(color: finoraDanger),
       ),
     ),
@@ -184,7 +190,9 @@ ThemeData buildFinoraTheme() {
         fontSize: 13,
       ),
       side: BorderSide(color: finoraBorder),
-      shape: StadiumBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(finoraRadiusSmall + 2)),
+      ),
       labelStyle: TextStyle(
         fontFamily: 'Inter',
         color: finoraInk,
@@ -266,7 +274,7 @@ ThemeData buildFinoraTheme() {
       backgroundColor: finoraWhite,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
     ),
     dialogTheme: const DialogThemeData(
@@ -284,19 +292,23 @@ ThemeData buildFinoraTheme() {
         fontFamily: 'Inter',
         fontWeight: FontWeight.w600,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(finoraRadiusControl),
+      ),
     ),
     navigationBarTheme: NavigationBarThemeData(
       height: 70,
       backgroundColor: finoraWhite,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
-      indicatorColor: finoraSoftBlue,
-      indicatorShape: const StadiumBorder(),
+      indicatorColor: finoraFill,
+      indicatorShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(finoraRadiusControl)),
+      ),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         return IconThemeData(
           color: states.contains(WidgetState.selected)
-              ? finoraBlueText
+              ? finoraInk
               : finoraMutedInk,
           size: 24,
         );

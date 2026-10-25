@@ -3,6 +3,7 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -11,7 +12,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -24,15 +25,40 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+      - name: Analyze
+        id: analyze
+        # Re-emit analyzer findings as annotations so they show on the PR.
+        run: |
+          status=0
+          flutter analyze --no-pub > analyze.txt 2>&1 || status=$?
+          cat analyze.txt
+          grep -E '^ *(error|warning|info) • ' analyze.txt \
+            | sed -E 's/^ *(error|warning|info) • (.*) • ([^ ]+):([0-9]+):([0-9]+) • (.*)$/::\1 file=\3,line=\4,col=\5::\2 [\6]/' \
+            | sed 's/^::info /::notice /' || true
+          exit $status
+      - name: Test
+        if: ${{ !cancelled() }}
+        # Failures are re-emitted as one annotation so they are readable on the PR.
+        run: |
+          status=0
+          flutter test --no-pub --reporter expanded > test.txt 2>&1 || status=$?
+          cat test.txt
+          if [ "$status" -ne 0 ]; then
+            details=$(grep -E '\[E\]|Expected:|Actual:|Which:|was thrown|The following|test/[a-z_]+\.dart [0-9]+:[0-9]+|lib/[a-z_/]+\.dart:[0-9]+|overflowed' test.txt | head -80 \
+              | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')
+            echo "::error title=Failing tests::${details}"
+          fi
+          exit $status
       - run: flutter build web --release --base-href /finora-mvp/
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

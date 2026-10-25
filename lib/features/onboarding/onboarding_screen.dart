@@ -1,4 +1,6 @@
 import 'package:finora/app/theme.dart';
+import 'package:finora/application/session_controller.dart';
+import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/features/onboarding/onboarding_controller.dart';
 import 'package:finora/shared/widgets.dart';
@@ -24,10 +26,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  int index = 0;
-
-  List<_Step> get steps {
-    final products = ref.read(onboardingProvider).products;
+  List<_Step> _stepsFor(Set<FinancialProductType> products) {
     return [
       _Step.welcome,
       _Step.account,
@@ -40,14 +39,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     ];
   }
 
-  void next() => setState(() => index = (index + 1).clamp(0, steps.length - 1));
-  void back() => setState(() => index = (index - 1).clamp(0, steps.length - 1));
+  OnboardingController get _controller => ref.read(onboardingProvider.notifier);
+
+  void next() {
+    final state = ref.read(onboardingProvider);
+    final last = _stepsFor(state.products).length - 1;
+    _controller.setStep((state.stepIndex + 1).clamp(0, last));
+  }
+
+  void back() {
+    final state = ref.read(onboardingProvider);
+    final last = _stepsFor(state.products).length - 1;
+    _controller.setStep((state.stepIndex - 1).clamp(0, last));
+  }
+
+  void _useDemoData() {
+    ref
+        .read(sessionProvider.notifier)
+        .useDemoData(email: ref.read(onboardingProvider).email);
+    context.go('/home');
+  }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingProvider);
-    final activeSteps = steps;
-    if (index >= activeSteps.length) index = activeSteps.length - 1;
+    final activeSteps = _stepsFor(state.products);
+    final index = state.stepIndex.clamp(0, activeSteps.length - 1);
     final step = activeSteps[index];
 
     return Scaffold(
@@ -59,6 +76,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 Row(
                   children: [
                     IconButton(
+                      tooltip: 'Back',
                       onPressed: back,
                       icon: const Icon(Icons.arrow_back),
                     ),
@@ -67,6 +85,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: LinearProgressIndicator(
+                          semanticsLabel: 'Onboarding progress',
                           value: index / (activeSteps.length - 1),
                           minHeight: 6,
                           backgroundColor: finoraBorder,
@@ -92,12 +111,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   Widget _content(_Step step, OnboardingState state, {required Key key}) {
     return switch (step) {
-      _Step.welcome => _Welcome(key: key, onContinue: next),
+      _Step.welcome => _Welcome(
+        key: key,
+        onContinue: next,
+        onUseDemoData: _useDemoData,
+      ),
       _Step.account => _AccountStep(
         key: key,
         email: state.email,
-        onChanged: ref.read(onboardingProvider.notifier).setEmail,
-        onContinue: state.email.contains('@') ? next : null,
+        onChanged: _controller.setEmail,
+        onContinue: state.hasValidEmail ? next : null,
+        showEmailError: state.email.isNotEmpty && !state.hasValidEmail,
       ),
       _Step.products => _SelectionStep<FinancialProductType>(
         key: key,
@@ -106,27 +130,30 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         options: FinancialProductType.values,
         selected: state.products,
         label: (item) => item.label,
-        onToggle: ref.read(onboardingProvider.notifier).toggleProduct,
+        onToggle: _controller.toggleProduct,
         onContinue: state.products.isNotEmpty ? next : null,
       ),
       _Step.banks => _SelectionStep<String>(
         key: key,
         title: 'Where do you bank?',
         subtitle: 'Choose every banking relationship you use.',
-        options: const ['ubs', 'zkb', 'postfinance', 'raiffeisen'],
+        options: _idsOffering({
+          FinancialProductType.currentAccount,
+          FinancialProductType.savings,
+        }),
         selected: state.institutionIds,
-        label: _institutionName,
-        onToggle: ref.read(onboardingProvider.notifier).toggleInstitution,
+        label: InstitutionCatalogue.nameOf,
+        onToggle: _controller.toggleInstitution,
         onContinue: state.institutionIds.isNotEmpty ? next : null,
       ),
       _Step.investments => _SelectionStep<String>(
         key: key,
         title: 'Where do you invest?',
         subtitle: 'We kept banks you already selected. Add any other provider.',
-        options: const ['ubs', 'swissquote', 'julius-baer', 'pictet'],
+        options: _idsOffering({FinancialProductType.investments}),
         selected: state.institutionIds,
-        label: _institutionName,
-        onToggle: ref.read(onboardingProvider.notifier).toggleInstitution,
+        label: InstitutionCatalogue.nameOf,
+        onToggle: _controller.toggleInstitution,
         onContinue: next,
         canSkip: true,
       ),
@@ -134,10 +161,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         key: key,
         title: 'Where is your Pillar 3a?',
         subtitle: 'Connected and manually entered providers can live together.',
-        options: const ['frankly', 'viac', 'finpension', 'ubs'],
+        options: _idsOffering({FinancialProductType.pillar3a}),
         selected: state.institutionIds,
-        label: _institutionName,
-        onToggle: ref.read(onboardingProvider.notifier).toggleInstitution,
+        label: InstitutionCatalogue.nameOf,
+        onToggle: _controller.toggleInstitution,
         onContinue: next,
         canSkip: true,
       ),
@@ -146,24 +173,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 }
 
-String _institutionName(String id) =>
-    const {
-      'ubs': 'UBS',
-      'zkb': 'Zürcher Kantonalbank',
-      'postfinance': 'PostFinance',
-      'raiffeisen': 'Raiffeisen',
-      'swissquote': 'Swissquote',
-      'julius-baer': 'Julius Baer',
-      'pictet': 'Pictet',
-      'frankly': 'frankly',
-      'viac': 'VIAC',
-      'finpension': 'finpension',
-    }[id] ??
-    id;
+List<String> _idsOffering(Set<FinancialProductType> types) => [
+  for (final institution in InstitutionCatalogue.offering(types)) institution.id,
+];
 
 class _Welcome extends StatelessWidget {
-  const _Welcome({required this.onContinue, super.key});
+  const _Welcome({
+    required this.onContinue,
+    required this.onUseDemoData,
+    super.key,
+  });
   final VoidCallback onContinue;
+  final VoidCallback onUseDemoData;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +223,13 @@ class _Welcome extends StatelessWidget {
         const _TrustLine(icon: Icons.lock_outline, text: 'You stay in control'),
         const Spacer(),
         FilledButton(onPressed: onContinue, child: const Text('Get started')),
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
+        Center(
+          child: TextButton(
+            onPressed: onUseDemoData,
+            child: const Text('Explore with demo data'),
+          ),
+        ),
         const Center(
           child: Text(
             'Private demo · no real bank data',
@@ -236,11 +263,13 @@ class _AccountStep extends StatelessWidget {
     required this.email,
     required this.onChanged,
     required this.onContinue,
+    required this.showEmailError,
     super.key,
   });
   final String email;
   final ValueChanged<String> onChanged;
   final VoidCallback? onContinue;
+  final bool showEmailError;
 
   @override
   Widget build(BuildContext context) {
@@ -261,9 +290,10 @@ class _AccountStep extends StatelessWidget {
           initialValue: email,
           keyboardType: TextInputType.emailAddress,
           autofillHints: const [AutofillHints.email],
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Email',
-            prefixIcon: Icon(Icons.mail_outline),
+            prefixIcon: const Icon(Icons.mail_outline),
+            errorText: showEmailError ? 'Enter a valid e-mail address' : null,
           ),
           onChanged: onChanged,
         ),
@@ -428,11 +458,11 @@ class _ReviewStep extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      _institutionName(id),
+                      InstitutionCatalogue.nameOf(id),
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                     subtitle: Text(
-                      id == 'frankly' || id == 'viac' || id == 'finpension'
+                      InstitutionCatalogue.byId(id)?.isManual ?? false
                           ? 'Manual connection available'
                           : 'Secure connection available',
                     ),

@@ -53,9 +53,7 @@ void main() {
   setUpAll(() async {
     if (_enabled) await _loadFonts();
   });
-  // Tests draw shadows as solid shapes by default; draw them as on a phone.
-  setUp(() => debugDisableShadows = false);
-  tearDown(() => debugDisableShadows = true);
+
   tearDown(() => Intl.defaultLocale = null);
 
   final session = UserSession.demo().copyWith(
@@ -89,10 +87,18 @@ void main() {
       container.read(routerProvider).go(route);
       await tester.pumpAndSettle();
     }
-    await expectLater(
-      find.byType(FinoraApp),
-      matchesGoldenFile('../../docs/screenshots/$name.png'),
-    );
+    // Tests draw shadows as solid shapes; draw them blurred as on a phone,
+    // and restore the flag before the test ends (it is checked).
+    debugDisableShadows = false;
+    try {
+      await tester.pump();
+      await expectLater(
+        find.byType(FinoraApp),
+        matchesGoldenFile('../../docs/screenshots/$name.png'),
+      );
+    } finally {
+      debugDisableShadows = true;
+    }
   }
 
   const screens = {

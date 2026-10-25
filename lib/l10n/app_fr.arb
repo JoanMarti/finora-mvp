@@ -847,5 +847,8 @@
   "reportCopied": "Résumé copié.",
   "greetingMorning": "Bonjour, {name}",
   "greetingAfternoon": "Bon après-midi, {name}",
-  "greetingEvening": "Bonsoir, {name}"
+  "greetingEvening": "Bonsoir, {name}",
+  "quickAnalysis": "Analyse",
+  "quickCalendar": "Calendrier",
+  "quickSave": "Économiser"
 }

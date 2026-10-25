@@ -2254,5 +2254,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "quickAnalysis": "Analysis",
+  "quickCalendar": "Calendar",
+  "quickSave": "Save"
 }

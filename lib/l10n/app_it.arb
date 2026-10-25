@@ -847,5 +847,8 @@
   "reportCopied": "Riepilogo copiato.",
   "greetingMorning": "Buongiorno, {name}",
   "greetingAfternoon": "Buon pomeriggio, {name}",
-  "greetingEvening": "Buonasera, {name}"
+  "greetingEvening": "Buonasera, {name}",
+  "quickAnalysis": "Analisi",
+  "quickCalendar": "Calendario",
+  "quickSave": "Risparmia"
 }

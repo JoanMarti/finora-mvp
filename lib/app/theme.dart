@@ -37,7 +37,7 @@ const finoraInkGradient = LinearGradient(
 
 /// Soft shadow used by hero cards and floating elements.
 const finoraShadow = [
-  BoxShadow(color: Color(0x1F2F3FBF), blurRadius: 28, offset: Offset(0, 12)),
+  BoxShadow(color: Color(0x262F3FBF), blurRadius: 24, offset: Offset(0, 8)),
 ];
 
 const finoraRadius = 24.0;
@@ -127,7 +127,7 @@ ThemeData buildFinoraTheme() {
         minimumSize: const Size.fromHeight(54),
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+        textStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 16),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -137,14 +137,14 @@ ThemeData buildFinoraTheme() {
         minimumSize: const Size(64, 50),
         side: const BorderSide(color: finoraBorder),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        textStyle: const TextStyle(fontWeight: FontWeight.w700),
+        textStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: finoraBlueText,
         shape: rounded,
-        textStyle: const TextStyle(fontWeight: FontWeight.w700),
+        textStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -178,6 +178,7 @@ ThemeData buildFinoraTheme() {
       backgroundColor: finoraWhite,
       selectedColor: finoraInk,
       secondaryLabelStyle: TextStyle(
+        fontFamily: 'Inter',
         color: finoraWhite,
         fontWeight: FontWeight.w700,
         fontSize: 13,
@@ -185,6 +186,7 @@ ThemeData buildFinoraTheme() {
       side: BorderSide(color: finoraBorder),
       shape: StadiumBorder(),
       labelStyle: TextStyle(
+        fontFamily: 'Inter',
         color: finoraInk,
         fontWeight: FontWeight.w600,
         fontSize: 13,
@@ -205,7 +207,11 @@ ThemeData buildFinoraTheme() {
         ),
         side: const WidgetStatePropertyAll(BorderSide(color: finoraBorder)),
         textStyle: const WidgetStatePropertyAll(
-          TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          TextStyle(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+          ),
         ),
       ),
     ),

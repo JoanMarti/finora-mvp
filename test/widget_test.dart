@@ -73,6 +73,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start free'));
     await tester.pumpAndSettle();
+    // The profile questions are optional.
+    expect(find.text('A little about you'), findsOneWidget);
+    await tester.tap(find.text('Skip for now'));
+    await tester.pumpAndSettle();
 
     expect(find.text('What do you have?'), findsOneWidget);
     await tester.tap(find.text('Current account'));

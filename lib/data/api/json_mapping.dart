@@ -94,6 +94,7 @@ abstract final class ApiJson {
       category: _enum(TransactionCategory.values, json['category'], 'category'),
       bookedAt: _date(json, 'bookedAt'),
       amount: money(json['amount'], 'amount'),
+      foreignCurrency: json['foreignCurrency'] as String?,
     );
   }
 

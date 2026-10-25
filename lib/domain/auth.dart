@@ -134,6 +134,10 @@ abstract interface class AuthService {
   /// address has an account.
   Future<void> requestPasswordReset(String email);
 
+  /// Deletes the account and everything stored with it on the server.
+  /// Required by Google Play for apps with sign-up.
+  Future<void> deleteAccount(String email);
+
   /// Whether this build uses a demo account store rather than a server.
   bool get isDemo;
 }

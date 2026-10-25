@@ -1071,5 +1071,13 @@
   "offerFamilyReason": "{count, plural, =1{Avec 1 enfant} other{Avec {count} enfants}}, vous avez droit à au moins {amount} par mois d’allocations ; beaucoup de cantons versent plus, et dès 16 ans l’allocation de formation est plus élevée. Vérifiez que votre employeur ou votre caisse de compensation les verse.",
   "offerFamilyAction": "Mettre à jour la famille",
   "partnerContinueTo": "Continuer vers {partner}",
-  "partnerLinkNote": "Ouvre {partner} dans votre navigateur. Finora peut être rémunéré si vous souscrivez ; cela ne change jamais les offres affichées."
+  "partnerLinkNote": "Ouvre {partner} dans votre navigateur. Finora peut être rémunéré si vous souscrivez ; cela ne change jamais les offres affichées.",
+  "deleteAccount": "Supprimer le compte",
+  "deleteAccountTitle": "Supprimer votre compte Finora ?",
+  "deleteAccountBody": "Votre compte, profil, objectifs, budgets, consentements et réglages sont supprimés, sur cet appareil et sur nos serveurs. Vos comptes bancaires ne sont pas touchés. Seul ce que la loi nous oblige à conserver, comme les justificatifs de paiements Premium, est gardé pendant la durée légale.",
+  "deleteAccountConfirm": "Supprimer définitivement",
+  "deleteAccountDone": "Votre compte a été supprimé.",
+  "legalSection": "Mentions légales",
+  "privacyPolicyLink": "Politique de confidentialité",
+  "appVersion": "Version {version}"
 }

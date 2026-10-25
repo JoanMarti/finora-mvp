@@ -1071,5 +1071,13 @@
   "offerFamilyReason": "{count, plural, =1{Con 1 figlio} other{Con {count} figli}} ti spettano almeno {amount} al mese di assegni per i figli; molti cantoni pagano di più e dai 16 anni l’assegno di formazione è più alto. Verifica che il datore di lavoro o la cassa di compensazione li versi.",
   "offerFamilyAction": "Aggiorna i dati familiari",
   "partnerContinueTo": "Continua su {partner}",
-  "partnerLinkNote": "Apre {partner} nel browser. Finora può ricevere un compenso se aderisci; non cambia mai le offerte che vedi."
+  "partnerLinkNote": "Apre {partner} nel browser. Finora può ricevere un compenso se aderisci; non cambia mai le offerte che vedi.",
+  "deleteAccount": "Elimina account",
+  "deleteAccountTitle": "Eliminare il tuo account Finora?",
+  "deleteAccountBody": "Il tuo account, profilo, obiettivi, budget, consensi e impostazioni vengono eliminati, su questo dispositivo e sui nostri server. I tuoi conti bancari non sono toccati. Conserviamo solo ciò che la legge ci impone, come le ricevute dei pagamenti Premium, per il periodo previsto.",
+  "deleteAccountConfirm": "Elimina definitivamente",
+  "deleteAccountDone": "Il tuo account è stato eliminato.",
+  "legalSection": "Note legali",
+  "privacyPolicyLink": "Informativa sulla privacy",
+  "appVersion": "Versione {version}"
 }

@@ -55,6 +55,7 @@ Future<void> _renderScreen(
   String name, {
   String? route,
   required Size size,
+  String? goldenPath,
 }) async {
   tester.view.physicalSize = size * 2;
   tester.view.devicePixelRatio = 2;
@@ -77,7 +78,7 @@ Future<void> _renderScreen(
   }
   await expectLater(
     find.byType(FinoraApp),
-    matchesGoldenFile('../../docs/screenshots/$name.png'),
+    matchesGoldenFile(goldenPath ?? '../../docs/screenshots/$name.png'),
   );
 }
 
@@ -100,6 +101,7 @@ void main() {
     String? route,
     Size size = const Size(390, 844),
     UserSession? as,
+    String? goldenPath,
   }) async {
     // Tests draw shadows without blur; draw them as on a phone. The flag is
     // restored before the test ends because the framework checks it.
@@ -111,6 +113,7 @@ void main() {
         name,
         route: route,
         size: size,
+        goldenPath: goldenPath,
       );
     } finally {
       debugDisableShadows = true;
@@ -202,6 +205,36 @@ void main() {
       size: const Size(1440, 900),
     );
   }, skip: !_enabled);
+
+  // Google Play phone screenshots: 1080×1920 (9:16), English and German.
+  const storeScreens = {
+    '1_overview': null,
+    '2_analysis': '/analysis',
+    '3_savings': '/account/ubs-savings',
+    '4_calendar': '/calendar',
+    '5_home': '/home-buying',
+    '6_plans': '/plus',
+  };
+  for (final locale in ['en-US', 'de-DE']) {
+    final storeSession = UserSession.demo().copyWith(
+      languageCode: locale.substring(0, 2),
+      offersConsent: true,
+    );
+    for (final entry in storeScreens.entries) {
+      testWidgets('store $locale ${entry.key}', (tester) async {
+        await capture(
+          tester,
+          entry.key,
+          route: entry.value,
+          as: storeSession,
+          size: const Size(540, 960),
+          goldenPath:
+              '../../fastlane/metadata/android/$locale/images/'
+              'phoneScreenshots/${entry.key}.png',
+        );
+      }, skip: !_enabled);
+    }
+  }
 
   testWidgets('tablet-dashboard', (tester) async {
     await capture(tester, 'tablet-dashboard', size: const Size(900, 1200));

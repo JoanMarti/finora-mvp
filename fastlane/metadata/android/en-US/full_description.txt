@@ -1,0 +1,31 @@
+Finora brings your Swiss finances together in one clear view: accounts, savings, investments, Pillar 3a, mortgage and the bills that come back every month. Read-only by design: Finora never moves money and never asks for your e-banking password.
+
+EARLY ACCESS
+This first version is an early-access preview. Bank connections run with generated demo data while the bLink and OpenWealth connections are being finished. Everything else works with your own figures: goals, budgets, assets, the simulators and the financial calendar.
+
+SEE EVERYTHING AT ONCE
+• Net worth and its trend across all banks
+• Spending analysis, recurring bills and subscriptions
+• Monthly report: what you saved and where it went
+
+PLAN AHEAD
+• Savings goals and a wealth plan
+• Retirement outlook across AHV/AVS, pension fund and Pillar 3a
+• "Can I buy a home?" with the rules Swiss banks apply
+• Tax savings from Pillar 3a and pension fund buy-ins
+• Financial calendar: health insurance switch by 30 November, Pillar 3a by 31 December, tax return
+
+SAVE MONEY
+• Clear hints next to the bill or account they are about: health and household insurance, mobile plans, savings interest, Pillar 3a fees
+• Every estimate explains what it is based on
+• Offers only with your express consent; partner offers are labelled and never ranked by what a partner pays
+
+PRIVACY FIRST
+• Your profile, goals and settings stay on your phone
+• No advertising, no tracking SDKs, no data sales
+• PIN lock and a mode that hides all amounts
+
+FREE AND PREMIUM
+Free has no time limit and includes up to 3 banks, 6 months of history and 2 goals. Finora Premium adds unlimited banks and goals, 24 months of history, retirement scenarios, the household view and the tax export. During early access no payment is taken.
+
+Finora gives information, not financial advice. Made in Switzerland, in English, German, French and Italian.

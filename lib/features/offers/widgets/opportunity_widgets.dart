@@ -190,16 +190,16 @@ class _OpportunitySheetState extends ConsumerState<_OpportunitySheet> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 6,
               children: [
                 ValuePill(
                   label: l10n.opportunityCategory(opportunity.category),
                   color: finoraBlue,
                 ),
-                if (opportunity.isSponsored) ...[
-                  const SizedBox(width: 8),
+                if (opportunity.isSponsored)
                   ValuePill(label: l10n.offerPartnerLabel, color: finoraSlate),
-                ],
               ],
             ),
             const SizedBox(height: 12),

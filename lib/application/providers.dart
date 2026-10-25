@@ -6,6 +6,7 @@ import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/market_data_repository.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/domain/price_changes.dart';
 import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,6 +210,16 @@ final overviewProvider = FutureProvider<FinancialOverview>((ref) async {
 });
 
 /// Things worth the user's attention, shown behind the notification bell.
+/// Recurring charges that went up, found in every connected account's
+/// transactions. Shown in full with Premium; Free sees how many there are.
+final priceChangesProvider = FutureProvider<List<PriceChange>>((ref) async {
+  final transactions = await ref.watch(transactionsProvider(null).future);
+  return PriceChangeDetector.detect(
+    transactions,
+    now: ref.watch(clockProvider)(),
+  );
+});
+
 final alertsProvider = FutureProvider<List<FinoraAlert>>((ref) async {
   final session = ref.watch(sessionProvider);
   final now = ref.watch(clockProvider)();
@@ -270,6 +281,21 @@ final alertsProvider = FutureProvider<List<FinoraAlert>>((ref) async {
           subject: line.category.name,
           amount: line.spent - line.limit,
           route: '/budgets',
+        ),
+      );
+    }
+  }
+
+  // Price increases are a Premium feature.
+  if (session.isPremiumAt(now)) {
+    for (final change in await ref.watch(priceChangesProvider.future)) {
+      alerts.add(
+        FinoraAlert(
+          kind: AlertKind.priceIncrease,
+          subject: change.merchant,
+          amount: change.current,
+          previousAmount: change.previous,
+          route: '/price-alerts',
         ),
       );
     }

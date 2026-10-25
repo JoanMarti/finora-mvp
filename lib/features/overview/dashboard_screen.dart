@@ -8,6 +8,7 @@ import 'package:finora/features/health/health_screen.dart';
 import 'package:finora/features/offers/widgets/opportunity_widgets.dart';
 import 'package:finora/features/profile/about_you_screen.dart';
 import 'package:finora/features/overview/widgets/balance_overview_card.dart';
+import 'package:finora/features/price_alerts/price_alerts_screen.dart';
 import 'package:finora/features/report/report_screen.dart';
 import 'package:finora/features/overview/widgets/insights_carousel.dart';
 import 'package:finora/features/overview/widgets/wealth_plan_card.dart';
@@ -129,6 +130,7 @@ class DashboardScreen extends ConsumerWidget {
                       ...plan,
                       const SizedBox(height: 12),
                       const SavingsOpportunitiesSection(),
+                      const PriceAlertsCard(),
                       const UpcomingEventsSection(),
                       const SizedBox(height: 12),
                       const MonthlyReportCard(),
@@ -168,6 +170,7 @@ class DashboardScreen extends ConsumerWidget {
                               ...plan,
                               const SizedBox(height: 16),
                               const SavingsOpportunitiesSection(),
+                      const PriceAlertsCard(),
                               const SizedBox(height: 12),
                               ...ideas,
                             ],

@@ -1079,5 +1079,18 @@
   "deleteAccountDone": "Votre compte a été supprimé.",
   "legalSection": "Mentions légales",
   "privacyPolicyLink": "Politique de confidentialité",
-  "appVersion": "Version {version}"
+  "appVersion": "Version {version}",
+  "priceAlertsTitle": "Hausses de prix",
+  "priceAlertsSubtitle": "Prélèvements récurrents plus chers que le mois précédent.",
+  "priceAlertRow": "{before} → {after} · +{percent} %",
+  "priceAlertYearly": "{amount} de plus par an",
+  "priceAlertsLockedTitle": "{count, plural, =1{1 hausse de prix trouvée dans vos factures} other{{count} hausses de prix trouvées dans vos factures}}",
+  "priceAlertsLockedBody": "Premium montre quelles factures ont augmenté, de combien, et quoi comparer.",
+  "priceAlertsEmpty": "Aucune hausse de prix dans vos prélèvements récurrents pour le moment.",
+  "priceAlertsHow": "Finora compare chaque prélèvement récurrent avec celui du mois précédent. Les hausses d’au moins 2 % et CHF 1 sont affichées.",
+  "priceAlertCompare": "Comparer les alternatives",
+  "priceAlertSince": "Depuis le {date}",
+  "alertPriceTitle": "{merchant} coûte plus cher",
+  "alertPriceBody": "De {before} à {after} : {yearly} de plus par an.",
+  "featurePriceAlerts": "Alertes de hausse de prix"
 }

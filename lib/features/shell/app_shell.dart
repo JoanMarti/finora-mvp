@@ -127,6 +127,12 @@ final sidebarNavGroups = [
   NavGroup((l10n) => l10n.navGroupSave, [
     _offers,
     NavItem(
+      '/price-alerts',
+      Icons.trending_up,
+      Icons.trending_up,
+      (l10n) => l10n.priceAlertsTitle,
+    ),
+    NavItem(
       '/subscriptions',
       Icons.autorenew,
       Icons.autorenew,

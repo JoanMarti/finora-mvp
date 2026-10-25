@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
@@ -237,6 +238,9 @@ class SessionController extends Notifier<UserSession> {
 
   void restoreOpportunities() =>
       _update(state.copyWith(dismissedOpportunities: const {}));
+
+  void setHousehold(Household? household) =>
+      _update(state.copyWith(household: household));
 
   void setHideAmounts(bool hidden) =>
       _update(state.copyWith(hideAmounts: hidden));

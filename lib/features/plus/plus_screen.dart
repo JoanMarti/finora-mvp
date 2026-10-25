@@ -38,7 +38,7 @@ class PlusScreen extends ConsumerWidget {
         Icons.family_restroom,
         l10n.plusFeatureHouseholdTitle,
         l10n.plusFeatureHouseholdBody,
-        true,
+        false,
       ),
       (
         Icons.history,

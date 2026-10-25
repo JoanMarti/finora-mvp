@@ -138,6 +138,7 @@ class SwissPensionRules {
     this.bvgConversionRate = .068,
     this.ordinaryRetirementAge = 65,
     this.pillar3aDrawdownYears = 20,
+    this.ahvCoupleCapShare = 1.5,
   });
 
   /// Full-contribution single pension, AHV/AVS (CHF 1,260 – 2,520 a month).
@@ -156,6 +157,10 @@ class SwissPensionRules {
 
   /// Years over which Pillar 3a capital is assumed to be spent.
   final int pillar3aDrawdownYears;
+
+  /// Married couples' two AHV pensions together are capped at 150 % of the
+  /// maximum single pension.
+  final double ahvCoupleCapShare;
 
   static const y2026 = SwissPensionRules();
 

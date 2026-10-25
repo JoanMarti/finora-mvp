@@ -68,6 +68,22 @@ void main() {
     String? route,
     Size size = const Size(390, 844),
   }) async {
+    // Tests draw shadows without blur; draw them as on a phone. The flag is
+    // restored before the test ends because the framework checks it.
+    debugDisableShadows = false;
+    try {
+      await renderScreen(tester, name, route: route, size: size);
+    } finally {
+      debugDisableShadows = true;
+    }
+  }
+
+  Future<void> renderScreen(
+    WidgetTester tester,
+    String name, {
+    String? route,
+    required Size size,
+  }) async {
     tester.view.physicalSize = size * 2;
     tester.view.devicePixelRatio = 2;
     addTearDown(tester.view.resetPhysicalSize);
@@ -87,18 +103,10 @@ void main() {
       container.read(routerProvider).go(route);
       await tester.pumpAndSettle();
     }
-    // Tests draw shadows as solid shapes; draw them blurred as on a phone,
-    // and restore the flag before the test ends (it is checked).
-    debugDisableShadows = false;
-    try {
-      await tester.pump();
-      await expectLater(
-        find.byType(FinoraApp),
-        matchesGoldenFile('../../docs/screenshots/$name.png'),
-      );
-    } finally {
-      debugDisableShadows = true;
-    }
+    await expectLater(
+      find.byType(FinoraApp),
+      matchesGoldenFile('../../docs/screenshots/$name.png'),
+    );
   }
 
   const screens = {

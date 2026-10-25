@@ -48,7 +48,7 @@ abstract final class ApiJson {
       id: _string(json, 'id'),
       name: _string(json, 'name'),
       shortName: json['shortName'] as String? ?? _string(json, 'name'),
-      colorValue: json['color'] as int? ?? 0xFF3C94FF,
+      colorValue: json['color'] as int? ?? 0xFF027DB9,
       connectionMethod: _enum(
         ConnectionMethod.values,
         json['connectionMethod'],
@@ -131,7 +131,7 @@ abstract final class ApiJson {
               'category',
             ),
             amount: money(_map(item, 'category')['amount']),
-            colorValue: _map(item, 'category')['color'] as int? ?? 0xFF3C94FF,
+            colorValue: _map(item, 'category')['color'] as int? ?? 0xFF027DB9,
           ),
       ],
     );

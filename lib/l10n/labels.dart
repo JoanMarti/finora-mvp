@@ -3,6 +3,7 @@ import 'package:finora/domain/calendar.dart';
 import 'package:finora/domain/health.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/report.dart';
 import 'package:finora/l10n/generated/app_localizations.dart';
 import 'package:finora/shared/formatters.dart';
 import 'package:intl/intl.dart';
@@ -315,4 +316,41 @@ extension CalendarLabels on AppLocalizations {
       CalendarEventKind.plusRenewal => calendarPlusDetail,
     };
   }
+}
+
+/// Texts for the monthly report.
+extension ReportLabels on AppLocalizations {
+  String reportHighlight(ReportHighlight highlight) {
+    final amount = highlight.amount == null
+        ? ''
+        : formatMoney(highlight.amount!);
+    return switch (highlight.kind) {
+      ReportHighlightKind.bestSavingsMonth => reportBestMonth(amount),
+      ReportHighlightKind.spendingAboveAverage => reportAboveAverage(
+        amount,
+        highlight.percent ?? 0,
+      ),
+      ReportHighlightKind.spendingBelowAverage => reportBelowAverage(
+        amount,
+        highlight.percent ?? 0,
+      ),
+      ReportHighlightKind.netWorthUp => reportNetWorthUp(amount),
+      ReportHighlightKind.netWorthDown => reportNetWorthDown(amount),
+      ReportHighlightKind.subscriptionsSaved => reportSubscriptionsSaved(
+        amount,
+      ),
+    };
+  }
+
+  /// Plain-text summary to paste into a note or a message.
+  String reportSummary(MonthlyReport report) => [
+    reportTitle(formatMonthYear(report.month)),
+    reportSummaryLine(
+      formatMoney(report.income),
+      formatMoney(report.spending),
+      formatMoney(report.saved),
+      (report.savingsRate * 100).round(),
+    ),
+    for (final highlight in report.highlights) '• ${reportHighlight(highlight)}',
+  ].join('\n');
 }

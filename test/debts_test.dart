@@ -181,7 +181,11 @@ void main() {
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    final fields = find.byType(TextField);
+    // Only the sheet's fields: the screen has its own payment field.
+    final fields = find.descendant(
+      of: find.byType(BottomSheet),
+      matching: find.byType(TextField),
+    );
     await tester.enterText(fields.at(0), 'Car leasing');
     await tester.enterText(fields.at(1), '12000');
     await tester.enterText(fields.at(2), '3.9');

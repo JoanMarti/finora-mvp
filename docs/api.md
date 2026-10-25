@@ -37,6 +37,7 @@ A **reference implementation** of this contract lives in [`server/`](../server/R
 | `POST /v1/auth/resend` | `{email}` returns `204` and sends a new code. |
 | `POST /v1/auth/login` | `{email, password}` returns `{user, accessToken}`. |
 | `POST /v1/auth/password-reset` | `{email}` always returns `204`, so it never reveals whether an address has an account. |
+| `DELETE /v1/auth/account` | Bearer token of the account; returns `204` and deletes the account and all its tokens. Required by Google Play for apps with sign-up (in the app: Profile → Delete account; on the web: `delete-account.html`). |
 
 `user` is `{id, email, firstName, emailVerified}`. E-mail addresses are compared in lower case.
 

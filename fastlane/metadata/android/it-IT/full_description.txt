@@ -1,0 +1,31 @@
+Finora riunisce le tue finanze svizzere in una vista chiara: conti, risparmi, investimenti, pilastro 3a, ipoteca e le fatture che tornano ogni mese. In sola lettura: Finora non sposta mai denaro e non chiede mai la password dell'e-banking.
+
+ACCESSO ANTICIPATO
+Questa prima versione è un'anteprima. I collegamenti bancari usano dati dimostrativi mentre si completano i collegamenti bLink e OpenWealth. Tutto il resto funziona con i tuoi numeri: obiettivi, budget, beni, simulatori e calendario finanziario.
+
+TUTTO A COLPO D'OCCHIO
+• Patrimonio netto e andamento su tutte le banche
+• Analisi delle spese, fatture ricorrenti e abbonamenti
+• Rapporto mensile: quanto hai risparmiato e dove è andato il denaro
+
+PIANIFICARE
+• Obiettivi di risparmio e piano patrimoniale
+• Previsione pensionistica: AVS, cassa pensione e pilastro 3a
+• «Posso comprare casa?» secondo le regole delle banche svizzere
+• Risparmio fiscale con il pilastro 3a e i riscatti LPP
+• Calendario finanziario: cambio di cassa malati entro il 30 novembre, pilastro 3a entro il 31 dicembre, dichiarazione d'imposta
+
+RISPARMIARE
+• Suggerimenti chiari accanto alla fattura o al conto: cassa malati ed economia domestica, abbonamento mobile, interessi di risparmio, commissioni del pilastro 3a
+• Ogni stima spiega su cosa si basa
+• Offerte solo con il tuo consenso esplicito; le offerte dei partner sono indicate e mai ordinate in base al compenso
+
+PRIVACY PRIMA DI TUTTO
+• Profilo, obiettivi e impostazioni restano sul telefono
+• Niente pubblicità, niente SDK di tracciamento, nessuna vendita di dati
+• Blocco con PIN e modalità che nasconde tutti gli importi
+
+GRATIS E PREMIUM
+Il piano gratuito non ha limiti di tempo e include fino a 3 banche, 6 mesi di storico e 2 obiettivi. Finora Premium offre banche e obiettivi illimitati, 24 mesi di storico, scenari previdenziali, vista familiare ed esportazione fiscale. Nessun pagamento durante l'accesso anticipato.
+
+Finora informa ma non consiglia. Fatto in Svizzera, in italiano, tedesco, francese e inglese.

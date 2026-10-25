@@ -1,0 +1,31 @@
+Finora réunit vos finances suisses dans une vue claire : comptes, épargne, placements, pilier 3a, hypothèque et factures qui reviennent chaque mois. En lecture seule : Finora ne déplace jamais d'argent et ne demande jamais votre mot de passe e-banking.
+
+ACCÈS ANTICIPÉ
+Cette première version est un aperçu. Les connexions bancaires utilisent des données de démonstration pendant que les connexions bLink et OpenWealth sont finalisées. Tout le reste fonctionne avec vos propres chiffres : objectifs, budgets, actifs, simulateurs et calendrier financier.
+
+TOUT EN UN COUP D'ŒIL
+• Patrimoine net et évolution sur toutes vos banques
+• Analyse des dépenses, factures récurrentes et abonnements
+• Rapport mensuel : ce que vous avez épargné et où est allé l'argent
+
+PLANIFIER
+• Objectifs d'épargne et plan patrimonial
+• Prévision de retraite : AVS, caisse de pension et pilier 3a
+• « Puis-je acheter un logement ? » selon les règles des banques suisses
+• Économies d'impôts avec le pilier 3a et les rachats LPP
+• Calendrier financier : changement de caisse maladie jusqu'au 30 novembre, pilier 3a jusqu'au 31 décembre, déclaration d'impôts
+
+ÉCONOMISER
+• Des conseils clairs à côté de la facture ou du compte concerné : assurance maladie et ménage, abonnement mobile, intérêts d'épargne, frais du pilier 3a
+• Chaque estimation explique sur quoi elle repose
+• Offres uniquement avec votre consentement exprès ; les offres partenaires sont signalées et jamais classées selon la rémunération
+
+LA CONFIDENTIALITÉ D'ABORD
+• Profil, objectifs et réglages restent sur votre téléphone
+• Pas de publicité, pas de SDK de suivi, pas de vente de données
+• Verrouillage par PIN et mode qui masque tous les montants
+
+GRATUIT ET PREMIUM
+Le plan gratuit n'a pas de limite de durée et inclut jusqu'à 3 banques, 6 mois d'historique et 2 objectifs. Finora Premium offre banques et objectifs illimités, 24 mois d'historique, scénarios de retraite, vue du ménage et export fiscal. Aucun paiement pendant l'accès anticipé.
+
+Finora informe mais ne conseille pas. Conçu en Suisse, en français, allemand, italien et anglais.

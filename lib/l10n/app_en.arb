@@ -2716,5 +2716,20 @@
         "type": "String"
       }
     }
+  },
+  "deleteAccount": "Delete account",
+  "deleteAccountTitle": "Delete your Finora account?",
+  "deleteAccountBody": "Your account, profile, goals, budgets, consents and settings are deleted, on this device and on our servers. Your bank accounts are not affected. Only what the law requires us to keep, such as records of Premium payments, is kept for the legal period.",
+  "deleteAccountConfirm": "Delete for good",
+  "deleteAccountDone": "Your account was deleted.",
+  "legalSection": "Legal",
+  "privacyPolicyLink": "Privacy policy",
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   }
 }

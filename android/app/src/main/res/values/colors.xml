@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand palette (lib/app/theme.dart). -->
+    <color name="finora_canvas">#F7F6F5</color>
+    <color name="finora_blue">#027DB9</color>
+    <color name="ic_launcher_background">#027DB9</color>
+</resources>

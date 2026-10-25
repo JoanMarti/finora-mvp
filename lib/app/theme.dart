@@ -134,7 +134,7 @@ ThemeData buildFinoraTheme() {
       style: OutlinedButton.styleFrom(
         foregroundColor: finoraInk,
         backgroundColor: finoraWhite,
-        minimumSize: const Size.fromHeight(50),
+        minimumSize: const Size(64, 50),
         side: const BorderSide(color: finoraBorder),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         textStyle: const TextStyle(fontWeight: FontWeight.w700),

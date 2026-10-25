@@ -559,7 +559,7 @@
             "cents": 145000,
             "currency": "CHF"
           },
-          "color": 4282160383
+          "color": 4278353337
         },
         {
           "category": "groceries",
@@ -567,7 +567,7 @@
             "cents": 74000,
             "currency": "CHF"
           },
-          "color": 4280756265
+          "color": 4278272356
         },
         {
           "category": "utilities",
@@ -575,7 +575,7 @@
             "cents": 67240,
             "currency": "CHF"
           },
-          "color": 4286349698
+          "color": 4287142306
         },
         {
           "category": "shopping",
@@ -583,7 +583,7 @@
             "cents": 46500,
             "currency": "CHF"
           },
-          "color": 4286101247
+          "color": 4284462046
         },
         {
           "category": "insurance",
@@ -591,7 +591,7 @@
             "cents": 42060,
             "currency": "CHF"
           },
-          "color": 4288850604
+          "color": 4290233547
         },
         {
           "category": "transport",
@@ -599,7 +599,7 @@
             "cents": 38000,
             "currency": "CHF"
           },
-          "color": 4290955980
+          "color": 4292465873
         }
       ]
     },
@@ -985,7 +985,7 @@
             "cents": 96400,
             "currency": "CHF"
           },
-          "color": 4286101247
+          "color": 4284462046
         },
         {
           "category": "dining",
@@ -993,7 +993,7 @@
             "cents": 52150,
             "currency": "CHF"
           },
-          "color": 4282160383
+          "color": 4278353337
         },
         {
           "category": "transport",
@@ -1001,7 +1001,7 @@
             "cents": 36000,
             "currency": "CHF"
           },
-          "color": 4290955980
+          "color": 4292465873
         }
       ]
     },
@@ -1647,7 +1647,7 @@
             "cents": 98000,
             "currency": "CHF"
           },
-          "color": 4280756265
+          "color": 4278272356
         },
         {
           "category": "dining",
@@ -1655,7 +1655,7 @@
             "cents": 61500,
             "currency": "CHF"
           },
-          "color": 4282160383
+          "color": 4278353337
         },
         {
           "category": "utilities",
@@ -1663,7 +1663,7 @@
             "cents": 39100,
             "currency": "CHF"
           },
-          "color": 4286349698
+          "color": 4287142306
         },
         {
           "category": "other",
@@ -1671,7 +1671,7 @@
             "cents": 31200,
             "currency": "CHF"
           },
-          "color": 4290955980
+          "color": 4292465873
         }
       ]
     },
@@ -2134,7 +2134,7 @@
             "cents": 98000,
             "currency": "CHF"
           },
-          "color": 4280756265
+          "color": 4278272356
         },
         {
           "category": "dining",
@@ -2142,7 +2142,7 @@
             "cents": 61500,
             "currency": "CHF"
           },
-          "color": 4282160383
+          "color": 4278353337
         },
         {
           "category": "utilities",
@@ -2150,7 +2150,7 @@
             "cents": 39100,
             "currency": "CHF"
           },
-          "color": 4286349698
+          "color": 4287142306
         },
         {
           "category": "other",
@@ -2158,7 +2158,7 @@
             "cents": 31200,
             "currency": "CHF"
           },
-          "color": 4290955980
+          "color": 4292465873
         }
       ]
     },

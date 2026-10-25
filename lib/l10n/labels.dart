@@ -1,3 +1,5 @@
+import 'package:finora/domain/assets.dart';
+import 'package:finora/domain/health.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/l10n/generated/app_localizations.dart';
@@ -195,4 +197,74 @@ extension OpportunityLabels on AppLocalizations {
     if (low == null || high == null) return null;
     return offerSavingRange(formatMoneyWhole(low), formatMoneyWhole(high));
   }
+}
+
+/// Texts for the financial health check and manual assets.
+extension HealthLabels on AppLocalizations {
+  String healthStatus(HealthStatus status) => switch (status) {
+    HealthStatus.good => healthStatusGood,
+    HealthStatus.fair => healthStatusFair,
+    HealthStatus.attention => healthStatusAttention,
+    HealthStatus.missingData => healthStatusMissing,
+  };
+
+  String healthFactorTitle(HealthFactorKind kind) => switch (kind) {
+    HealthFactorKind.emergencyFund => healthEmergencyTitle,
+    HealthFactorKind.savingsRate => healthSavingsRateTitle,
+    HealthFactorKind.pillar3a => healthPillarTitle,
+    HealthFactorKind.housing => healthHousingTitle,
+    HealthFactorKind.retirement => healthRetirementTitle,
+    HealthFactorKind.fixedCosts => healthFixedCostsTitle,
+  };
+
+  String healthFactorDetail(HealthFactor factor) {
+    int percent(double? value) => ((value ?? 0) * 100).round();
+    return switch (factor.kind) {
+      HealthFactorKind.emergencyFund => factor.ratio == null
+          ? healthNoSpendingData
+          : healthEmergencyDetail(
+              factor.ratio!.toStringAsFixed(1),
+              formatMoneyWhole(factor.target ?? Money.zero),
+            ),
+      HealthFactorKind.savingsRate => factor.score == null
+          ? healthNoSpendingData
+          : healthSavingsRateDetail(percent(factor.ratio)),
+      HealthFactorKind.pillar3a => healthPillarDetail(
+        formatMoneyWhole(factor.amount ?? Money.zero),
+        formatMoneyWhole(factor.target ?? Money.zero),
+      ),
+      HealthFactorKind.housing => factor.score == null
+          ? healthHousingMissing(formatMoneyWhole(factor.amount ?? Money.zero))
+          : [
+              healthHousingLtv(percent(factor.ratio)),
+              if (factor.secondRatio != null)
+                healthHousingAffordability(percent(factor.secondRatio)),
+            ].join(' '),
+      HealthFactorKind.retirement => [
+        healthRetirementDetail(percent(factor.ratio)),
+        if (factor.isExample) healthExampleFigures,
+      ].join(' '),
+      HealthFactorKind.fixedCosts => factor.score == null
+          ? healthNoSpendingData
+          : healthFixedCostsDetail(percent(factor.ratio)),
+    };
+  }
+
+  String healthFactorAction(HealthFactor factor) => switch (factor.kind) {
+    HealthFactorKind.emergencyFund => healthEmergencyAction,
+    HealthFactorKind.savingsRate => healthSavingsRateAction,
+    HealthFactorKind.pillar3a =>
+      factor.route == '/offers' ? offerPillarAction : healthPillarAction,
+    HealthFactorKind.housing =>
+      factor.score == null ? healthHousingAddAction : offerMortgageAction,
+    HealthFactorKind.retirement => healthRetirementAction,
+    HealthFactorKind.fixedCosts => healthFixedCostsAction,
+  };
+
+  String assetKind(ManualAssetKind kind) => switch (kind) {
+    ManualAssetKind.property => assetKindProperty,
+    ManualAssetKind.vehicle => assetKindVehicle,
+    ManualAssetKind.crypto => assetKindCrypto,
+    ManualAssetKind.other => assetKindOther,
+  };
 }

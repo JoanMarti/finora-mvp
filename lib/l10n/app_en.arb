@@ -1386,5 +1386,154 @@
         "type": "String"
       }
     }
-  }
+  },
+  "healthTitle": "Financial health",
+  "healthScoreOutOf": "{score} / 100",
+  "@healthScoreOutOf": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "healthIntro": "Six areas scored from your own data with common Swiss rules of thumb.",
+  "healthAreasSection": "Areas",
+  "healthStatusGood": "Healthy",
+  "healthStatusFair": "Could improve",
+  "healthStatusAttention": "Needs attention",
+  "healthStatusMissing": "Data missing",
+  "healthNextStep": "Next step: {area}",
+  "@healthNextStep": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "healthAllGood": "Every area looks healthy.",
+  "healthDisclaimer": "Based on your connected data and common Swiss rules of thumb used by banks and advisers. It is a guide, not financial advice.",
+  "healthNoSpendingData": "Connect an everyday account to judge this area.",
+  "healthExampleFigures": "(Based on example figures: add your own.)",
+  "healthEmergencyTitle": "Emergency fund",
+  "healthEmergencyDetail": "{months} months of spending in savings accounts. Target: {target}.",
+  "@healthEmergencyDetail": {
+    "placeholders": {
+      "months": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "healthEmergencyAction": "Plan a safety buffer",
+  "healthSavingsRateTitle": "Savings rate",
+  "healthSavingsRateDetail": "You keep {percent}% of your income each month. 20% counts as healthy.",
+  "@healthSavingsRateDetail": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "healthSavingsRateAction": "See where your money goes",
+  "healthPillarTitle": "Pillar 3a",
+  "healthPillarDetail": "{paid} of {limit} paid in this year.",
+  "@healthPillarDetail": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "healthPillarAction": "Review your Pillar 3a",
+  "healthHousingTitle": "Mortgage & housing",
+  "healthHousingMissing": "You have a mortgage of {amount}. Add your property’s value to check it against Swiss lending rules.",
+  "@healthHousingMissing": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "healthHousingLtv": "Loan-to-value {percent}% (banks lend up to 80%; above 67% must be paid down within 15 years).",
+  "@healthHousingLtv": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "healthHousingAffordability": "Housing costs {percent}% of income at 5% imputed interest plus 1% upkeep (rule: at most 33%).",
+  "@healthHousingAffordability": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "healthHousingAddAction": "Add property value",
+  "healthRetirementTitle": "Retirement",
+  "healthRetirementDetail": "Projected retirement income covers {percent}% of your target.",
+  "@healthRetirementDetail": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "healthRetirementAction": "Check retirement plan",
+  "healthFixedCostsTitle": "Fixed costs",
+  "healthFixedCostsDetail": "{percent}% of your spending goes to recurring bills. Up to 50% leaves room to manoeuvre.",
+  "@healthFixedCostsDetail": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "healthFixedCostsAction": "Review recurring bills",
+  "assetsTitle": "Property & other assets",
+  "otherAssetsSection": "Other assets",
+  "allocationOther": "Other",
+  "assetsTotal": "Total estimated value",
+  "assetsNote": "Values you enter are estimates and count towards your net worth. Finora never connects to these assets.",
+  "assetsEmpty": "Add your home, car or crypto to see your complete net worth and check your mortgage.",
+  "assetsTileEmpty": "Add your home, car or crypto",
+  "assetsSummary": "{count, plural, =1{1 asset · {total}} other{{count} assets · {total}}}",
+  "@assetsSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "assetKindProperty": "Property",
+  "assetKindVehicle": "Vehicle",
+  "assetKindCrypto": "Crypto",
+  "assetKindOther": "Other",
+  "addAsset": "Add asset",
+  "editAsset": "Edit asset",
+  "assetNameLabel": "Name",
+  "assetValueLabel": "Estimated value",
+  "assetPropertyHelp": "Use a recent estimate, for example your bank’s valuation or an online hedonic estimate.",
+  "assetNameRequired": "Enter a name",
+  "assetValueRequired": "Enter a value above zero",
+  "saveAsset": "Save",
+  "deleteAsset": "Delete asset",
+  "assetValuedOn": "valued {date}",
+  "@assetValuedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assetOutdated": "Value may be out of date: tap to update"
 }

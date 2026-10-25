@@ -850,5 +850,13 @@
   "greetingEvening": "Buonasera, {name}",
   "quickAnalysis": "Analisi",
   "quickCalendar": "Calendario",
-  "quickSave": "Risparmia"
+  "quickSave": "Risparmia",
+  "hintSaveUpTo": "Risparmia fino a {amount} all’anno",
+  "offerSavingsRateTitle": "Più interessi sui tuoi risparmi",
+  "offerSavingsRateReason": "Su {account} ci sono {amount}. Le grandi banche pagano spesso circa lo 0,25%, mentre conti di risparmio fino al {percent}% sono ampiamente disponibili.",
+  "offerPillarFeesTitle": "Riduci le commissioni del pilastro 3a",
+  "offerPillarFeesReason": "Su {account} ci sono {amount}. I fondi 3a bancari costano spesso circa l’1,2% all’anno; i fornitori a basso costo circa lo 0,45%, e la differenza si accumula fino alla pensione.",
+  "offerHouseholdTitle": "Confronta l’assicurazione mobilia domestica",
+  "offerHouseholdReason": "Paghi {amount} al mese a {merchant}. Una copertura mobilia e RC equivalente costa spesso il 10–25% in meno altrove.",
+  "offerHouseholdAction": "Confronta le offerte"
 }

@@ -59,6 +59,35 @@ final opportunitiesProvider = FutureProvider<List<Opportunity>>((ref) async {
   ];
 });
 
+/// The offer to show next to a bill, if there is one.
+Opportunity? hintForBill(List<Opportunity> items, RecurringPayment bill) {
+  Opportunity? find(OpportunityKind kind, {bool sameMerchant = true}) => items
+      .where(
+        (item) =>
+            item.kind == kind && (!sameMerchant || item.subject == bill.merchant),
+      )
+      .firstOrNull;
+  return switch (bill.category) {
+    BillCategory.healthInsurance => find(OpportunityKind.healthInsuranceSwitch),
+    BillCategory.householdInsurance => find(OpportunityKind.householdInsurance),
+    BillCategory.phoneInternet => find(OpportunityKind.telecomPlan),
+    BillCategory.streaming || BillCategory.membership => find(
+      OpportunityKind.subscriptionsReview,
+      sameMerchant: false,
+    ),
+    BillCategory.electricity || BillCategory.radioTvFee => null,
+  };
+}
+
+/// Offers about one account (savings rate, 3a fees, card, mortgage).
+final accountOpportunitiesProvider =
+    Provider.family<List<Opportunity>, String>(
+      (ref, accountId) => [
+        for (final item in ref.watch(opportunitiesProvider).value ?? const [])
+          if (item.accountId == accountId) item,
+      ],
+    );
+
 /// Upper end of the yearly savings across all visible opportunities.
 final potentialSavingProvider = Provider<Money>((ref) {
   final items = ref.watch(opportunitiesProvider).value ?? const [];

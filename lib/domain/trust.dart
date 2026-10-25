@@ -135,11 +135,13 @@ class FunnelStats {
   }
 
   FunnelStats record(Opportunity opportunity, OfferEventType type) {
-    final byType = {...?counts[opportunity.id]};
+    // Counted per kind: per-account offers of one kind add up.
+    final key = opportunity.kind.name;
+    final byType = {...?counts[key]};
     byType[type] = (byType[type] ?? 0) + 1;
     final pursued = type == OfferEventType.partnerClicked;
     return FunnelStats(
-      counts: {...counts, opportunity.id: byType},
+      counts: {...counts, key: byType},
       pursuedSavingLow: pursued
           ? pursuedSavingLow + (opportunity.savingLow ?? Money.zero)
           : pursuedSavingLow,

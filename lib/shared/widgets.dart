@@ -295,3 +295,40 @@ class KeyFigureGrid extends StatelessWidget {
     );
   }
 }
+
+/// Month labels under a chart, placed under their data points. With many
+/// months only about six labels are shown, always including the latest.
+class MonthAxis extends StatelessWidget {
+  const MonthAxis({required this.months, super.key});
+  final List<DateTime> months;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = months.length;
+    if (count == 0) return const SizedBox.shrink();
+    final step = count <= 7 ? 1 : ((count - 1) / 5).ceil();
+    return SizedBox(
+      height: 14,
+      child: Stack(
+        children: [
+          for (var index = 0; index < count; index++)
+            if ((count - 1 - index) % step == 0)
+              Align(
+                alignment: Alignment(
+                  count == 1 ? 0 : -1 + 2 * index / (count - 1),
+                  0,
+                ),
+                child: Text(
+                  formatMonthShort(months[index]),
+                  style: TextStyle(
+                    color: index == count - 1 ? finoraBlueText : finoraMutedInk,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+}

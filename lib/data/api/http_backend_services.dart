@@ -70,4 +70,14 @@ class HttpBackendServices
     }
     return links;
   }
+
+  /// Asks the server whether a Google Play purchase token is valid and the
+  /// subscription active; the server checks it with the Play Developer API.
+  Future<bool> verifyPurchase(String receipt) async {
+    final body = await _api.post('v1/purchases/verify', {
+      'platform': 'android',
+      'receipt': receipt,
+    });
+    return body is Map && body['active'] == true;
+  }
 }

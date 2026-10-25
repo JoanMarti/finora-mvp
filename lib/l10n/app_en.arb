@@ -2731,5 +2731,72 @@
         "type": "String"
       }
     }
-  }
+  },
+  "priceAlertsTitle": "Price increases",
+  "priceAlertsSubtitle": "Recurring charges that cost more than the month before.",
+  "priceAlertRow": "{before} → {after} · +{percent}%",
+  "@priceAlertRow": {
+    "placeholders": {
+      "before": {
+        "type": "String"
+      },
+      "after": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "priceAlertYearly": "{amount} more a year",
+  "@priceAlertYearly": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "priceAlertsLockedTitle": "{count, plural, =1{1 price increase found in your bills} other{{count} price increases found in your bills}}",
+  "@priceAlertsLockedTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "priceAlertsLockedBody": "Premium shows which bills went up, by how much, and what to compare.",
+  "priceAlertsEmpty": "No price increases in your recurring charges right now.",
+  "priceAlertsHow": "Finora compares each recurring charge with the one a month before. Increases of at least 2% and CHF 1 are shown.",
+  "priceAlertCompare": "Compare alternatives",
+  "priceAlertSince": "Since {date}",
+  "@priceAlertSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "alertPriceTitle": "{merchant} costs more",
+  "@alertPriceTitle": {
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "alertPriceBody": "From {before} to {after}: {yearly} more a year.",
+  "@alertPriceBody": {
+    "placeholders": {
+      "before": {
+        "type": "String"
+      },
+      "after": {
+        "type": "String"
+      },
+      "yearly": {
+        "type": "String"
+      }
+    }
+  },
+  "featurePriceAlerts": "Price-increase alerts"
 }

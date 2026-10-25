@@ -1079,5 +1079,18 @@
   "deleteAccountDone": "Ihr Konto wurde gelöscht.",
   "legalSection": "Rechtliches",
   "privacyPolicyLink": "Datenschutzerklärung",
-  "appVersion": "Version {version}"
+  "appVersion": "Version {version}",
+  "priceAlertsTitle": "Preiserhöhungen",
+  "priceAlertsSubtitle": "Wiederkehrende Belastungen, die mehr kosten als im Vormonat.",
+  "priceAlertRow": "{before} → {after} · +{percent} %",
+  "priceAlertYearly": "{amount} mehr pro Jahr",
+  "priceAlertsLockedTitle": "{count, plural, =1{1 Preiserhöhung in Ihren Rechnungen gefunden} other{{count} Preiserhöhungen in Ihren Rechnungen gefunden}}",
+  "priceAlertsLockedBody": "Premium zeigt, welche Rechnungen gestiegen sind, um wie viel und was sich zu vergleichen lohnt.",
+  "priceAlertsEmpty": "Zurzeit keine Preiserhöhungen bei Ihren wiederkehrenden Belastungen.",
+  "priceAlertsHow": "Finora vergleicht jede wiederkehrende Belastung mit der vom Vormonat. Angezeigt werden Erhöhungen ab 2 % und CHF 1.",
+  "priceAlertCompare": "Alternativen vergleichen",
+  "priceAlertSince": "Seit {date}",
+  "alertPriceTitle": "{merchant} kostet mehr",
+  "alertPriceBody": "Von {before} auf {after}: {yearly} mehr pro Jahr.",
+  "featurePriceAlerts": "Alarme bei Preiserhöhungen"
 }

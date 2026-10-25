@@ -99,6 +99,7 @@ extension FinoraLabels on AppLocalizations {
           : transactionCategory(_categoryNamed(alert.subject)!),
     ),
     AlertKind.billDue => alertBillTitle(alert.subject),
+    AlertKind.priceIncrease => alertPriceTitle(alert.subject),
   };
 
   String alertDescription(FinoraAlert alert) => switch (alert.kind) {
@@ -113,6 +114,13 @@ extension FinoraLabels on AppLocalizations {
       alert.bill == null ? '' : billCategory(alert.bill!),
       alert.amount == null ? '' : formatMoney(alert.amount!),
       inDays(alert.daysUntilDue ?? 0),
+    ),
+    AlertKind.priceIncrease => alertPriceBody(
+      alert.previousAmount == null ? '' : formatMoney(alert.previousAmount!),
+      alert.amount == null ? '' : formatMoney(alert.amount!),
+      alert.amount == null || alert.previousAmount == null
+          ? ''
+          : formatMoneyWhole((alert.amount! - alert.previousAmount!) * 12),
     ),
   };
 

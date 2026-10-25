@@ -482,7 +482,11 @@ class _PeriodSelector extends StatelessWidget {
           style: ButtonStyle(
             visualDensity: VisualDensity.comfortable,
             textStyle: WidgetStateProperty.all(
-              const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+              const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w700,
+                fontSize: 12,
+              ),
             ),
           ),
         ),

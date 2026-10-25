@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/profile.dart';
 
 /// Families of services a partner could offer.
 enum OpportunityCategory { insurance, banking, pensions, mortgage, telecom, budget }
@@ -20,6 +21,8 @@ enum OpportunityKind {
   savingsRate,
   pillar3aFees,
   householdInsurance,
+  rentDeposit,
+  familyAllowance,
 }
 
 /// How Finora would be paid if the user continues with a partner. It drives
@@ -98,6 +101,8 @@ class SwissMarketFacts {
     this.pillar3aFeeTypical = .012,
     this.pillar3aFeeLowCost = .0045,
     this.lowCostPillar3aProviders = const {'viac', 'frankly', 'finpension'},
+    this.rentGuaranteePremium = .05,
+    this.childAllowanceMinimum = const Money.cents(21500),
   });
 
   /// Average basic health insurance premium increase announced for 2027.
@@ -122,6 +127,14 @@ class SwissMarketFacts {
   /// Institutions already counted as low-cost 3a providers.
   final Set<String> lowCostPillar3aProviders;
 
+  /// Yearly premium of a rent deposit guarantee as a share of the deposit
+  /// (about 4–5 % with the main providers; assumption).
+  final double rentGuaranteePremium;
+
+  /// Federal minimum child allowance per child and month (CHF 215 since
+  /// 2025); cantons may pay more.
+  final Money childAllowanceMinimum;
+
   static const current = SwissMarketFacts();
 }
 
@@ -135,6 +148,7 @@ class OpportunityInput {
     required this.now,
     this.facts = SwissMarketFacts.current,
     this.propertyValue = Money.zero,
+    this.profile = const UserProfile(),
   });
 
   final List<FinancialAccount> accounts;
@@ -145,6 +159,13 @@ class OpportunityInput {
   final Money pillar3aContributionsThisYear;
   final DateTime now;
   final SwissMarketFacts facts;
+
+  /// Who the user is; personalises limits, estimates and the order.
+  final UserProfile profile;
+
+  /// Pillar 3a maximum for this user (larger for the self-employed).
+  Money get pillar3aLimit =>
+      ProfileEstimates.pillar3aLimit(profile, facts.pillar3aLimit);
 }
 
 /// Turns account data into savings opportunities with transparent,
@@ -165,9 +186,15 @@ abstract final class OpportunityEngine {
       ..._savingsRate(input),
       ..._pillar3aFees(input),
       ?_householdInsurance(input),
+      ?_rentDeposit(input),
+      ?_familyAllowance(input),
     ];
+    // What the user said matters to them moves related ideas up a little;
+    // deadlines still come first, and partner pay never counts.
+    int priority(Opportunity item) =>
+        item.priority + (_matchesInterests(item, input.profile) ? 8 : 0);
     found.sort((a, b) {
-      final byPriority = b.priority.compareTo(a.priority);
+      final byPriority = priority(b).compareTo(priority(a));
       if (byPriority != 0) return byPriority;
       return (b.savingHigh ?? Money.zero).compareTo(a.savingHigh ?? Money.zero);
     });
@@ -260,7 +287,12 @@ abstract final class OpportunityEngine {
 
   /// Unused Pillar 3a room, or no Pillar 3a at all while earning a salary.
   static Opportunity? _pillar3a(OpportunityInput input) {
-    final limit = input.facts.pillar3aLimit;
+    final limit = input.pillar3aLimit;
+    // Tax saved: the profile's estimated marginal rate when known, else an
+    // illustrative 20–30 %.
+    final rate = ProfileEstimates.marginalRate(input.profile);
+    final low = rate == null ? .2 : (rate - .03).clamp(.1, .45).toDouble();
+    final high = rate == null ? .3 : (rate + .02).clamp(.1, .45).toDouble();
     final hasPillar3a = input.accounts.any(
       (account) => account.type.isRetirement,
     );
@@ -275,9 +307,8 @@ abstract final class OpportunityEngine {
         category: OpportunityCategory.pensions,
         revenue: RevenueModel.affiliate,
         priority: 60,
-        // Tax saved at an illustrative 20–30 % marginal rate.
-        savingLow: _round(limit * .2),
-        savingHigh: _round(limit * .3),
+        savingLow: _round(limit * low),
+        savingHigh: _round(limit * high),
         amount: limit,
         deadline: yearEnd,
       );
@@ -290,8 +321,8 @@ abstract final class OpportunityEngine {
       category: OpportunityCategory.pensions,
       revenue: RevenueModel.affiliate,
       priority: lastQuarter ? 90 : 35,
-      savingLow: _round(room * .2),
-      savingHigh: _round(room * .3),
+      savingLow: _round(room * low),
+      savingHigh: _round(room * high),
       amount: room,
       deadline: yearEnd,
     );
@@ -461,5 +492,54 @@ abstract final class OpportunityEngine {
       savingHigh: Money.cents(24000 * math.max(1, extra)),
       count: banks.length,
     );
+  }
+
+  /// Renters with a blocked deposit can free it with a guarantee. It costs
+  /// a yearly premium, so it is shown as an option, not a saving.
+  static Opportunity? _rentDeposit(OpportunityInput input) {
+    final profile = input.profile;
+    final deposit = profile.rentDeposit;
+    if (!profile.isRenting || deposit == null || deposit.cents < 150000) {
+      return null;
+    }
+    return Opportunity(
+      kind: OpportunityKind.rentDeposit,
+      category: OpportunityCategory.insurance,
+      revenue: RevenueModel.leadFee,
+      priority: 16,
+      amount: deposit,
+      percent: (input.facts.rentGuaranteePremium * 100).round(),
+    );
+  }
+
+  /// Parents are owed at least the federal minimum child allowance; a
+  /// check, not an offer.
+  static Opportunity? _familyAllowance(OpportunityInput input) {
+    final children = input.profile.children ?? 0;
+    if (children == 0) return null;
+    return Opportunity(
+      kind: OpportunityKind.familyAllowance,
+      category: OpportunityCategory.budget,
+      revenue: RevenueModel.none,
+      priority: 14,
+      amount: input.facts.childAllowanceMinimum * children,
+      count: children,
+    );
+  }
+
+  static bool _matchesInterests(Opportunity item, UserProfile profile) {
+    bool wants(Interest interest) => profile.interests.contains(interest);
+    return switch (item.kind) {
+      OpportunityKind.mortgageRenewal => wants(Interest.buyHome),
+      OpportunityKind.idleCash ||
+      OpportunityKind.pillar3aFees => wants(Interest.investing),
+      OpportunityKind.pillar3aRoom ||
+      OpportunityKind.pillar3aOpen => wants(Interest.retireEarly),
+      OpportunityKind.savingsRate ||
+      OpportunityKind.subscriptionsReview => wants(Interest.saveMore),
+      OpportunityKind.cardFees => wants(Interest.payOffDebt),
+      OpportunityKind.familyAllowance => wants(Interest.family),
+      _ => false,
+    };
   }
 }

@@ -64,6 +64,7 @@ Passwords need at least 10 characters, a letter and a digit, and must not contai
 | `GET /v1/pillar3a/contributions?year=` | `{amount}` |
 | `GET /v1/tax/{year}` | `{year, asOf, isComplete, pillar3aContributions, accounts[{accountId, closingBalance, income?, interestPaid?}]}` |
 | `POST /v1/refresh` | `204`: asks every provider for fresh data. |
+| `GET /v1/partners` | `[{kind, partnerName, url}]`: where each offer kind leads. `kind` is an `OpportunityKind`; `url` must be `https` and carries the affiliate network's ids. The app adds `utm_source=finora`, `utm_medium=app` and `utm_campaign=<kind>`, never personal data. Configured server-side so partners change without an app release. |
 
 ## Write endpoints (aggregated data only)
 

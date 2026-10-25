@@ -284,4 +284,23 @@ void main() {
       expect(reset, 204);
     });
   });
+
+  test('partner links come from the server configuration', () async {
+    final (empty, none) = await call('GET', '/v1/partners');
+    expect(empty, 200);
+    expect(none, isEmpty);
+    final configured = buildHandler(
+      fixtures,
+      partners: [
+        {
+          'kind': 'telecomPlan',
+          'partnerName': 'Example Mobile',
+          'url': 'https://mobile.example/?aff=7',
+        },
+      ],
+    );
+    final (status, links) = await call('GET', '/v1/partners', using: configured);
+    expect(status, 200);
+    expect(((links! as List).single as Map)['partnerName'], 'Example Mobile');
+  });
 }

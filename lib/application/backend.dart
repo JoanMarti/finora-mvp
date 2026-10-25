@@ -5,8 +5,11 @@ import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/backend_services.dart';
+import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/partners.dart';
 import 'package:finora/domain/purchases.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Whether a Finora backend is configured. `false` in the demo.
 final backendEnabledProvider = Provider<bool>((ref) => false);
@@ -60,6 +63,27 @@ final backendSyncProvider = Provider<void>((ref) {
       );
     });
 });
+
+/// Where offers lead. The demo has no partner contracts.
+final partnerDirectoryProvider = Provider<PartnerDirectory>(
+  (ref) => const NoPartners(),
+);
+
+/// Partner links by offer kind; empty when they cannot be loaded, so an
+/// offer then ends in the explanation instead of failing.
+final partnerLinksProvider =
+    FutureProvider<Map<OpportunityKind, PartnerLink>>((ref) async {
+      try {
+        return await ref.watch(partnerDirectoryProvider).links();
+      } on Object {
+        return const {};
+      }
+    });
+
+/// Opens a partner link outside the app.
+final linkOpenerProvider = Provider<Future<bool> Function(Uri)>(
+  (ref) => (uri) => launchUrl(uri, mode: LaunchMode.externalApplication),
+);
 
 final purchaseServiceProvider = Provider<PurchaseService>(
   (ref) => DemoPurchaseService(ref.watch(clockProvider)),

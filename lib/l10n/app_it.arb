@@ -1063,5 +1063,13 @@
   "interestFamily": "Pianificare per la famiglia",
   "interestTravel": "Viaggiare",
   "taxRateFromProfile": "Stimato da cantone, reddito e stato civile. Per un risultato preciso usa l’aliquota dell’ultima tassazione.",
-  "pillar3aSelfEmployedNote": "Come indipendente senza cassa pensione puoi versare fino a {amount} quest’anno."
+  "pillar3aSelfEmployedNote": "Come indipendente senza cassa pensione puoi versare fino a {amount} quest’anno.",
+  "offerRentDepositTitle": "Liberare il deposito di garanzia",
+  "offerRentDepositReason": "Sul conto di deposito di garanzia sono bloccati {amount}. Un’assicurazione di garanzia li libera per circa il {percent}% del deposito all’anno: conviene solo se ti serve il denaro, ad esempio per saldare una carta o costituire la riserva.",
+  "offerRentDepositAction": "Confronta le garanzie",
+  "offerFamilyTitle": "Verifica gli assegni familiari",
+  "offerFamilyReason": "{count, plural, =1{Con 1 figlio} other{Con {count} figli}} ti spettano almeno {amount} al mese di assegni per i figli; molti cantoni pagano di più e dai 16 anni l’assegno di formazione è più alto. Verifica che il datore di lavoro o la cassa di compensazione li versi.",
+  "offerFamilyAction": "Aggiorna i dati familiari",
+  "partnerContinueTo": "Continua su {partner}",
+  "partnerLinkNote": "Apre {partner} nel browser. Finora può ricevere un compenso se aderisci; non cambia mai le offerte che vedi."
 }

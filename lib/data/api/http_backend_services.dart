@@ -1,6 +1,8 @@
 import 'package:finora/data/api/api_client.dart';
 import 'package:finora/domain/backend_services.dart';
 import 'package:finora/domain/calendar.dart';
+import 'package:finora/domain/opportunities.dart';
+import 'package:finora/domain/partners.dart';
 import 'package:finora/domain/trust.dart';
 
 String _day(DateTime date) =>
@@ -22,7 +24,8 @@ String _tag(String? value) {
 /// [FunnelReporter] and [ReminderService] over the Finora backend. Both
 /// calls are idempotent `PUT`s of the full current state, so retrying or
 /// sending twice is harmless.
-class HttpBackendServices implements FunnelReporter, ReminderService {
+class HttpBackendServices
+    implements FunnelReporter, ReminderService, PartnerDirectory {
   HttpBackendServices(this._api);
 
   final FinoraApiClient _api;
@@ -52,5 +55,19 @@ class HttpBackendServices implements FunnelReporter, ReminderService {
           },
       ],
     });
+  }
+
+  /// Partner links as configured on the server; invalid entries are left
+  /// out so one bad row never hides the others.
+  @override
+  Future<Map<OpportunityKind, PartnerLink>> links() async {
+    final body = await _api.get('v1/partners');
+    final links = <OpportunityKind, PartnerLink>{};
+    if (body is List) {
+      for (final link in body.map(PartnerLink.fromJson).nonNulls) {
+        links[link.kind] = link;
+      }
+    }
+    return links;
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/budgets.dart';
+import 'package:finora/domain/debts.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
@@ -36,6 +37,9 @@ class UserSession {
     this.reminders = const ReminderPreferences(),
     this.budgets = const {},
     this.subscriptionDecisions = const {},
+    this.debts,
+    this.debtPayment,
+    this.payoffStrategy = PayoffStrategy.avalanche,
   });
 
   /// A ready-to-explore profile used by "Use demo data instead" and tests.
@@ -116,6 +120,14 @@ class UserSession {
   /// The user's decision per subscription, keyed by merchant.
   final Map<String, SubscriptionDecision> subscriptionDecisions;
 
+  /// Debts in the payoff plan; `null` until the plan is first opened, when
+  /// it starts from the connected credit cards.
+  final List<Debt>? debts;
+
+  /// Monthly amount for repaying debts; `null` uses the minimums plus 10 %.
+  final Money? debtPayment;
+  final PayoffStrategy payoffStrategy;
+
   bool get isPlus => plan == FinoraPlan.plus;
 
   static const _unset = Object();
@@ -166,6 +178,9 @@ class UserSession {
     ReminderPreferences? reminders,
     Map<TransactionCategory, Money>? budgets,
     Map<String, SubscriptionDecision>? subscriptionDecisions,
+    List<Debt>? debts,
+    Money? debtPayment,
+    PayoffStrategy? payoffStrategy,
   }) {
     return UserSession(
       email: email ?? this.email,
@@ -200,6 +215,9 @@ class UserSession {
       budgets: budgets ?? this.budgets,
       subscriptionDecisions:
           subscriptionDecisions ?? this.subscriptionDecisions,
+      debts: debts ?? this.debts,
+      debtPayment: debtPayment ?? this.debtPayment,
+      payoffStrategy: payoffStrategy ?? this.payoffStrategy,
     );
   }
 
@@ -233,6 +251,9 @@ class UserSession {
       for (final entry in subscriptionDecisions.entries)
         entry.key: entry.value.name,
     },
+    'debts': debts == null ? null : [for (final debt in debts!) debt.toJson()],
+    'debtPayment': debtPayment?.cents,
+    'payoffStrategy': payoffStrategy.name,
   };
 
   static UserSession fromJson(Map<String, Object?> json) {
@@ -299,6 +320,19 @@ class UserSession {
             for (final decision in SubscriptionDecision.values)
               if (decision.name == entry.value) '${entry.key}': decision,
       },
+      debts: json['debts'] is List
+          ? [
+              for (final raw in json['debts']! as List) ?Debt.fromJson(raw),
+            ]
+          : null,
+      debtPayment: json['debtPayment'] is int
+          ? Money.cents(json['debtPayment']! as int)
+          : null,
+      payoffStrategy:
+          PayoffStrategy.values
+              .where((value) => value.name == json['payoffStrategy'])
+              .firstOrNull ??
+          PayoffStrategy.avalanche,
     );
   }
 

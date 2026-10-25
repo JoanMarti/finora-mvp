@@ -2780,6 +2780,18 @@
       }
     },
     {
+      "id": "t17",
+      "accountId": "ubs-card",
+      "merchant": "Amazon.de",
+      "category": "shopping",
+      "bookedAt": "2026-10-17T12:00:00.000",
+      "amount": {
+        "cents": -8930,
+        "currency": "CHF"
+      },
+      "foreignCurrency": "EUR"
+    },
+    {
       "id": "t3",
       "accountId": "ubs-personal",
       "merchant": "Salary",
@@ -2813,6 +2825,18 @@
       }
     },
     {
+      "id": "t18",
+      "accountId": "ubs-card",
+      "merchant": "Trattoria da Luca, Milano",
+      "category": "dining",
+      "bookedAt": "2026-10-10T12:00:00.000",
+      "amount": {
+        "cents": -6450,
+        "currency": "CHF"
+      },
+      "foreignCurrency": "EUR"
+    },
+    {
       "id": "t5",
       "accountId": "ubs-personal",
       "merchant": "CSS Insurance",
@@ -2844,6 +2868,18 @@
         "cents": -98000,
         "currency": "CHF"
       }
+    },
+    {
+      "id": "t19",
+      "accountId": "ubs-card",
+      "merchant": "Booking.com",
+      "category": "other",
+      "bookedAt": "2026-10-03T12:00:00.000",
+      "amount": {
+        "cents": -42000,
+        "currency": "CHF"
+      },
+      "foreignCurrency": "EUR"
     },
     {
       "id": "t6",

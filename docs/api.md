@@ -36,7 +36,7 @@ A **reference implementation** of this contract lives in [`server/`](../server/R
 | `GET /v1/connections` | `[{institutionId, status, lastSyncedAt}]` |
 | `GET /v1/accounts` | `[{id, institutionId, name, type, balance, maskedIdentifier?, monthlyChange?}]` |
 | `GET /v1/accounts/{id}/analytics` | `{monthlyIncome, monthlySpending, balanceHistory[{month, balance}], cashFlowHistory[{month, income, spending}], recurringPayments[{merchant, category, amount, cadence, nextDueAt}], spendingCategories[{category, amount, color?}]}` |
-| `GET /v1/transactions?accountId=` | `[{id, accountId, merchant, category, bookedAt, amount}]`, newest first. Without `accountId` it returns all accounts. |
+| `GET /v1/transactions?accountId=` | `[{id, accountId, merchant, category, bookedAt, amount, foreignCurrency?}]`, with `amount` in CHF including conversion and `foreignCurrency` the original currency, newest first. Without `accountId` it returns all accounts. |
 | `GET /v1/pillar3a/contributions?year=` | `{amount}` |
 | `GET /v1/tax/{year}` | `{year, asOf, isComplete, pillar3aContributions, accounts[{accountId, closingBalance, income?, interestPaid?}]}` |
 | `POST /v1/refresh` | `204`: asks every provider for fresh data. |

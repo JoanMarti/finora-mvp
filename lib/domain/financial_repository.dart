@@ -1,4 +1,5 @@
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/planning.dart';
 
 /// Read-only access to the user's financial data, independent of the source
 /// (bLink, OpenWealth, manual values or the demo implementation).
@@ -14,6 +15,10 @@ abstract interface class FinancialRepository {
 
   /// Pillar 3a contributions booked in [year] across all providers.
   Future<Money> getPillar3aContributions({required int year});
+
+  /// Year-end balances, income and debt interest for a tax return. For the
+  /// running year the figures are as of today.
+  Future<TaxYearData> getTaxYearData(int year);
 
   /// Asks every connected source for fresh data.
   Future<void> refresh();

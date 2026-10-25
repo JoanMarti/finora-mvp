@@ -57,11 +57,21 @@ class DashboardScreen extends ConsumerWidget {
                     WealthTrajectoryCard(overview: overviewValue),
                   ],
                   const SizedBox(height: 24),
-                  SectionTitle(l10n.wealthPlanSection),
+                  SectionTitle(
+                    l10n.wealthPlanSection,
+                    action: TextButton(
+                      onPressed: () => context.push('/goals'),
+                      child: Text(l10n.editPlan),
+                    ),
+                  ),
                   WealthPlanCard(
                     overview: overviewValue,
                     targets: ref.watch(wealthTargetsProvider),
+                    goals: ref.watch(goalProgressProvider).value ?? const [],
                   ),
+                  const SizedBox(height: 24),
+                  SectionTitle(l10n.planningToolsSection),
+                  const _PlanningTools(),
                   const SizedBox(height: 24),
                   SectionTitle(l10n.ideasSection),
                   PersonalizedInsightsCarousel(
@@ -274,6 +284,67 @@ class _EmptyOverview extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PlanningTools extends ConsumerWidget {
+  const _PlanningTools();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final goals = ref.watch(goalProgressProvider).value ?? const [];
+    final projection = ref.watch(retirementProjectionProvider).value;
+    final lastYear = ref.watch(clockProvider)().year - 1;
+    final tools = [
+      (
+        Icons.flag_outlined,
+        l10n.goalsTitle,
+        goals.isEmpty ? l10n.setFirstGoal : l10n.goalCount(goals.length),
+        '/goals',
+      ),
+      (
+        Icons.beach_access_outlined,
+        l10n.retirementTitle,
+        projection == null
+            ? l10n.retirementToolSubtitle
+            : l10n.retirementToolEstimate(
+                formatMoney(projection.totalMonthly),
+                '${projection.retirementYear}',
+              ),
+        '/retirement',
+      ),
+      (
+        Icons.receipt_long_outlined,
+        l10n.taxTitle,
+        l10n.taxToolSubtitle('$lastYear'),
+        '/tax',
+      ),
+    ];
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          for (var index = 0; index < tools.length; index++) ...[
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: finoraSoftBlue,
+                foregroundColor: finoraBlueText,
+                child: Icon(tools[index].$1, size: 20),
+              ),
+              title: Text(
+                tools[index].$2,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+              subtitle: Text(tools[index].$3),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(tools[index].$4),
+            ),
+            if (index != tools.length - 1) const Divider(height: 1),
+          ],
+        ],
       ),
     );
   }

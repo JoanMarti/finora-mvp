@@ -1,5 +1,6 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -102,4 +103,59 @@ class SimulatorNote extends StatelessWidget {
       style: const TextStyle(color: finoraMutedInk, fontSize: 12, height: 1.4),
     ),
   );
+}
+
+/// Page frame for simulators. Phones show the result first, then the
+/// inputs and details in one column. Wide screens keep the inputs on the
+/// left and the result beside them, so every change is visible at once.
+class SimulatorLayout extends StatelessWidget {
+  const SimulatorLayout({
+    required this.summary,
+    required this.inputs,
+    required this.details,
+    super.key,
+  });
+
+  final List<Widget> summary;
+  final List<Widget> inputs;
+  final List<Widget> details;
+
+  static const wideWidth = 960.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < wideWidth) {
+          return FinoraPage(
+            child: ListView(children: [...summary, ...inputs, ...details]),
+          );
+        }
+        return FinoraPage(
+          maxWidth: 1120,
+          padding: const EdgeInsets.fromLTRB(28, 16, 28, 0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 5,
+                child: ListView(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  children: inputs,
+                ),
+              ),
+              const SizedBox(width: 28),
+              Expanded(
+                flex: 4,
+                child: ListView(
+                  padding: const EdgeInsets.only(top: 16, bottom: 32),
+                  children: [...summary, ...details],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

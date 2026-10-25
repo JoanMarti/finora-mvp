@@ -785,4 +785,29 @@ const _transactionTemplates = <_TransactionTemplate>[
     -42000,
     foreignCurrency: 'EUR',
   ),
+  // A monthly bill that went up, for the price-change alerts.
+  _TransactionTemplate(
+    't20',
+    'zkb-private',
+    'Swisscom',
+    TransactionCategory.utilities,
+    39,
+    -8490,
+  ),
+  _TransactionTemplate(
+    't21',
+    'ubs-card',
+    'Spotify',
+    TransactionCategory.shopping,
+    7,
+    -1295,
+  ),
+  _TransactionTemplate(
+    't22',
+    'ubs-card',
+    'Spotify',
+    TransactionCategory.shopping,
+    37,
+    -1195,
+  ),
 ];

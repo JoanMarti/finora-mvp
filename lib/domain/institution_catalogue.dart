@@ -4,7 +4,14 @@ import 'package:finora/domain/models.dart';
 /// names, brand colours and connection methods across onboarding, connection
 /// and account screens.
 abstract final class InstitutionCatalogue {
-  static const all = <Institution>[
+  /// Shows made-up institutions instead of the real ones. Used for the
+  /// store screenshots, so the listing does not suggest an affiliation with
+  /// any bank. Ids, products and connection methods stay the same.
+  static bool neutralNames = false;
+
+  static List<Institution> get all => neutralNames ? _neutral : _real;
+
+  static const _real = <Institution>[
     Institution(
       id: 'ubs',
       name: 'UBS',
@@ -100,6 +107,33 @@ abstract final class InstitutionCatalogue {
       connectionMethod: ConnectionMethod.manual,
       productTypes: {FinancialProductType.pillar3a},
     ),
+  ];
+
+  /// Fictional name, short name and colour for each institution.
+  static const _neutralLook = <String, (String, String, int)>{
+    'ubs': ('Alpenrose Bank', 'AR', 0xFF027DB9),
+    'zkb': ('Lakeside Bank', 'LB', 0xFF2E8B57),
+    'postfinance': ('Riverside Bank', 'RB', 0xFFB58A00),
+    'raiffeisen': ('Valley Cooperative Bank', 'VC', 0xFF6B4E9B),
+    'swissquote': ('Summit Invest', 'SI', 0xFFE07A2F),
+    'julius-baer': ('Harbour Private Bank', 'HP', 0xFF0D2240),
+    'pictet': ('Meridian Wealth', 'MW', 0xFF5B2333),
+    'frankly': ('Pinewood 3a', 'PW', 0xFF1F5C4A),
+    'viac': ('Cedar 3a', 'CE', 0xFF3D7A5C),
+    'finpension': ('Aspen 3a', 'AS', 0xFF3D3D8F),
+  };
+
+  static final _neutral = <Institution>[
+    for (final institution in _real)
+      Institution(
+        id: institution.id,
+        name: _neutralLook[institution.id]?.$1 ?? institution.name,
+        shortName: _neutralLook[institution.id]?.$2 ?? institution.shortName,
+        colorValue:
+            _neutralLook[institution.id]?.$3 ?? institution.colorValue,
+        connectionMethod: institution.connectionMethod,
+        productTypes: institution.productTypes,
+      ),
   ];
 
   /// Institutions used when someone skips onboarding with demo data.

@@ -246,7 +246,7 @@ class _SavingsBars extends StatelessWidget {
         .fold<int>(1, (a, b) => a > b ? a : b);
     final label = DateFormat('MMMMM', context.l10n.localeName);
     return SizedBox(
-      height: height + 20,
+      height: height + 34,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [

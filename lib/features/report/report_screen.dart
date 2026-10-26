@@ -5,6 +5,7 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/application/report.dart';
 import 'package:finora/domain/report.dart';
 import 'package:finora/features/calendar/calendar_screen.dart';
+import 'package:finora/features/report/annual_report_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -86,6 +87,8 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                     )
                   else
                     _ReportBody(report: report),
+                  const SizedBox(height: 16),
+                  const AnnualReportLinkCard(),
                 ],
               ),
       ),

@@ -329,6 +329,7 @@ class PlanCards extends StatelessWidget {
             '${l10n.limitMonths(FreeLimits.premiumHistoryMonths)}',
         '${l10n.featureGoals}: ${l10n.limitUnlimited}',
         l10n.featurePriceAlerts,
+        l10n.featureAnnualReport,
         l10n.featureScenarios,
         l10n.featureHousehold,
         l10n.featureTaxExport,
@@ -523,6 +524,7 @@ class PlanComparisonTable extends StatelessWidget {
       (l10n.featureCalendar, '', ''),
       (l10n.featureSimulators, '', ''),
       (l10n.featurePriceAlerts, null, ''),
+      (l10n.featureAnnualReport, null, ''),
       (l10n.featureScenarios, null, ''),
       (l10n.featureHousehold, null, ''),
       (l10n.featureTaxExport, null, ''),
@@ -612,11 +614,6 @@ class _RoadmapCard extends StatelessWidget {
     final l10n = context.l10n;
     final items = [
       (Icons.folder_outlined, l10n.roadmapVaultTitle, l10n.roadmapVaultBody),
-      (
-        Icons.picture_as_pdf_outlined,
-        l10n.roadmapReportTitle,
-        l10n.roadmapReportBody,
-      ),
       (Icons.forum_outlined, l10n.roadmapCoachTitle, l10n.roadmapCoachBody),
       (
         Icons.support_agent,

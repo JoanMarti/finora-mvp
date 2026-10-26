@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/annual_report.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

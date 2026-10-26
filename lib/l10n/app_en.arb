@@ -2805,5 +2805,84 @@
   "biometricEnableReason": "Confirm to turn on fingerprint or face unlock",
   "biometricButton": "Use fingerprint or face",
   "biometricOn": "Fingerprint or face unlock is on.",
-  "biometricNotRecognised": "Not recognised. Enter your PIN."
+  "biometricNotRecognised": "Not recognised. Enter your PIN.",
+  "annualReportTitle": "Annual report",
+  "annualReportHeading": "Your year in Finora",
+  "annualReportRange": "{start} – {end}",
+  "@annualReportRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "annualReportNetWorthEnd": "Net worth at the end",
+  "annualReportMonthsSection": "Saved each month",
+  "annualReportBestMonth": "Best month: {month} ({amount} saved).",
+  "@annualReportBestMonth": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "annualReportToughestMonth": "Toughest month: {month} ({amount}).",
+  "@annualReportToughestMonth": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "annualReportBillsSection": "Your biggest bills per year",
+  "annualReportBillsTotal": "All recurring bills: {amount} a year.",
+  "@annualReportBillsTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "annualReportPriceIncreases": "Price increases add {amount} a year.",
+  "@annualReportPriceIncreases": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "annualReportDownload": "Download PDF",
+  "annualReportPdfFailed": "The PDF could not be created. Please try again.",
+  "annualReportEmpty": "The annual report appears once three full months of data are available.",
+  "annualReportLockedTitle": "Your year in one PDF",
+  "annualReportLockedBody": "With Premium: income, spending, savings and net worth over the last 12 months, your biggest bills and price increases, as a PDF to keep or share with an adviser.",
+  "annualReportCardBody": "The last 12 months in one PDF.",
+  "annualReportSavedColumn": "Saved",
+  "annualReportMonthColumn": "Month",
+  "annualReportPreparedFor": "Prepared for {name}",
+  "@annualReportPreparedFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "annualReportPdfFooter": "Created with Finora on {date}. Information, not financial advice.",
+  "@annualReportPdfFooter": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "featureAnnualReport": "Annual PDF report"
 }

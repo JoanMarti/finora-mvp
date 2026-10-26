@@ -134,7 +134,7 @@
     {
       "id": "ubs-invest",
       "institutionId": "ubs",
-      "name": "Manage portfolio",
+      "name": "Managed portfolio",
       "type": "investments",
       "balance": {
         "cents": 1560000,
@@ -149,7 +149,7 @@
     {
       "id": "ubs-3a",
       "institutionId": "ubs",
-      "name": "Vitainvest 3a",
+      "name": "Fund 3a",
       "type": "pillar3a",
       "balance": {
         "cents": 1520000,
@@ -2861,7 +2861,7 @@
     {
       "id": "t12",
       "accountId": "zkb-private",
-      "merchant": "Transfer from UBS",
+      "merchant": "Transfer from savings",
       "category": "income",
       "bookedAt": "2026-10-08T12:00:00.000",
       "amount": {

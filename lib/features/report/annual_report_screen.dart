@@ -1,6 +1,8 @@
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/annual_report.dart';
+import 'package:finora/application/offers.dart';
 import 'package:finora/application/providers.dart';
+import 'package:finora/application/session_controller.dart';
 import 'package:finora/domain/annual_report.dart';
 import 'package:finora/features/plus/plus_screen.dart';
 import 'package:finora/features/report/annual_report_pdf.dart';

@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:finora/app/app.dart';
 import 'package:finora/app/router.dart';
+import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/trust.dart';
 import 'package:finora/domain/user_session.dart';
 import 'package:flutter/rendering.dart';
@@ -206,7 +207,9 @@ void main() {
     );
   }, skip: !_enabled);
 
-  // Google Play phone screenshots: 1080×1920 (9:16), English and German.
+  // Google Play phone screenshots: 1080×1920 (9:16), in the four store
+  // languages. They show made-up banks, so the listing does not suggest an
+  // affiliation with any real institution.
   const storeScreens = {
     '1_overview': null,
     '2_analysis': '/analysis',
@@ -215,7 +218,7 @@ void main() {
     '5_home': '/home-buying',
     '6_plans': '/plus',
   };
-  for (final locale in ['en-US', 'de-DE']) {
+  for (final locale in ['en-US', 'de-DE', 'fr-FR', 'it-IT']) {
     final storeSession = UserSession.demo().copyWith(
       languageCode: locale.substring(0, 2),
       offersConsent: true,
@@ -223,6 +226,8 @@ void main() {
     );
     for (final entry in storeScreens.entries) {
       testWidgets('store $locale ${entry.key}', (tester) async {
+        InstitutionCatalogue.neutralNames = true;
+        addTearDown(() => InstitutionCatalogue.neutralNames = false);
         await capture(
           tester,
           entry.key,

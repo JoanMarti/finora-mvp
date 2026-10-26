@@ -481,7 +481,7 @@ const _accountTemplates = <_AccountTemplate>[
   _AccountTemplate(
     id: 'ubs-invest',
     institutionId: 'ubs',
-    name: 'Manage portfolio',
+    name: 'Managed portfolio',
     type: FinancialProductType.investments,
     balanceCents: 1560000,
     maskedIdentifier: 'Mandate 2210',
@@ -490,7 +490,7 @@ const _accountTemplates = <_AccountTemplate>[
   _AccountTemplate(
     id: 'ubs-3a',
     institutionId: 'ubs',
-    name: 'Vitainvest 3a',
+    name: 'Fund 3a',
     type: FinancialProductType.pillar3a,
     balanceCents: 1520000,
     maskedIdentifier: '3a •••• 0918',
@@ -720,7 +720,7 @@ const _transactionTemplates = <_TransactionTemplate>[
   _TransactionTemplate(
     't12',
     'zkb-private',
-    'Transfer from UBS',
+    'Transfer from savings',
     TransactionCategory.income,
     15,
     250000,

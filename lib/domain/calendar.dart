@@ -114,7 +114,7 @@ abstract final class FinancialCalendar {
           kind: CalendarEventKind.healthInsuranceSwitch,
           date: next(11, 30),
           subject: healthBill.merchant,
-          route: '/offers',
+          route: '/health-insurance',
         ),
       );
     }

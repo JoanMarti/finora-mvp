@@ -572,6 +572,12 @@ class _PlanningTools extends ConsumerWidget {
         '/tax-savings',
       ),
       (
+        Icons.health_and_safety_outlined,
+        l10n.healthInsTitle,
+        l10n.healthInsToolSubtitle,
+        '/health-insurance',
+      ),
+      (
         Icons.house_outlined,
         l10n.homeTitle,
         l10n.homeToolSubtitle,

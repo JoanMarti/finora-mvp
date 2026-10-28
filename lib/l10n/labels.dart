@@ -5,6 +5,7 @@ import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/report.dart';
+import 'package:finora/domain/tax_documents.dart';
 import 'package:finora/l10n/generated/app_localizations.dart';
 import 'package:finora/shared/formatters.dart';
 import 'package:intl/intl.dart';
@@ -441,5 +442,35 @@ extension ProfileLabels on AppLocalizations {
     Interest.payOffDebt => interestPayOffDebt,
     Interest.family => interestFamily,
     Interest.travel => interestTravel,
+  };
+
+  /// Title of a tax paper; [institution] names the bank it comes from.
+  String taxDocumentTitle(TaxDocument document, String institution) =>
+      switch (document.kind) {
+        TaxDocumentKind.salaryCertificate => taxDocSalaryTitle,
+        TaxDocumentKind.selfEmployedAccounts => taxDocSelfEmployedTitle,
+        TaxDocumentKind.pensionCertificate => taxDocPensionTitle,
+        TaxDocumentKind.bankStatement => taxDocBankTitle(institution),
+        TaxDocumentKind.pillar3aCertificate => taxDoc3aTitle(institution),
+        TaxDocumentKind.mortgageInterest => taxDocMortgageTitle(institution),
+        TaxDocumentKind.propertyCosts => taxDocPropertyTitle,
+        TaxDocumentKind.loanInterest => taxDocLoanTitle,
+        TaxDocumentKind.healthInsurance => taxDocHealthTitle,
+        TaxDocumentKind.childcareCosts => taxDocChildcareTitle,
+        TaxDocumentKind.donations => taxDocDonationsTitle,
+      };
+
+  String taxDocumentHint(TaxDocumentKind kind) => switch (kind) {
+    TaxDocumentKind.salaryCertificate => taxDocSalaryHint,
+    TaxDocumentKind.selfEmployedAccounts => taxDocSelfEmployedHint,
+    TaxDocumentKind.pensionCertificate => taxDocPensionHint,
+    TaxDocumentKind.bankStatement => taxDocBankHint,
+    TaxDocumentKind.pillar3aCertificate => taxDoc3aHint,
+    TaxDocumentKind.mortgageInterest => taxDocMortgageHint,
+    TaxDocumentKind.propertyCosts => taxDocPropertyHint,
+    TaxDocumentKind.loanInterest => taxDocLoanHint,
+    TaxDocumentKind.healthInsurance => taxDocHealthHint,
+    TaxDocumentKind.childcareCosts => taxDocChildcareHint,
+    TaxDocumentKind.donations => taxDocDonationsHint,
   };
 }

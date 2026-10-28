@@ -2972,5 +2972,65 @@
   "taxDocChildcareTitle": "Childcare receipts",
   "taxDocChildcareHint": "Daycare and childminder costs are deductible up to a cantonal limit.",
   "taxDocDonationsTitle": "Donation receipts",
-  "taxDocDonationsHint": "Donations to recognised charities are deductible."
+  "taxDocDonationsHint": "Donations to recognised charities are deductible.",
+  "healthInsTitle": "Health insurance deductible",
+  "healthInsBest": "Best deductible for you",
+  "healthInsSaving": "Saves about {amount} a year compared with now",
+  "@healthInsSaving": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "healthInsAlreadyBest": "Your current deductible already fits your expected costs.",
+  "healthInsWorstCase": "In a bad year at most {amount}",
+  "@healthInsWorstCase": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "healthInsPremiumLabel": "Monthly premium today",
+  "healthInsPremiumFromBills": "Taken from your {merchant} payments.",
+  "@healthInsPremiumFromBills": {
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "healthInsCurrentSection": "Your deductible today",
+  "healthInsCostsLabel": "Expected medical costs per year",
+  "healthInsCostsHelp": "Doctor, medicines, therapy and hospital in a normal year.",
+  "healthInsTableSection": "Cost per year by deductible",
+  "healthInsOptionLine": "Premium {premium} + your share {share}",
+  "@healthInsOptionLine": {
+    "placeholders": {
+      "premium": {
+        "type": "String"
+      },
+      "share": {
+        "type": "String"
+      }
+    }
+  },
+  "healthInsCurrentTag": "Today",
+  "healthInsBestTag": "Best",
+  "healthInsDeadline": "To change your deductible or insurer for {year}, your letter must reach the insurer by {date}.",
+  "@healthInsDeadline": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "healthInsDisclaimer": "Estimate with the largest discount the law allows (70% of the extra risk); your insurer may give less. Compare the official premiums on priminfo.admin.ch.",
+  "healthInsCompare": "Compare health insurers",
+  "healthInsAdultsOnly": "For adults; children have deductibles from CHF 0 to 600.",
+  "healthInsToolSubtitle": "Find the deductible that costs least"
 }

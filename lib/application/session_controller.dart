@@ -313,6 +313,17 @@ class SessionController extends Notifier<UserSession> {
   void setBudgets(Map<TransactionCategory, Money> budgets) =>
       _update(state.copyWith(budgets: {...state.budgets, ...budgets}));
 
+  /// Marks a tax paper as collected or not (`<tax year>:<document id>`).
+  void setTaxDocumentReady(String key, {required bool ready}) {
+    final next = {...state.taxDocumentsReady};
+    if (ready) {
+      next.add(key);
+    } else {
+      next.remove(key);
+    }
+    _update(state.copyWith(taxDocumentsReady: next));
+  }
+
   /// Records the user's decision for a subscription; `null` clears it.
   void decideSubscription(String merchant, SubscriptionDecision? decision) {
     final next = {...state.subscriptionDecisions};

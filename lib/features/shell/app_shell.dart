@@ -129,6 +129,12 @@ final sidebarNavGroups = [
       Icons.description,
       (l10n) => l10n.navTax,
     ),
+    NavItem(
+      '/tax-documents',
+      Icons.fact_check_outlined,
+      Icons.fact_check,
+      (l10n) => l10n.taxDocsTitle,
+    ),
   ]),
   NavGroup((l10n) => l10n.navGroupSave, [
     _offers,

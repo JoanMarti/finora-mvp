@@ -27,6 +27,7 @@ import 'package:finora/features/profile/about_you_screen.dart';
 import 'package:finora/features/profile/profile_screen.dart';
 import 'package:finora/features/report/annual_report_screen.dart';
 import 'package:finora/features/report/report_screen.dart';
+import 'package:finora/features/tax_documents/tax_documents_screen.dart';
 import 'package:finora/features/simulators/home_buying_screen.dart';
 import 'package:finora/features/simulators/tax_savings_screen.dart';
 import 'package:finora/features/shell/app_shell.dart';
@@ -92,6 +93,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/health', builder: (_, _) => const HealthScreen()),
           GoRoute(path: '/budgets', builder: (_, _) => const BudgetsScreen()),
           GoRoute(path: '/report', builder: (_, _) => const ReportScreen()),
+          GoRoute(
+            path: '/tax-documents',
+            builder: (_, _) => const TaxDocumentsScreen(),
+          ),
           GoRoute(
             path: '/annual-report',
             builder: (_, _) => const AnnualReportScreen(),

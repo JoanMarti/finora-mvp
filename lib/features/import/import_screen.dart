@@ -126,6 +126,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               initialValue: _institutionId,
+              isExpanded: true,
               decoration: InputDecoration(labelText: l10n.importBankLabel),
               items: [
                 for (final bank in banks)

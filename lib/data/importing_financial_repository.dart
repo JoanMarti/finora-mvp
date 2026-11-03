@@ -10,14 +10,16 @@ import 'package:finora/domain/planning.dart';
 class ImportingFinancialRepository implements FinancialRepository {
   ImportingFinancialRepository(
     this._base, {
-    required List<ImportedAccount> imported,
-    DateTime Function() clock = DateTime.now,
-  }) : _imported = imported,
-       _clock = clock;
+    required this.imported,
+    this.clock = DateTime.now,
+  });
 
   final FinancialRepository _base;
-  final List<ImportedAccount> _imported;
-  final DateTime Function() _clock;
+  final List<ImportedAccount> imported;
+  final DateTime Function() clock;
+
+  List<ImportedAccount> get _imported => imported;
+  DateTime _clock() => clock();
 
   Set<String> get _importedInstitutions => {
     for (final account in _imported) account.institutionId,

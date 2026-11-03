@@ -89,7 +89,7 @@ The texts can be uploaded by hand or with `fastlane supply` (`fastlane supply --
 
 - **Premium purchases:** ✅ Google Play Billing is built in (sprint 29). Build store versions with `--dart-define=FINORA_PURCHASES=play` and create the subscription in Play Console (section 8).
 - **Legal texts:** operator name and address, full terms of use, and a lawyer's review of the privacy policy, the consent texts (nLPD) and the offers model (LSFin; FINMA registration if Finora is paid directly by insurers).
-- **Bank data:** connect bLink and OpenWealth through the backend, or keep the early-access label and the demo data clearly marked.
+- **Bank data:** connect bLink and OpenWealth through the backend, or keep the early-access label and the demo data clearly marked. Until then, users can import the CSV export of their e-banking (Accounts → Import statement); the bookings stay on the device.
 - **Translations:** a native review of the DE, FR and IT app and store texts.
 - **Bank names in the demo:** ✅ the store screenshots show made-up institutions (`InstitutionCatalogue.neutralNames`). The app itself still lists the real banks you can connect, and its demo data uses them; before production, decide whether the demo should switch to the neutral names as well.
 

@@ -5,6 +5,7 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/planning.dart';
+import 'package:finora/features/tax_documents/tax_documents_screen.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
@@ -90,6 +91,8 @@ class _TaxSummaryScreenState extends ConsumerState<TaxSummaryScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            const TaxDocumentsLinkCard(),
+            const SizedBox(height: 12),
             summary.when(
               loading: () => const Padding(
                 padding: EdgeInsets.all(32),

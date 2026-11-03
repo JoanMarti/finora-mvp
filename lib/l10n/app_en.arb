@@ -2884,5 +2884,93 @@
       }
     }
   },
-  "featureAnnualReport": "Annual PDF report"
+  "featureAnnualReport": "Annual PDF report",
+  "taxDocsTitle": "Tax documents",
+  "taxDocsHeading": "Papers for your {year} tax return",
+  "@taxDocsHeading": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "taxDocsProgress": "{ready} of {total} ready",
+  "@taxDocsProgress": {
+    "placeholders": {
+      "ready": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "taxDocsDeadline": "Due {date} in most cantons; an extension is usually possible.",
+  "@taxDocsDeadline": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "taxDocsIntro": "Most papers arrive in January and February. Tick them off as they come in.",
+  "taxDocsOptional": "If it applies",
+  "taxDocsAllReady": "Everything is ready for your tax return.",
+  "taxDocsCardBody": "{ready} of {total} papers ready for your {year} return",
+  "@taxDocsCardBody": {
+    "placeholders": {
+      "ready": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "taxDocSalaryTitle": "Salary certificate",
+  "taxDocSalaryHint": "From your employer, usually in January.",
+  "taxDocSelfEmployedTitle": "Annual accounts",
+  "taxDocSelfEmployedHint": "Income statement and balance sheet of your business, with AHV contributions.",
+  "taxDocPensionTitle": "Pension fund statement",
+  "taxDocPensionHint": "Shows your buy-ins; they are fully deductible.",
+  "taxDocBankTitle": "Tax statement from {institution}",
+  "@taxDocBankTitle": {
+    "placeholders": {
+      "institution": {
+        "type": "String"
+      }
+    }
+  },
+  "taxDocBankHint": "Balances and interest on 31 December, for the wealth tax.",
+  "taxDoc3aTitle": "Pillar 3a certificate from {institution}",
+  "@taxDoc3aTitle": {
+    "placeholders": {
+      "institution": {
+        "type": "String"
+      }
+    }
+  },
+  "taxDoc3aHint": "Your contributions are deducted from taxable income.",
+  "taxDocMortgageTitle": "Mortgage interest statement from {institution}",
+  "@taxDocMortgageTitle": {
+    "placeholders": {
+      "institution": {
+        "type": "String"
+      }
+    }
+  },
+  "taxDocMortgageHint": "Mortgage interest is deductible.",
+  "taxDocPropertyTitle": "Property maintenance receipts",
+  "taxDocPropertyHint": "Or use the flat-rate deduction when it is higher.",
+  "taxDocLoanTitle": "Interest statement for your loans",
+  "taxDocLoanHint": "Interest on private debts can be deducted.",
+  "taxDocHealthTitle": "Health insurance premium statement",
+  "taxDocHealthHint": "Premiums and costs you paid yourself, including your deductible.",
+  "taxDocChildcareTitle": "Childcare receipts",
+  "taxDocChildcareHint": "Daycare and childminder costs are deductible up to a cantonal limit.",
+  "taxDocDonationsTitle": "Donation receipts",
+  "taxDocDonationsHint": "Donations to recognised charities are deductible."
 }

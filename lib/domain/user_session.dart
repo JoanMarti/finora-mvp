@@ -38,6 +38,7 @@ class UserSession {
     this.reminders = const ReminderPreferences(),
     this.budgets = const {},
     this.subscriptionDecisions = const {},
+    this.taxDocumentsReady = const {},
     this.debts,
     this.debtPayment,
     this.payoffStrategy = PayoffStrategy.avalanche,
@@ -142,6 +143,9 @@ class UserSession {
   /// The user's decision per subscription, keyed by merchant.
   final Map<String, SubscriptionDecision> subscriptionDecisions;
 
+  /// Tax papers the user has collected, as `<tax year>:<document id>`.
+  final Set<String> taxDocumentsReady;
+
   /// Debts in the payoff plan; `null` until the plan is first opened, when
   /// it starts from the connected credit cards.
   final List<Debt>? debts;
@@ -240,6 +244,7 @@ class UserSession {
     ReminderPreferences? reminders,
     Map<TransactionCategory, Money>? budgets,
     Map<String, SubscriptionDecision>? subscriptionDecisions,
+    Set<String>? taxDocumentsReady,
     List<Debt>? debts,
     Money? debtPayment,
     PayoffStrategy? payoffStrategy,
@@ -285,6 +290,7 @@ class UserSession {
       budgets: budgets ?? this.budgets,
       subscriptionDecisions:
           subscriptionDecisions ?? this.subscriptionDecisions,
+      taxDocumentsReady: taxDocumentsReady ?? this.taxDocumentsReady,
       debts: debts ?? this.debts,
       debtPayment: debtPayment ?? this.debtPayment,
       payoffStrategy: payoffStrategy ?? this.payoffStrategy,
@@ -335,6 +341,7 @@ class UserSession {
       for (final entry in subscriptionDecisions.entries)
         entry.key: entry.value.name,
     },
+    'taxDocumentsReady': taxDocumentsReady.toList(),
     'debts': debts == null ? null : [for (final debt in debts!) debt.toJson()],
     'debtPayment': debtPayment?.cents,
     'payoffStrategy': payoffStrategy.name,
@@ -411,6 +418,9 @@ class UserSession {
           for (final entry in raw.entries)
             for (final decision in SubscriptionDecision.values)
               if (decision.name == entry.value) '${entry.key}': decision,
+      },
+      taxDocumentsReady: {
+        ...?(json['taxDocumentsReady'] as List?)?.whereType<String>(),
       },
       debts: json['debts'] is List
           ? [

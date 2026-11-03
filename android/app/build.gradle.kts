@@ -30,6 +30,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // flutter_local_notifications uses java.time on older Android.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
@@ -85,4 +87,5 @@ dependencies {
     // AppCompat themes keep the biometric prompt (local_auth) from crashing
     // on Android 8 and below.
     implementation("androidx.appcompat:appcompat:1.7.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

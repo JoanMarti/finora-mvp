@@ -1,1 +1,1 @@
-Prima versione in accesso anticipato: panoramica, analisi, obiettivi, simulatori, calendario finanziario, suggerimenti di risparmio e registrazione.
+Accesso anticipato: panoramica, analisi, obiettivi, budget e simulatori. Novità: importa l'estratto CSV della tua banca per vedere i tuoi dati reali, verifica della franchigia della cassa malati, lista dei documenti fiscali, rapporto annuale in PDF e avvisi di aumento prezzi (Premium), promemoria come notifiche e sblocco con impronta.

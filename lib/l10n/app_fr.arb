@@ -1200,5 +1200,7 @@
   "importProblemHeader": "Aucun en-tête de colonne trouvé. Exportez le relevé en CSV, pas en PDF.",
   "importProblemDate": "Aucune colonne de date trouvée.",
   "importProblemAmount": "Aucune colonne de montant trouvée.",
-  "importProblemRows": "Aucune écriture trouvée dans le fichier."
+  "importProblemRows": "Aucune écriture trouvée dans le fichier.",
+  "reminderChannelName": "Rappels",
+  "reminderChannelDescription": "Échéances de vos finances, une semaine avant"
 }

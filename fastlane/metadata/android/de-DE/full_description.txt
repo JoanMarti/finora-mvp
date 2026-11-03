@@ -1,7 +1,7 @@
 Finora bringt Ihre Schweizer Finanzen in eine klare Übersicht: Konten, Sparen, Anlagen, Säule 3a, Hypothek und die Rechnungen, die jeden Monat wiederkommen. Nur lesend: Finora bewegt nie Geld und fragt nie nach Ihrem E-Banking-Passwort.
 
 EARLY ACCESS
-Diese erste Version ist eine Vorschau. Bankverbindungen laufen mit erzeugten Demodaten, während die Anbindung über bLink und OpenWealth fertiggestellt wird. Alles andere funktioniert mit Ihren eigenen Zahlen: Ziele, Budgets, Vermögenswerte, Simulatoren und Finanzkalender.
+Diese erste Version ist eine Vorschau. Bankverbindungen laufen mit erzeugten Demodaten, während die Anbindung über bLink und OpenWealth fertiggestellt wird. Alles andere funktioniert mit Ihren eigenen Zahlen: Ziele, Budgets, Vermögenswerte, Simulatoren und Finanzkalender. Den CSV-Kontoauszug aus Ihrem E-Banking können Sie schon jetzt importieren, um Ihre echten Zahlen zu sehen; er bleibt auf Ihrem Telefon.
 
 ALLES AUF EINEN BLICK
 • Nettovermögen und Verlauf über alle Banken

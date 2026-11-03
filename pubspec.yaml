@@ -43,12 +43,14 @@ dependencies:
   in_app_purchase: ^3.2.0
   local_auth: ^3.0.0
   file_selector: ^1.0.3
+  flutter_local_notifications: ^19.4.0
   pdf: ^3.11.0
   printing: ^5.13.0
   in_app_purchase_android: any
   http: ^1.2.0
   intl: any # version is pinned by flutter_localizations
   shared_preferences: ^2.3.0
+  timezone: ^0.10.0
 
 # image 4.11.0 (used by pdf/printing) calls an archive API that the
 # newest archive release on pub.dev lacks; stay on 4.10 until they match.

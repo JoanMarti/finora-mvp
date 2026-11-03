@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Labels of the launcher shortcuts (long press on the app icon). -->
+<resources>
+    <string name="shortcut_import_short">Import</string>
+    <string name="shortcut_import_long">Import a bank statement</string>
+    <string name="shortcut_health_short">Deductible</string>
+    <string name="shortcut_health_long">Health insurance deductible</string>
+    <string name="shortcut_tax_short">Tax papers</string>
+    <string name="shortcut_tax_long">Tax documents checklist</string>
+</resources>

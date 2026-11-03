@@ -1,7 +1,7 @@
 Finora réunit vos finances suisses dans une vue claire : comptes, épargne, placements, pilier 3a, hypothèque et factures qui reviennent chaque mois. En lecture seule : Finora ne déplace jamais d'argent et ne demande jamais votre mot de passe e-banking.
 
 ACCÈS ANTICIPÉ
-Cette première version est un aperçu. Les connexions bancaires utilisent des données de démonstration pendant que les connexions bLink et OpenWealth sont finalisées. Tout le reste fonctionne avec vos propres chiffres : objectifs, budgets, actifs, simulateurs et calendrier financier.
+Cette première version est un aperçu. Les connexions bancaires utilisent des données de démonstration pendant que les connexions bLink et OpenWealth sont finalisées. Tout le reste fonctionne avec vos propres chiffres : objectifs, budgets, actifs, simulateurs et calendrier financier. Vous pouvez déjà importer le relevé CSV de votre e-banking pour voir vos vrais chiffres ; il reste sur votre téléphone.
 
 TOUT EN UN COUP D'ŒIL
 • Patrimoine net et évolution sur toutes vos banques

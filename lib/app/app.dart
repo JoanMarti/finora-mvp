@@ -1,6 +1,7 @@
 import 'package:finora/app/router.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/backend.dart';
+import 'package:finora/application/local_reminders.dart';
 import 'package:finora/application/session_controller.dart';
 import 'package:finora/features/lock/lock_screen.dart';
 import 'package:finora/l10n/l10n.dart';
@@ -21,6 +22,10 @@ class FinoraApp extends ConsumerWidget {
     ref.watch(backendSyncProvider);
     // Store builds confirm the Premium subscription with Google Play.
     ref.watch(billingSyncProvider);
+    // Android shows the calendar reminders as local notifications.
+    ref
+      ..watch(localReminderSyncProvider)
+      ..watch(reminderNavigationProvider);
     final hideAmounts = ref.watch(
       sessionProvider.select((session) => session.hideAmounts),
     );

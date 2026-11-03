@@ -1200,5 +1200,7 @@
   "importProblemHeader": "Nessuna intestazione di colonna trovata. Esporta l’estratto in CSV, non in PDF.",
   "importProblemDate": "Nessuna colonna di data trovata.",
   "importProblemAmount": "Nessuna colonna di importo trovata.",
-  "importProblemRows": "Nessun movimento trovato nel file."
+  "importProblemRows": "Nessun movimento trovato nel file.",
+  "reminderChannelName": "Promemoria",
+  "reminderChannelDescription": "Scadenze delle tue finanze, una settimana prima"
 }

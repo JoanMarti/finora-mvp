@@ -1,7 +1,7 @@
 Finora brings your Swiss finances together in one clear view: accounts, savings, investments, Pillar 3a, mortgage and the bills that come back every month. Read-only by design: Finora never moves money and never asks for your e-banking password.
 
 EARLY ACCESS
-This first version is an early-access preview. Bank connections run with generated demo data while the bLink and OpenWealth connections are being finished. Everything else works with your own figures: goals, budgets, assets, the simulators and the financial calendar.
+This first version is an early-access preview. Bank connections run with generated demo data while the bLink and OpenWealth connections are being finished. You can already import the CSV statement from your e-banking to see your real figures; it stays on your phone. Everything else works with your own figures: goals, budgets, assets, the simulators and the financial calendar.
 
 SEE EVERYTHING AT ONCE
 • Net worth and its trend across all banks
@@ -13,7 +13,8 @@ PLAN AHEAD
 • Retirement outlook across AHV/AVS, pension fund and Pillar 3a
 • "Can I buy a home?" with the rules Swiss banks apply
 • Tax savings from Pillar 3a and pension fund buy-ins
-• Financial calendar: health insurance switch by 30 November, Pillar 3a by 31 December, tax return
+• Financial calendar: health insurance switch by 30 November, Pillar 3a by 31 December, tax return — with reminders as notifications
+• Health insurance deductible check and a checklist of your tax documents
 
 SAVE MONEY
 • Clear hints next to the bill or account they are about: health and household insurance, mobile plans, savings interest, Pillar 3a fees

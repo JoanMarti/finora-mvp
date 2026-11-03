@@ -1,7 +1,7 @@
 Finora riunisce le tue finanze svizzere in una vista chiara: conti, risparmi, investimenti, pilastro 3a, ipoteca e le fatture che tornano ogni mese. In sola lettura: Finora non sposta mai denaro e non chiede mai la password dell'e-banking.
 
 ACCESSO ANTICIPATO
-Questa prima versione è un'anteprima. I collegamenti bancari usano dati dimostrativi mentre si completano i collegamenti bLink e OpenWealth. Tutto il resto funziona con i tuoi numeri: obiettivi, budget, beni, simulatori e calendario finanziario.
+Questa prima versione è un'anteprima. I collegamenti bancari usano dati dimostrativi mentre si completano i collegamenti bLink e OpenWealth. Tutto il resto funziona con i tuoi numeri: obiettivi, budget, beni, simulatori e calendario finanziario. Puoi già importare l'estratto CSV del tuo e-banking per vedere i tuoi dati reali; resta sul tuo telefono.
 
 TUTTO A COLPO D'OCCHIO
 • Patrimonio netto e andamento su tutte le banche

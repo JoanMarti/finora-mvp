@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher shortcuts. Flutter passes the path of the link (/import, …)
+     to the router as the starting page; sign-in and the app lock still
+     apply. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="import"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_import"
+        android:shortcutShortLabel="@string/shortcut_import_short"
+        android:shortcutLongLabel="@string/shortcut_import_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ch.finora.app"
+            android:targetClass="ch.finora.finora.MainActivity"
+            android:data="finora://app/import" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="health"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_health"
+        android:shortcutShortLabel="@string/shortcut_health_short"
+        android:shortcutLongLabel="@string/shortcut_health_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ch.finora.app"
+            android:targetClass="ch.finora.finora.MainActivity"
+            android:data="finora://app/health-insurance" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="tax"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_tax"
+        android:shortcutShortLabel="@string/shortcut_tax_short"
+        android:shortcutLongLabel="@string/shortcut_tax_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ch.finora.app"
+            android:targetClass="ch.finora.finora.MainActivity"
+            android:data="finora://app/tax-documents" />
+    </shortcut>
+</shortcuts>

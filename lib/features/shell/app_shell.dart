@@ -90,6 +90,12 @@ final sidebarNavGroups = [
       Icons.insert_chart,
       (l10n) => l10n.navReport,
     ),
+    NavItem(
+      '/annual-report',
+      Icons.picture_as_pdf_outlined,
+      Icons.picture_as_pdf,
+      (l10n) => l10n.annualReportTitle,
+    ),
   ]),
   NavGroup((l10n) => l10n.navGroupPlan, [
     NavItem(

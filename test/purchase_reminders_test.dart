@@ -201,6 +201,9 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(restore);
+      await tester.pumpAndSettle();
       await tester.tap(restore);
       await tester.pumpAndSettle();
       final session = _session(tester, PlusScreen);

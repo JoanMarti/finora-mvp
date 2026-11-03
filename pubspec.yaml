@@ -57,6 +57,11 @@ dependencies:
 dependency_overrides:
   image: ">=4.2.0 <4.11.0"
 
+# image 4.11.0 (used by pdf/printing) calls an archive API that the
+# newest archive release on pub.dev lacks; stay on 4.10 until they match.
+dependency_overrides:
+  image: ">=4.2.0 <4.11.0"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -151,6 +151,12 @@ final sidebarNavGroups = [
       (l10n) => l10n.subscriptionsTitle,
     ),
     NavItem(
+      '/health-insurance',
+      Icons.health_and_safety_outlined,
+      Icons.health_and_safety,
+      (l10n) => l10n.healthInsTitle,
+    ),
+    NavItem(
       '/tax-savings',
       Icons.calculate_outlined,
       Icons.calculate,

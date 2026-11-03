@@ -5,6 +5,7 @@ import 'package:finora/domain/models.dart';
 import 'package:finora/domain/opportunities.dart';
 import 'package:finora/domain/profile.dart';
 import 'package:finora/domain/report.dart';
+import 'package:finora/domain/statement_import.dart';
 import 'package:finora/domain/tax_documents.dart';
 import 'package:finora/l10n/generated/app_localizations.dart';
 import 'package:finora/shared/formatters.dart';
@@ -472,5 +473,13 @@ extension ProfileLabels on AppLocalizations {
     TaxDocumentKind.healthInsurance => taxDocHealthHint,
     TaxDocumentKind.childcareCosts => taxDocChildcareHint,
     TaxDocumentKind.donations => taxDocDonationsHint,
+  };
+
+  String statementProblem(StatementProblem problem) => switch (problem) {
+    StatementProblem.empty => importProblemEmpty,
+    StatementProblem.noHeader => importProblemHeader,
+    StatementProblem.noDate => importProblemDate,
+    StatementProblem.noAmount => importProblemAmount,
+    StatementProblem.noRows => importProblemRows,
   };
 }

@@ -4,6 +4,7 @@ import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/budgets.dart';
 import 'package:finora/domain/debts.dart';
+import 'package:finora/domain/imported_accounts.dart';
 import 'package:finora/domain/household.dart';
 import 'package:finora/domain/institution_catalogue.dart';
 import 'package:finora/domain/models.dart';
@@ -39,6 +40,7 @@ class UserSession {
     this.budgets = const {},
     this.subscriptionDecisions = const {},
     this.taxDocumentsReady = const {},
+    this.importedAccounts = const [],
     this.debts,
     this.debtPayment,
     this.payoffStrategy = PayoffStrategy.avalanche,
@@ -146,6 +148,9 @@ class UserSession {
   /// Tax papers the user has collected, as `<tax year>:<document id>`.
   final Set<String> taxDocumentsReady;
 
+  /// Accounts read from imported bank statements (CSV).
+  final List<ImportedAccount> importedAccounts;
+
   /// Debts in the payoff plan; `null` until the plan is first opened, when
   /// it starts from the connected credit cards.
   final List<Debt>? debts;
@@ -245,6 +250,7 @@ class UserSession {
     Map<TransactionCategory, Money>? budgets,
     Map<String, SubscriptionDecision>? subscriptionDecisions,
     Set<String>? taxDocumentsReady,
+    List<ImportedAccount>? importedAccounts,
     List<Debt>? debts,
     Money? debtPayment,
     PayoffStrategy? payoffStrategy,
@@ -291,6 +297,7 @@ class UserSession {
       subscriptionDecisions:
           subscriptionDecisions ?? this.subscriptionDecisions,
       taxDocumentsReady: taxDocumentsReady ?? this.taxDocumentsReady,
+      importedAccounts: importedAccounts ?? this.importedAccounts,
       debts: debts ?? this.debts,
       debtPayment: debtPayment ?? this.debtPayment,
       payoffStrategy: payoffStrategy ?? this.payoffStrategy,
@@ -342,6 +349,9 @@ class UserSession {
         entry.key: entry.value.name,
     },
     'taxDocumentsReady': taxDocumentsReady.toList(),
+    'importedAccounts': [
+      for (final account in importedAccounts) account.toJson(),
+    ],
     'debts': debts == null ? null : [for (final debt in debts!) debt.toJson()],
     'debtPayment': debtPayment?.cents,
     'payoffStrategy': payoffStrategy.name,
@@ -422,6 +432,10 @@ class UserSession {
       taxDocumentsReady: {
         ...?(json['taxDocumentsReady'] as List?)?.whereType<String>(),
       },
+      importedAccounts: [
+        if (json['importedAccounts'] case final List raw)
+          for (final item in raw) ?ImportedAccount.fromJson(item),
+      ],
       debts: json['debts'] is List
           ? [
               for (final raw in json['debts']! as List) ?Debt.fromJson(raw),

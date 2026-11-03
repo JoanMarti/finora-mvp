@@ -8,6 +8,7 @@ import 'package:finora/data/api/http_backend_services.dart';
 import 'package:finora/data/billing/in_app_purchase_port.dart';
 import 'package:finora/data/billing/play_purchase_service.dart';
 import 'package:finora/data/demo_auth_service.dart';
+import 'package:finora/data/importing_financial_repository.dart';
 import 'package:finora/data/mock_financial_repository.dart';
 import 'package:finora/data/mock_market_data_repository.dart';
 import 'package:finora/data/remote_financial_repository.dart';
@@ -88,7 +89,14 @@ List<Override> backendOverrides(
       ref.watch(
         sessionProvider.select((session) => session.connectedInstitutionIds),
       );
-      return RemoteFinancialRepository(api);
+      final imported = ref.watch(
+        sessionProvider.select((session) => session.importedAccounts),
+      );
+      return ImportingFinancialRepository(
+        RemoteFinancialRepository(api),
+        imported: imported,
+        clock: ref.watch(clockProvider),
+      );
     }),
     // Market themes are static educational content shipped with the app.
     marketDataRepositoryProvider.overrideWithValue(
@@ -113,15 +121,24 @@ List<Override> demoOverrides({
   financialRepositoryProvider.overrideWith((ref) {
     // Only the connected institutions and products shape the data; other
     // session changes (language, goals, consent) must not reload it.
-    final (institutionIds, products) = ref.watch(
+    final (institutionIds, products, imported) = ref.watch(
       sessionProvider.select(
-        (session) => (session.connectedInstitutionIds, session.products),
+        (session) => (
+          session.connectedInstitutionIds,
+          session.products,
+          session.importedAccounts,
+        ),
       ),
     );
-    return MockFinancialRepository(
-      institutionIds: institutionIds,
-      products: products,
-      clock: ref.watch(clockProvider),
+    final clock = ref.watch(clockProvider);
+    return ImportingFinancialRepository(
+      MockFinancialRepository(
+        institutionIds: institutionIds,
+        products: products,
+        clock: clock,
+      ),
+      imported: imported,
+      clock: clock,
     );
   }),
   marketDataRepositoryProvider.overrideWithValue(

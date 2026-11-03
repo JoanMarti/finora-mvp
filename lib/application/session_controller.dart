@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:finora/domain/imported_accounts.dart';
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
 import 'package:finora/domain/auth.dart';
@@ -312,6 +313,32 @@ class SessionController extends Notifier<UserSession> {
 
   void setBudgets(Map<TransactionCategory, Money> budgets) =>
       _update(state.copyWith(budgets: {...state.budgets, ...budgets}));
+
+  /// Adds an imported statement; a second import of the same account adds
+  /// its new bookings.
+  void importAccount(ImportedAccount account) {
+    final existing = state.importedAccounts
+        .where((item) => item.id == account.id)
+        .firstOrNull;
+    _update(
+      state.copyWith(
+        importedAccounts: [
+          for (final item in state.importedAccounts)
+            if (item.id != account.id) item,
+          existing == null ? account : existing.merge(account),
+        ],
+      ),
+    );
+  }
+
+  void removeImportedAccount(String id) => _update(
+    state.copyWith(
+      importedAccounts: [
+        for (final item in state.importedAccounts)
+          if (item.id != id) item,
+      ],
+    ),
+  );
 
   /// Marks a tax paper as collected or not (`<tax year>:<document id>`).
   void setTaxDocumentReady(String key, {required bool ready}) {

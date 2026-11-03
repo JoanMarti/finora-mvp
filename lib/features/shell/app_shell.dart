@@ -171,6 +171,12 @@ final sidebarNavGroups = [
   ]),
   NavGroup((l10n) => l10n.navGroupYou, [
     NavItem(
+      '/import',
+      Icons.upload_file_outlined,
+      Icons.upload_file,
+      (l10n) => l10n.importAction,
+    ),
+    NavItem(
       '/about-you',
       Icons.badge_outlined,
       Icons.badge,

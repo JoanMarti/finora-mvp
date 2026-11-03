@@ -3032,5 +3032,76 @@
   "healthInsDisclaimer": "Estimate with the largest discount the law allows (70% of the extra risk); your insurer may give less. Compare the official premiums on priminfo.admin.ch.",
   "healthInsCompare": "Compare health insurers",
   "healthInsAdultsOnly": "For adults; children have deductibles from CHF 0 to 600.",
-  "healthInsToolSubtitle": "Find the deductible that costs least"
+  "healthInsToolSubtitle": "Find the deductible that costs least",
+  "importTitle": "Import a bank statement",
+  "importAction": "Import statement",
+  "importIntro": "Until your bank can be connected, import the CSV export of your e-banking. Finora reads it on this device; nothing is uploaded.",
+  "importHowTitle": "How to export",
+  "importHowBody": "In your e-banking, open the account’s transactions, choose a period (ideally 12 months) and export as CSV.",
+  "importBankLabel": "Bank",
+  "importNameLabel": "Account name",
+  "importNameDefault": "Private account",
+  "importChooseFile": "Choose CSV file",
+  "importPasteToggle": "Paste the content instead",
+  "importPasteLabel": "CSV content",
+  "importPasteRead": "Read",
+  "importPreviewTitle": "{count} bookings from {start} to {end}",
+  "@importPreviewTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "importPreviewTotals": "In {income} · Out {spending}",
+  "@importPreviewTotals": {
+    "placeholders": {
+      "income": {
+        "type": "String"
+      },
+      "spending": {
+        "type": "String"
+      }
+    }
+  },
+  "importBalanceLabel": "Balance today",
+  "importBalanceFromFile": "Read from the statement.",
+  "importBalanceHelp": "Enter the balance shown in your e-banking.",
+  "importConfirm": "Import",
+  "importDone": "{count} bookings imported.",
+  "@importDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReplaceNote": "Replaces the demo current account of this bank.",
+  "importCategoryNote": "Categories are guessed from the booking texts.",
+  "importExistingSection": "Imported accounts",
+  "importExistingLine": "{count} bookings · imported {date}",
+  "@importExistingLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "importRemove": "Remove",
+  "importRemoved": "Imported account removed.",
+  "importFileFailed": "The file could not be opened.",
+  "importProblemEmpty": "The file is empty.",
+  "importProblemHeader": "No column headers found. Export the statement as CSV, not as PDF.",
+  "importProblemDate": "No date column found.",
+  "importProblemAmount": "No amount column found.",
+  "importProblemRows": "No bookings found in the file."
 }

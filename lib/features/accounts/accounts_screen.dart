@@ -98,6 +98,13 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(l10n.navAccounts),
+        actions: [
+          IconButton(
+            tooltip: l10n.importAction,
+            icon: const Icon(Icons.upload_file),
+            onPressed: () => context.push('/import'),
+          ),
+        ],
       ),
       body: SafeArea(
         top: false,

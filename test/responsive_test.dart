@@ -87,16 +87,16 @@ void main() {
     // The first account opens next to the list.
     expect(find.text('Account insight'), findsOneWidget);
 
-    await tester.ensureVisible(find.text('Vitainvest 3a'));
+    await tester.ensureVisible(find.text('Fund 3a'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Vitainvest 3a'));
+    await tester.tap(find.text('Fund 3a'));
     await tester.pumpAndSettle();
     expect(
       container.read(routerProvider).routerDelegate.currentConfiguration.uri
           .path,
       '/accounts',
     );
-    expect(find.text('Vitainvest 3a'), findsAtLeastNWidgets(2));
+    expect(find.text('Fund 3a'), findsAtLeastNWidgets(2));
     expect(tester.takeException(), isNull);
   });
 

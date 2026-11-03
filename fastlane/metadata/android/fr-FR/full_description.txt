@@ -23,9 +23,9 @@ PLANIFIER
 LA CONFIDENTIALITÉ D'ABORD
 • Profil, objectifs et réglages restent sur votre téléphone
 • Pas de publicité, pas de SDK de suivi, pas de vente de données
-• Verrouillage par PIN et mode qui masque tous les montants
+• Verrouillage par PIN ou empreinte digitale et mode qui masque tous les montants
 
 GRATUIT ET PREMIUM
-Le plan gratuit n'a pas de limite de durée et inclut jusqu'à 3 banques, 6 mois d'historique et 2 objectifs. Finora Premium offre banques et objectifs illimités, 24 mois d'historique, scénarios de retraite, vue du ménage et export fiscal. Aucun paiement pendant l'accès anticipé.
+Le plan gratuit n'a pas de limite de durée et inclut jusqu'à 3 banques, 6 mois d'historique et 2 objectifs. Finora Premium offre banques et objectifs illimités, 24 mois d'historique, scénarios de retraite, vue du ménage, export fiscal et alertes de hausse de prix : CHF 6.90 par mois ou CHF 59 par an via Google Play, avec 14 jours d'essai gratuit. Résiliable à tout moment dans Google Play.
 
 Finora informe mais ne conseille pas. Conçu en Suisse, en français, allemand, italien et anglais.

@@ -1200,5 +1200,7 @@
   "importProblemHeader": "Keine Spaltenüberschriften gefunden. Exportieren Sie den Auszug als CSV, nicht als PDF.",
   "importProblemDate": "Keine Datumsspalte gefunden.",
   "importProblemAmount": "Keine Betragsspalte gefunden.",
-  "importProblemRows": "Keine Buchungen in der Datei gefunden."
+  "importProblemRows": "Keine Buchungen in der Datei gefunden.",
+  "reminderChannelName": "Erinnerungen",
+  "reminderChannelDescription": "Termine für Ihre Finanzen, eine Woche im Voraus"
 }

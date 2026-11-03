@@ -1,7 +1,11 @@
+import 'dart:ui' show Locale, PlatformDispatcher;
+
 import 'package:finora/application/auth.dart';
 import 'package:finora/application/backend.dart';
+import 'package:finora/application/local_reminders.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/application/session_controller.dart';
+import 'package:finora/data/android_local_reminders.dart';
 import 'package:finora/data/api/api_client.dart';
 import 'package:finora/data/api/http_auth_service.dart';
 import 'package:finora/data/api/http_backend_services.dart';
@@ -13,6 +17,7 @@ import 'package:finora/data/mock_financial_repository.dart';
 import 'package:finora/data/mock_market_data_repository.dart';
 import 'package:finora/data/remote_financial_repository.dart';
 import 'package:finora/domain/user_session.dart';
+import 'package:finora/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -43,6 +48,25 @@ List<Override> purchaseOverrides({HttpBackendServices? backend}) {
   ];
 }
 
+/// Features of the phone itself: local reminder notifications on Android.
+List<Override> deviceOverrides() {
+  if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+    return const [];
+  }
+  final language = reminderLanguage(
+    PlatformDispatcher.instance.locale.languageCode,
+  );
+  final l10n = lookupAppLocalizations(Locale(language));
+  final reminders = AndroidLocalReminders(
+    channelName: l10n.reminderChannelName,
+    channelDescription: l10n.reminderChannelDescription,
+  );
+  return [
+    localReminderSchedulerProvider.overrideWithValue(reminders),
+    notificationPermissionsProvider.overrideWithValue(reminders),
+  ];
+}
+
 /// The data sources for this build: the backend when [finoraApiUrl] is set,
 /// otherwise the demo.
 List<Override> appOverrides({
@@ -56,18 +80,22 @@ List<Override> appOverrides({
         accountStore: accountStore,
       ),
       ...purchaseOverrides(),
+      ...deviceOverrides(),
     ];
   }
   final tokens = AuthTokenHolder();
-  return backendOverrides(
-    FinoraApiClient(
-      baseUrl: Uri.parse(finoraApiUrl),
-      client: http.Client(),
-      accessToken: tokens.read,
+  return [
+    ...backendOverrides(
+      FinoraApiClient(
+        baseUrl: Uri.parse(finoraApiUrl),
+        client: http.Client(),
+        accessToken: tokens.read,
+      ),
+      sessionStore: sessionStore,
+      tokens: tokens,
     ),
-    sessionStore: sessionStore,
-    tokens: tokens,
-  );
+    ...deviceOverrides(),
+  ];
 }
 
 /// Wires the Finora backend. Signing in stores the access token in

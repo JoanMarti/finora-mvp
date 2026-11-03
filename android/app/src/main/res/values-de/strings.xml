@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Labels of the launcher shortcuts (long press on the app icon). -->
+<resources>
+    <string name="shortcut_import_short">Import</string>
+    <string name="shortcut_import_long">Kontoauszug importieren</string>
+    <string name="shortcut_health_short">Franchise</string>
+    <string name="shortcut_health_long">Franchise der Krankenkasse</string>
+    <string name="shortcut_tax_short">Steuerbelege</string>
+    <string name="shortcut_tax_long">Steuerunterlagen</string>
+</resources>

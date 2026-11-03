@@ -3103,5 +3103,7 @@
   "importProblemHeader": "No column headers found. Export the statement as CSV, not as PDF.",
   "importProblemDate": "No date column found.",
   "importProblemAmount": "No amount column found.",
-  "importProblemRows": "No bookings found in the file."
+  "importProblemRows": "No bookings found in the file.",
+  "reminderChannelName": "Reminders",
+  "reminderChannelDescription": "Dates for your finances, a week ahead"
 }

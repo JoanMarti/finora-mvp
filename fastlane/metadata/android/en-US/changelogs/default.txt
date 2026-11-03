@@ -1,1 +1,1 @@
-First early-access version: overview, analysis, goals, simulators, financial calendar, savings hints and account sign-up.
+Early access: overview, analysis, goals, budgets and simulators. New: import your bank's CSV statement to see your real figures, health insurance deductible check, tax documents checklist, annual PDF report and price-increase alerts (Premium), reminders as notifications and fingerprint unlock.

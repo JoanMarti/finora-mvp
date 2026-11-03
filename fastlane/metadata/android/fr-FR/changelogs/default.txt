@@ -1,1 +1,1 @@
-Première version en accès anticipé : aperçu, analyse, objectifs, simulateurs, calendrier financier, conseils d'économies et création de compte.
+Accès anticipé : aperçu, analyse, objectifs, budgets et simulateurs. Nouveau : importez le relevé CSV de votre banque pour voir vos vrais chiffres, choix de la franchise d'assurance maladie, liste des documents fiscaux, rapport annuel en PDF et alertes de hausse de prix (Premium), rappels en notification et déverrouillage par empreinte.

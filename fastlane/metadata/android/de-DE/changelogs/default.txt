@@ -1,1 +1,1 @@
-Erste Early-Access-Version: Übersicht, Analyse, Ziele, Simulatoren, Finanzkalender, Spartipps und Konto-Registrierung.
+Early Access: Übersicht, Analyse, Ziele, Budgets und Simulatoren. Neu: CSV-Kontoauszug Ihrer Bank importieren und echte Zahlen sehen, Franchise-Check der Krankenkasse, Checkliste für Steuerunterlagen, Jahresbericht als PDF und Preiserhöhungs-Alarme (Premium), Erinnerungen als Benachrichtigung und Entsperren per Fingerabdruck.

@@ -24,6 +24,9 @@ The store listing says this openly ("Early access"). Recommended path: internal 
 | App name "Finora", adaptive icon (with monochrome layer), Android 12+ splash on the warm canvas | `android/app/src/main/AndroidManifest.xml`, `res/` |
 | No cloud backup or device transfer of app data | `res/xml/data_extraction_rules.xml` |
 | `https` links open in the browser (partner offers) | manifest `<queries>` |
+| Calendar reminders as local notifications: a week ahead at 9:00 Swiss time, Android 13+ asks for permission, kept after a restart | `lib/data/android_local_reminders.dart`, manifest receivers |
+| Launcher shortcuts (long press on the icon): Import, Deductible, Tax papers | `res/xml/shortcuts.xml` |
+| CSV import of bank statements through the system file picker | `lib/features/import/` |
 | Version `1.0.0`; the version code is the CI run number | `pubspec.yaml`, workflow `android` job |
 | `.aab` built on every pull request and kept for 14 days | GitHub Actions → run → artifact `finora-android-<run>` |
 
@@ -73,7 +76,7 @@ The texts can be uploaded by hand or with `fastlane supply` (`fastlane supply --
 | Ads | **No ads.** Revisit when partner links are switched on: affiliate offers count as promotional content |
 | Content rating | Questionnaire: utility/finance, no user-generated content, no gambling → expected PEGI 3 / Everyone |
 | Target audience | 18 and over |
-| Data safety | **1.0 (no backend): no data collected or shared.** Everything stays on the device and no tracking SDKs are included. Data is not encrypted in transit because nothing is sent. Account deletion: in-app, plus `https://joanmarti.github.io/finora-mvp/delete-account.html` |
+| Data safety | **1.0 (no backend): no data collected or shared.** Imported statements and scheduled reminders stay on the device. Everything stays on the device and no tracking SDKs are included. Data is not encrypted in transit because nothing is sent. Account deletion: in-app, plus `https://joanmarti.github.io/finora-mvp/delete-account.html` |
 | Data safety once a backend is used | Collected: name and e-mail (account management, required); app interactions (aggregated offer counts, not linked to the user). Encrypted in transit. Users can request deletion. Update the form **before** the first backend build |
 | Financial features | 1.0 offers none of the listed features (no loans, payments, trading or insurance sales). Declare accordingly, or choose "Other" with "read-only personal finance overview". Review when partner offers go live ([Google](https://support.google.com/googleplay/android-developer/answer/13849271)) |
 | Account deletion | Available in the app (Profile → Delete account) and on the web page above ([Google](https://support.google.com/googleplay/android-developer/answer/13327111)) |

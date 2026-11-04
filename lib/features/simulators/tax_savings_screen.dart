@@ -135,6 +135,11 @@ class _TaxSavingsScreenState extends ConsumerState<TaxSavingsScreen> {
               icon: const Icon(Icons.savings_outlined),
               label: Text(l10n.offerPillarAction),
             ),
+            TextButton.icon(
+              onPressed: () => context.push('/pillar3a-catch-up'),
+              icon: const Icon(Icons.history),
+              label: Text(l10n.catchUpLink),
+            ),
             SimulatorNote(l10n.taxSavingsBuyInLock(TaxSavings.buyInLockYears)),
             SimulatorNote(l10n.taxSavingsDisclaimer),
         ],

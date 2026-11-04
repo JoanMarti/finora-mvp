@@ -3125,5 +3125,74 @@
         "type": "String"
       }
     }
-  }
+  },
+  "catchUpTitle": "Pillar 3a catch-up",
+  "catchUpCanPay": "You can catch up {amount} this year",
+  "@catchUpCanPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "catchUpSaves": "Saves about {amount} in taxes",
+  "@catchUpSaves": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "catchUpNoGaps": "No gaps since 2025: every year was paid in full.",
+  "catchUpIntro": "Since 2026 you can pay into Pillar 3a for past years in which you paid less than the maximum, from 2025 on and for up to ten years.",
+  "catchUpConditions": "Conditions",
+  "catchUpConditionCurrent": "This year’s maximum is paid in first",
+  "catchUpConditionCurrentMissing": "Still {amount} to pay for this year first",
+  "@catchUpConditionCurrentMissing": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "catchUpConditionIncome": "Income subject to AHV in the missing year and this year",
+  "catchUpConditionNoWithdrawal": "No Pillar 3a benefits drawn yet",
+  "catchUpGapsSection": "Paid in per year",
+  "catchUpGapLine": "Gap {gap} · can be filled until {year}",
+  "@catchUpGapLine": {
+    "placeholders": {
+      "gap": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "catchUpPaidLabel": "Paid in {year}",
+  "@catchUpPaidLabel": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "catchUpCapNote": "Per year you can catch up at most {amount} in total, in one payment per missing year. It is deducted from this year’s taxable income.",
+  "@catchUpCapNote": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "catchUpDeadline": "Ask your 3a provider for its purchase form; the money must arrive by {date}.",
+  "@catchUpDeadline": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "catchUpDisclaimer": "Estimate. The maximum for years after 2026 is assumed unchanged; your provider confirms the gaps.",
+  "catchUpLink": "Pay in for past years"
 }

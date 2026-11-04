@@ -157,6 +157,12 @@ final sidebarNavGroups = [
       (l10n) => l10n.healthInsTitle,
     ),
     NavItem(
+      '/pillar3a-catch-up',
+      Icons.history_outlined,
+      Icons.history,
+      (l10n) => l10n.catchUpTitle,
+    ),
+    NavItem(
       '/tax-savings',
       Icons.calculate_outlined,
       Icons.calculate,

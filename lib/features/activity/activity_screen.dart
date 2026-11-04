@@ -142,12 +142,18 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
                       const SizedBox(width: 8),
                       if (_filter.isEmpty)
                         OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(0, 40),
+                          ),
                           onPressed: () => _openFilters(items, accounts),
                           icon: const Icon(Icons.tune, size: 18),
                           label: Text(l10n.filterButton),
                         )
                       else
                         FilledButton.tonalIcon(
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size(0, 40),
+                          ),
                           onPressed: () => _openFilters(items, accounts),
                           icon: const Icon(Icons.tune, size: 18),
                           label: Text(
@@ -461,10 +467,12 @@ class _FilterSheetState extends State<_FilterSheet> {
                       : () => _set(const TransactionFilter()),
                   child: Text(l10n.filterClear),
                 ),
-                const Spacer(),
-                FilledButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(l10n.filterShow(widget.countFor(_filter))),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(l10n.filterShow(widget.countFor(_filter))),
+                  ),
                 ),
               ],
             ),

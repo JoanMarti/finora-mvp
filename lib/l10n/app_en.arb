@@ -3239,5 +3239,26 @@
       }
     }
   },
-  "filterNoMatch": "No bookings match these filters."
+  "filterNoMatch": "No bookings match these filters.",
+  "backupTitle": "Backup and restore",
+  "backupIntro": "Your goals, budgets, profile, imported statements and settings are kept only on this device and are not part of cloud backups. Save a backup file to move them to a new phone.",
+  "backupExport": "Save a backup",
+  "backupRestore": "Restore from a backup",
+  "backupWarning": "The file contains your financial data in plain text. Keep it somewhere safe and do not share it.",
+  "backupKeeps": "Your PIN and your Premium plan stay as they are on this device.",
+  "backupRestoreTitle": "Replace the data on this device?",
+  "backupRestoreBody": "The backup from {date} replaces your goals, budgets, profile, imported statements and settings here.",
+  "@backupRestoreBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupRestoreConfirm": "Replace",
+  "backupRestored": "Backup restored.",
+  "backupSaveFailed": "The backup could not be saved.",
+  "backupProblemNotBackup": "This file is not a Finora backup.",
+  "backupProblemNewer": "This backup comes from a newer version of Finora. Update the app first.",
+  "backupProblemDamaged": "The backup is damaged and could not be read."
 }

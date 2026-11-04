@@ -49,6 +49,7 @@ dependencies:
   in_app_purchase_android: any
   http: ^1.2.0
   intl: any # version is pinned by flutter_localizations
+  share_plus: ^13.0.0
   shared_preferences: ^2.3.0
   timezone: ^0.10.0
 

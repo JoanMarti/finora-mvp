@@ -4,6 +4,7 @@ import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
+import 'package:finora/shared/category_sheet.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -204,7 +205,9 @@ class _TransactionRow extends StatelessWidget {
     final l10n = context.l10n;
     final positive = !transaction.amount.isNegative;
     const muted = TextStyle(color: finoraMutedInk, fontSize: 13);
-    return Padding(
+    return InkWell(
+      onTap: () => showCategorySheet(context, transaction),
+      child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       child: Row(
         children: [
@@ -258,6 +261,7 @@ class _TransactionRow extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

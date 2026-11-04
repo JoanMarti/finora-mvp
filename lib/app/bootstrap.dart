@@ -117,12 +117,15 @@ List<Override> backendOverrides(
       ref.watch(
         sessionProvider.select((session) => session.connectedInstitutionIds),
       );
-      final imported = ref.watch(
-        sessionProvider.select((session) => session.importedAccounts),
+      final (imported, rules) = ref.watch(
+        sessionProvider.select(
+          (session) => (session.importedAccounts, session.categoryRules),
+        ),
       );
       return ImportingFinancialRepository(
         RemoteFinancialRepository(api),
         imported: imported,
+        categoryRules: rules,
         clock: ref.watch(clockProvider),
       );
     }),
@@ -149,12 +152,13 @@ List<Override> demoOverrides({
   financialRepositoryProvider.overrideWith((ref) {
     // Only the connected institutions and products shape the data; other
     // session changes (language, goals, consent) must not reload it.
-    final (institutionIds, products, imported) = ref.watch(
+    final (institutionIds, products, imported, rules) = ref.watch(
       sessionProvider.select(
         (session) => (
           session.connectedInstitutionIds,
           session.products,
           session.importedAccounts,
+          session.categoryRules,
         ),
       ),
     );
@@ -166,6 +170,7 @@ List<Override> demoOverrides({
         clock: clock,
       ),
       imported: imported,
+      categoryRules: rules,
       clock: clock,
     );
   }),

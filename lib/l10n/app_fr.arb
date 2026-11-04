@@ -1190,7 +1190,7 @@
   "importConfirm": "Importer",
   "importDone": "{count} écritures importées.",
   "importReplaceNote": "Remplace le compte courant de démonstration de cette banque.",
-  "importCategoryNote": "Les catégories sont déduites des libellés.",
+  "importCategoryNote": "Les catégories sont déduites des libellés ; touchez une écriture pour la modifier.",
   "importExistingSection": "Comptes importés",
   "importExistingLine": "{count} écritures · importé le {date}",
   "importRemove": "Supprimer",
@@ -1202,5 +1202,8 @@
   "importProblemAmount": "Aucune colonne de montant trouvée.",
   "importProblemRows": "Aucune écriture trouvée dans le fichier.",
   "reminderChannelName": "Rappels",
-  "reminderChannelDescription": "Échéances de vos finances, une semaine avant"
+  "reminderChannelDescription": "Échéances de vos finances, une semaine avant",
+  "categorySheetRule": "S’applique à toutes les écritures de {merchant}, y compris les futures.",
+  "categorySheetReset": "Revenir à la catégorie automatique",
+  "categoryChanged": "{merchant} : {category}"
 }

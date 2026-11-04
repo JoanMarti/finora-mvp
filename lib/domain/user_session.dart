@@ -41,6 +41,7 @@ class UserSession {
     this.subscriptionDecisions = const {},
     this.taxDocumentsReady = const {},
     this.importedAccounts = const [],
+    this.categoryRules = const {},
     this.debts,
     this.debtPayment,
     this.payoffStrategy = PayoffStrategy.avalanche,
@@ -151,6 +152,10 @@ class UserSession {
   /// Accounts read from imported bank statements (CSV).
   final List<ImportedAccount> importedAccounts;
 
+  /// Categories the user chose, by merchant (lower case); they apply to
+  /// every booking from that merchant.
+  final Map<String, TransactionCategory> categoryRules;
+
   /// Debts in the payoff plan; `null` until the plan is first opened, when
   /// it starts from the connected credit cards.
   final List<Debt>? debts;
@@ -251,6 +256,7 @@ class UserSession {
     Map<String, SubscriptionDecision>? subscriptionDecisions,
     Set<String>? taxDocumentsReady,
     List<ImportedAccount>? importedAccounts,
+    Map<String, TransactionCategory>? categoryRules,
     List<Debt>? debts,
     Money? debtPayment,
     PayoffStrategy? payoffStrategy,
@@ -298,6 +304,7 @@ class UserSession {
           subscriptionDecisions ?? this.subscriptionDecisions,
       taxDocumentsReady: taxDocumentsReady ?? this.taxDocumentsReady,
       importedAccounts: importedAccounts ?? this.importedAccounts,
+      categoryRules: categoryRules ?? this.categoryRules,
       debts: debts ?? this.debts,
       debtPayment: debtPayment ?? this.debtPayment,
       payoffStrategy: payoffStrategy ?? this.payoffStrategy,
@@ -352,6 +359,9 @@ class UserSession {
     'importedAccounts': [
       for (final account in importedAccounts) account.toJson(),
     ],
+    'categoryRules': {
+      for (final entry in categoryRules.entries) entry.key: entry.value.name,
+    },
     'debts': debts == null ? null : [for (final debt in debts!) debt.toJson()],
     'debtPayment': debtPayment?.cents,
     'payoffStrategy': payoffStrategy.name,
@@ -436,6 +446,12 @@ class UserSession {
         if (json['importedAccounts'] case final List raw)
           for (final item in raw) ?ImportedAccount.fromJson(item),
       ],
+      categoryRules: {
+        if (json['categoryRules'] case final Map raw)
+          for (final entry in raw.entries)
+            for (final category in TransactionCategory.values)
+              if (category.name == entry.value) '${entry.key}': category,
+      },
       debts: json['debts'] is List
           ? [
               for (final raw in json['debts']! as List) ?Debt.fromJson(raw),

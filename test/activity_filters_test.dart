@@ -116,11 +116,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Money in'));
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining(RegExp(r'^Show \d+ bookings\$')));
+    await tester.tap(find.textContaining(RegExp(r'^Show \d+ bookings$')));
     await tester.pumpAndSettle();
     expect(find.text('Filters (1)'), findsOneWidget);
     expect(find.text('Migros'), findsNothing);
-    expect(find.textContaining(RegExp(r'out CHF.0\$')), findsOneWidget);
+    expect(find.textContaining(RegExp(r'out CHF.0$')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

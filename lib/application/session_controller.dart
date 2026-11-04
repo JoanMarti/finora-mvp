@@ -341,7 +341,7 @@ class SessionController extends Notifier<UserSession> {
         categoryRules: {
           for (final entry in state.categoryRules.entries)
             if (entry.key != key) entry.key: entry.value,
-          if (category != null) key: category,
+          key: ?category,
         },
       ),
     );

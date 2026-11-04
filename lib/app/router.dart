@@ -31,6 +31,7 @@ import 'package:finora/features/report/report_screen.dart';
 import 'package:finora/features/tax_documents/tax_documents_screen.dart';
 import 'package:finora/features/simulators/health_insurance_screen.dart';
 import 'package:finora/features/simulators/home_buying_screen.dart';
+import 'package:finora/features/simulators/pillar3a_catch_up_screen.dart';
 import 'package:finora/features/simulators/tax_savings_screen.dart';
 import 'package:finora/features/shell/app_shell.dart';
 import 'package:finora/l10n/l10n.dart';
@@ -96,6 +97,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/budgets', builder: (_, _) => const BudgetsScreen()),
           GoRoute(path: '/report', builder: (_, _) => const ReportScreen()),
           GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
+          GoRoute(
+            path: '/pillar3a-catch-up',
+            builder: (_, _) => const Pillar3aCatchUpScreen(),
+          ),
           GoRoute(
             path: '/health-insurance',
             builder: (_, _) => const HealthInsuranceScreen(),

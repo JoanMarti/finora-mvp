@@ -1205,5 +1205,22 @@
   "reminderChannelDescription": "Termine für Ihre Finanzen, eine Woche im Voraus",
   "categorySheetRule": "Gilt für alle Buchungen von {merchant}, auch künftige.",
   "categorySheetReset": "Zurück zur automatischen Kategorie",
-  "categoryChanged": "{merchant}: {category}"
+  "categoryChanged": "{merchant}: {category}",
+  "catchUpTitle": "3a-Einkauf",
+  "catchUpCanPay": "Sie können dieses Jahr {amount} nachzahlen",
+  "catchUpSaves": "Spart rund {amount} Steuern",
+  "catchUpNoGaps": "Keine Lücken seit 2025: jedes Jahr wurde voll einbezahlt.",
+  "catchUpIntro": "Seit 2026 können Sie in die Säule 3a für frühere Jahre nachzahlen, in denen Sie weniger als den Maximalbetrag einbezahlt haben – ab 2025 und bis zu zehn Jahre lang.",
+  "catchUpConditions": "Bedingungen",
+  "catchUpConditionCurrent": "Zuerst den Maximalbetrag dieses Jahres einzahlen",
+  "catchUpConditionCurrentMissing": "Zuerst noch {amount} für dieses Jahr einzahlen",
+  "catchUpConditionIncome": "AHV-pflichtiges Einkommen im fehlenden Jahr und in diesem Jahr",
+  "catchUpConditionNoWithdrawal": "Noch keine 3a-Leistungen bezogen",
+  "catchUpGapsSection": "Einbezahlt pro Jahr",
+  "catchUpGapLine": "Lücke {gap} · nachzahlbar bis {year}",
+  "catchUpPaidLabel": "Einbezahlt {year}",
+  "catchUpCapNote": "Pro Jahr können Sie insgesamt höchstens {amount} nachzahlen, mit einer Zahlung pro fehlendem Jahr. Der Betrag wird vom steuerbaren Einkommen dieses Jahres abgezogen.",
+  "catchUpDeadline": "Verlangen Sie bei Ihrer 3a-Anbieterin das Einkaufsformular; das Geld muss bis {date} eintreffen.",
+  "catchUpDisclaimer": "Schätzung. Für Jahre nach 2026 wird ein unveränderter Maximalbetrag angenommen; Ihre Anbieterin bestätigt die Lücken.",
+  "catchUpLink": "Für frühere Jahre nachzahlen"
 }

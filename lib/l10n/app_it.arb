@@ -1205,5 +1205,22 @@
   "reminderChannelDescription": "Scadenze delle tue finanze, una settimana prima",
   "categorySheetRule": "Vale per tutti i movimenti di {merchant}, anche quelli futuri.",
   "categorySheetReset": "Torna alla categoria automatica",
-  "categoryChanged": "{merchant}: {category}"
+  "categoryChanged": "{merchant}: {category}",
+  "catchUpTitle": "Riscatto 3a",
+  "catchUpCanPay": "Quest’anno puoi recuperare {amount}",
+  "catchUpSaves": "Fa risparmiare circa {amount} di imposte",
+  "catchUpNoGaps": "Nessuna lacuna dal 2025: ogni anno è stato versato per intero.",
+  "catchUpIntro": "Dal 2026 puoi versare nel pilastro 3a per gli anni passati in cui hai versato meno del massimo, a partire dal 2025 e fino a dieci anni.",
+  "catchUpConditions": "Condizioni",
+  "catchUpConditionCurrent": "Prima si versa il massimo di quest’anno",
+  "catchUpConditionCurrentMissing": "Prima ancora {amount} da versare per quest’anno",
+  "catchUpConditionIncome": "Reddito soggetto all’AVS nell’anno mancante e quest’anno",
+  "catchUpConditionNoWithdrawal": "Nessuna prestazione 3a ancora riscossa",
+  "catchUpGapsSection": "Versato per anno",
+  "catchUpGapLine": "Lacuna {gap} · recuperabile fino al {year}",
+  "catchUpPaidLabel": "Versato nel {year}",
+  "catchUpCapNote": "Per anno puoi recuperare al massimo {amount} in totale, con un unico versamento per anno mancante. L’importo è dedotto dal reddito imponibile di quest’anno.",
+  "catchUpDeadline": "Chiedi il modulo di riscatto al tuo fornitore 3a; il denaro deve arrivare entro il {date}.",
+  "catchUpDisclaimer": "Stima. Per gli anni dopo il 2026 si assume un massimo invariato; il fornitore conferma le lacune.",
+  "catchUpLink": "Recuperare gli anni passati"
 }

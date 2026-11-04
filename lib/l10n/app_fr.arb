@@ -1205,5 +1205,22 @@
   "reminderChannelDescription": "Échéances de vos finances, une semaine avant",
   "categorySheetRule": "S’applique à toutes les écritures de {merchant}, y compris les futures.",
   "categorySheetReset": "Revenir à la catégorie automatique",
-  "categoryChanged": "{merchant} : {category}"
+  "categoryChanged": "{merchant} : {category}",
+  "catchUpTitle": "Rachat 3a",
+  "catchUpCanPay": "Vous pouvez rattraper {amount} cette année",
+  "catchUpSaves": "Économise environ {amount} d’impôts",
+  "catchUpNoGaps": "Aucune lacune depuis 2025 : chaque année a été versée en entier.",
+  "catchUpIntro": "Depuis 2026, vous pouvez verser dans le pilier 3a pour les années passées où vous avez versé moins que le maximum, à partir de 2025 et jusqu’à dix ans.",
+  "catchUpConditions": "Conditions",
+  "catchUpConditionCurrent": "Le maximum de cette année est versé d’abord",
+  "catchUpConditionCurrentMissing": "Encore {amount} à verser pour cette année d’abord",
+  "catchUpConditionIncome": "Revenu soumis à l’AVS l’année manquante et cette année",
+  "catchUpConditionNoWithdrawal": "Aucune prestation 3a encore perçue",
+  "catchUpGapsSection": "Versé par année",
+  "catchUpGapLine": "Lacune {gap} · rattrapable jusqu’en {year}",
+  "catchUpPaidLabel": "Versé en {year}",
+  "catchUpCapNote": "Par année, vous pouvez rattraper au maximum {amount} au total, en un seul versement par année manquante. Le montant est déduit du revenu imposable de cette année.",
+  "catchUpDeadline": "Demandez le formulaire de rachat à votre prestataire 3a ; l’argent doit arriver d’ici le {date}.",
+  "catchUpDisclaimer": "Estimation. Le maximum des années après 2026 est supposé inchangé ; votre prestataire confirme les lacunes.",
+  "catchUpLink": "Rattraper les années passées"
 }

@@ -183,6 +183,12 @@ final sidebarNavGroups = [
       (l10n) => l10n.importAction,
     ),
     NavItem(
+      '/backup',
+      Icons.settings_backup_restore_outlined,
+      Icons.settings_backup_restore,
+      (l10n) => l10n.backupTitle,
+    ),
+    NavItem(
       '/about-you',
       Icons.badge_outlined,
       Icons.badge,

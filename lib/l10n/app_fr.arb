@@ -1240,5 +1240,19 @@
   "filterClear": "Effacer les filtres",
   "filterShow": "Afficher {count} écritures",
   "activityTotals": "{count} écritures · entrées {moneyIn} · sorties {moneyOut}",
-  "filterNoMatch": "Aucune écriture ne correspond à ces filtres."
+  "filterNoMatch": "Aucune écriture ne correspond à ces filtres.",
+  "backupTitle": "Sauvegarde et restauration",
+  "backupIntro": "Vos objectifs, budgets, profil, relevés importés et réglages sont conservés uniquement sur cet appareil et ne font pas partie des sauvegardes cloud. Enregistrez un fichier de sauvegarde pour les transférer sur un nouveau téléphone.",
+  "backupExport": "Enregistrer une sauvegarde",
+  "backupRestore": "Restaurer une sauvegarde",
+  "backupWarning": "Le fichier contient vos données financières en clair. Conservez-le en lieu sûr et ne le partagez pas.",
+  "backupKeeps": "Votre code PIN et votre abonnement Premium restent tels quels sur cet appareil.",
+  "backupRestoreTitle": "Remplacer les données de cet appareil ?",
+  "backupRestoreBody": "La sauvegarde du {date} remplace ici vos objectifs, budgets, profil, relevés importés et réglages.",
+  "backupRestoreConfirm": "Remplacer",
+  "backupRestored": "Sauvegarde restaurée.",
+  "backupSaveFailed": "La sauvegarde n’a pas pu être enregistrée.",
+  "backupProblemNotBackup": "Ce fichier n’est pas une sauvegarde Finora.",
+  "backupProblemNewer": "Cette sauvegarde provient d’une version plus récente de Finora. Mettez d’abord l’app à jour.",
+  "backupProblemDamaged": "La sauvegarde est endommagée et n’a pas pu être lue."
 }

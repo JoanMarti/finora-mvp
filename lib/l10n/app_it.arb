@@ -1240,5 +1240,19 @@
   "filterClear": "Cancella filtri",
   "filterShow": "Mostra {count} movimenti",
   "activityTotals": "{count} movimenti · entrate {moneyIn} · uscite {moneyOut}",
-  "filterNoMatch": "Nessun movimento corrisponde a questi filtri."
+  "filterNoMatch": "Nessun movimento corrisponde a questi filtri.",
+  "backupTitle": "Backup e ripristino",
+  "backupIntro": "I tuoi obiettivi, budget, profilo, estratti importati e impostazioni sono salvati solo su questo dispositivo e non fanno parte dei backup cloud. Salva un file di backup per trasferirli su un nuovo telefono.",
+  "backupExport": "Salva un backup",
+  "backupRestore": "Ripristina da un backup",
+  "backupWarning": "Il file contiene i tuoi dati finanziari in chiaro. Conservalo in un luogo sicuro e non condividerlo.",
+  "backupKeeps": "Il PIN e l’abbonamento Premium restano invariati su questo dispositivo.",
+  "backupRestoreTitle": "Sostituire i dati su questo dispositivo?",
+  "backupRestoreBody": "Il backup del {date} sostituisce qui obiettivi, budget, profilo, estratti importati e impostazioni.",
+  "backupRestoreConfirm": "Sostituisci",
+  "backupRestored": "Backup ripristinato.",
+  "backupSaveFailed": "Impossibile salvare il backup.",
+  "backupProblemNotBackup": "Questo file non è un backup di Finora.",
+  "backupProblemNewer": "Questo backup proviene da una versione più recente di Finora. Aggiorna prima l’app.",
+  "backupProblemDamaged": "Il backup è danneggiato e non può essere letto."
 }

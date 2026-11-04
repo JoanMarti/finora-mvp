@@ -457,6 +457,10 @@ class SessionController extends Notifier<UserSession> {
 
   void markEmailVerified() => _update(state.copyWith(emailVerified: true));
 
+  /// Replaces everything on this device with a restored backup
+  /// ([FinoraBackup.decode] keeps the PIN and the plan of this device).
+  void restore(UserSession restored) => _update(restored);
+
   /// Ends the session on this device. Data shown in the app comes from the
   /// banks and is fetched again after the next sign-in.
   void signOut() => reset();

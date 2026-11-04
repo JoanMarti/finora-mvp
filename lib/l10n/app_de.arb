@@ -1240,5 +1240,19 @@
   "filterClear": "Filter zurücksetzen",
   "filterShow": "{count} Buchungen anzeigen",
   "activityTotals": "{count} Buchungen · ein {moneyIn} · aus {moneyOut}",
-  "filterNoMatch": "Keine Buchungen passen zu diesen Filtern."
+  "filterNoMatch": "Keine Buchungen passen zu diesen Filtern.",
+  "backupTitle": "Sicherung und Wiederherstellung",
+  "backupIntro": "Ihre Ziele, Budgets, Ihr Profil, importierte Auszüge und Einstellungen sind nur auf diesem Gerät gespeichert und nicht Teil von Cloud-Sicherungen. Speichern Sie eine Sicherungsdatei, um sie auf ein neues Telefon zu übertragen.",
+  "backupExport": "Sicherung speichern",
+  "backupRestore": "Aus Sicherung wiederherstellen",
+  "backupWarning": "Die Datei enthält Ihre Finanzdaten im Klartext. Bewahren Sie sie sicher auf und teilen Sie sie nicht.",
+  "backupKeeps": "Ihr PIN und Ihr Premium-Abo bleiben auf diesem Gerät, wie sie sind.",
+  "backupRestoreTitle": "Daten auf diesem Gerät ersetzen?",
+  "backupRestoreBody": "Die Sicherung vom {date} ersetzt hier Ihre Ziele, Budgets, Ihr Profil, importierte Auszüge und Einstellungen.",
+  "backupRestoreConfirm": "Ersetzen",
+  "backupRestored": "Sicherung wiederhergestellt.",
+  "backupSaveFailed": "Die Sicherung konnte nicht gespeichert werden.",
+  "backupProblemNotBackup": "Diese Datei ist keine Finora-Sicherung.",
+  "backupProblemNewer": "Diese Sicherung stammt aus einer neueren Finora-Version. Aktualisieren Sie zuerst die App.",
+  "backupProblemDamaged": "Die Sicherung ist beschädigt und konnte nicht gelesen werden."
 }

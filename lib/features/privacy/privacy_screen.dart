@@ -7,6 +7,7 @@ import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// How Finora handles data, every consent the user gave, and a single place
@@ -105,6 +106,15 @@ class PrivacyScreen extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: 20),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.settings_backup_restore),
+                title: Text(l10n.backupTitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/backup'),
+              ),
+            ),
+            const SizedBox(height: 12),
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(foregroundColor: finoraDanger),
               onPressed: hasOfferData ? () => _confirmWithdraw(context, ref) : null,

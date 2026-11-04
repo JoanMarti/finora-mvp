@@ -1190,7 +1190,7 @@
   "importConfirm": "Importieren",
   "importDone": "{count} Buchungen importiert.",
   "importReplaceNote": "Ersetzt das Demo-Privatkonto dieser Bank.",
-  "importCategoryNote": "Kategorien werden aus den Buchungstexten abgeleitet.",
+  "importCategoryNote": "Kategorien werden aus den Buchungstexten abgeleitet; tippen Sie auf eine Buchung, um sie zu ändern.",
   "importExistingSection": "Importierte Konten",
   "importExistingLine": "{count} Buchungen · importiert am {date}",
   "importRemove": "Entfernen",
@@ -1202,5 +1202,8 @@
   "importProblemAmount": "Keine Betragsspalte gefunden.",
   "importProblemRows": "Keine Buchungen in der Datei gefunden.",
   "reminderChannelName": "Erinnerungen",
-  "reminderChannelDescription": "Termine für Ihre Finanzen, eine Woche im Voraus"
+  "reminderChannelDescription": "Termine für Ihre Finanzen, eine Woche im Voraus",
+  "categorySheetRule": "Gilt für alle Buchungen von {merchant}, auch künftige.",
+  "categorySheetReset": "Zurück zur automatischen Kategorie",
+  "categoryChanged": "{merchant}: {category}"
 }

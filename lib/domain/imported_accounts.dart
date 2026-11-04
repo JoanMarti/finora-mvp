@@ -1,3 +1,4 @@
+import 'package:finora/domain/category_rules.dart';
 import 'package:finora/domain/merchant_categories.dart';
 import 'package:finora/domain/models.dart';
 import 'package:finora/domain/statement_import.dart';
@@ -90,6 +91,19 @@ class ImportedAccount {
         ..sort((a, b) => a.bookedAt.compareTo(b.bookedAt)),
     );
   }
+
+  /// This account with the user's categories applied.
+  ImportedAccount withRules(Map<String, TransactionCategory> rules) =>
+      rules.isEmpty
+      ? this
+      : ImportedAccount(
+          id: id,
+          institutionId: institutionId,
+          name: name,
+          balance: balance,
+          importedAt: importedAt,
+          transactions: CategoryRules.applyAll(transactions, rules),
+        );
 
   FinancialAccount toAccount(DateTime now) => FinancialAccount(
     id: id,

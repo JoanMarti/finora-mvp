@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:finora/domain/category_rules.dart';
 import 'package:finora/domain/imported_accounts.dart';
 import 'package:finora/domain/app_lock.dart';
 import 'package:finora/domain/assets.dart';
@@ -327,6 +328,21 @@ class SessionController extends Notifier<UserSession> {
             if (item.id != account.id) item,
           existing == null ? account : existing.merge(account),
         ],
+      ),
+    );
+  }
+
+  /// Sets the category for every booking from [merchant]; `null` goes back
+  /// to the automatic one.
+  void setCategoryRule(String merchant, TransactionCategory? category) {
+    final key = CategoryRules.keyOf(merchant);
+    _update(
+      state.copyWith(
+        categoryRules: {
+          for (final entry in state.categoryRules.entries)
+            if (entry.key != key) entry.key: entry.value,
+          if (category != null) key: category,
+        },
       ),
     );
   }

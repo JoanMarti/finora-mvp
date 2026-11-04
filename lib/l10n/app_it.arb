@@ -1190,7 +1190,7 @@
   "importConfirm": "Importa",
   "importDone": "{count} movimenti importati.",
   "importReplaceNote": "Sostituisce il conto corrente demo di questa banca.",
-  "importCategoryNote": "Le categorie sono dedotte dai testi dei movimenti.",
+  "importCategoryNote": "Le categorie sono dedotte dai testi dei movimenti; tocca un movimento per cambiarla.",
   "importExistingSection": "Conti importati",
   "importExistingLine": "{count} movimenti · importato il {date}",
   "importRemove": "Rimuovi",
@@ -1202,5 +1202,8 @@
   "importProblemAmount": "Nessuna colonna di importo trovata.",
   "importProblemRows": "Nessun movimento trovato nel file.",
   "reminderChannelName": "Promemoria",
-  "reminderChannelDescription": "Scadenze delle tue finanze, una settimana prima"
+  "reminderChannelDescription": "Scadenze delle tue finanze, una settimana prima",
+  "categorySheetRule": "Vale per tutti i movimenti di {merchant}, anche quelli futuri.",
+  "categorySheetReset": "Torna alla categoria automatica",
+  "categoryChanged": "{merchant}: {category}"
 }

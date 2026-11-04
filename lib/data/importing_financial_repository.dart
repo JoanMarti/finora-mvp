@@ -1,3 +1,4 @@
+import 'package:finora/domain/category_rules.dart';
 import 'package:finora/domain/financial_repository.dart';
 import 'package:finora/domain/imported_accounts.dart';
 import 'package:finora/domain/institution_catalogue.dart';
@@ -10,12 +11,19 @@ import 'package:finora/domain/planning.dart';
 class ImportingFinancialRepository implements FinancialRepository {
   ImportingFinancialRepository(
     this._base, {
-    required this.imported,
+    required List<ImportedAccount> imported,
+    this.categoryRules = const {},
     this.clock = DateTime.now,
-  });
+  }) : imported = [
+         for (final account in imported) account.withRules(categoryRules),
+       ];
 
   final FinancialRepository _base;
+  /// Imported accounts, with the user's categories applied.
   final List<ImportedAccount> imported;
+
+  /// Categories the user chose, by merchant; applied to every booking.
+  final Map<String, TransactionCategory> categoryRules;
   final DateTime Function() clock;
 
   List<ImportedAccount> get _imported => imported;
@@ -92,7 +100,10 @@ class ImportingFinancialRepository implements FinancialRepository {
     if (accountId != null) {
       final imported = _importedById(accountId);
       if (imported != null) return imported.transactions.reversed.toList();
-      return _base.getTransactions(accountId: accountId);
+      return CategoryRules.applyAll(
+        await _base.getTransactions(accountId: accountId),
+        categoryRules,
+      );
     }
     final replacedIds = {
       for (final account in await _base.getAccounts())
@@ -100,7 +111,8 @@ class ImportingFinancialRepository implements FinancialRepository {
     };
     final items = [
       for (final item in await _base.getTransactions())
-        if (!replacedIds.contains(item.accountId)) item,
+        if (!replacedIds.contains(item.accountId))
+          CategoryRules.apply(item, categoryRules),
       for (final account in _imported) ...account.transactions,
     ]..sort((a, b) => b.bookedAt.compareTo(a.bookedAt));
     return items;

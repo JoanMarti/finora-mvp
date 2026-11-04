@@ -3083,7 +3083,7 @@
     }
   },
   "importReplaceNote": "Replaces the demo current account of this bank.",
-  "importCategoryNote": "Categories are guessed from the booking texts.",
+  "importCategoryNote": "Categories are guessed from the booking texts; tap a booking to change its category.",
   "importExistingSection": "Imported accounts",
   "importExistingLine": "{count} bookings · imported {date}",
   "@importExistingLine": {
@@ -3105,5 +3105,25 @@
   "importProblemAmount": "No amount column found.",
   "importProblemRows": "No bookings found in the file.",
   "reminderChannelName": "Reminders",
-  "reminderChannelDescription": "Dates for your finances, a week ahead"
+  "reminderChannelDescription": "Dates for your finances, a week ahead",
+  "categorySheetRule": "Applies to every booking from {merchant}, including future ones.",
+  "@categorySheetRule": {
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      }
+    }
+  },
+  "categorySheetReset": "Back to the automatic category",
+  "categoryChanged": "{merchant}: {category}",
+  "@categoryChanged": {
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  }
 }

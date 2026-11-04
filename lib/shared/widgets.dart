@@ -4,6 +4,7 @@ import 'package:finora/domain/models.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/formatters.dart';
+import 'package:finora/shared/category_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -185,6 +186,7 @@ class TransactionTile extends ConsumerWidget {
       TransactionCategory.other => (Icons.shopping_bag_outlined, finoraSilver),
     };
     return ListTile(
+      onTap: () => showCategorySheet(context, transaction),
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       leading: CircleAvatar(
         backgroundColor: accent.withValues(alpha: .13),

@@ -2,6 +2,7 @@ import 'package:finora/app/layout.dart';
 import 'package:finora/app/theme.dart';
 import 'package:finora/application/providers.dart';
 import 'package:finora/domain/models.dart';
+import 'package:finora/domain/transaction_filter.dart';
 import 'package:finora/l10n/l10n.dart';
 import 'package:finora/l10n/labels.dart';
 import 'package:finora/shared/category_sheet.dart';
@@ -20,8 +21,12 @@ class ActivityScreen extends ConsumerStatefulWidget {
 
 class _ActivityScreenState extends ConsumerState<ActivityScreen> {
   String _query = '';
+  TransactionFilter _filter = const TransactionFilter();
 
-  bool _matches(FinancialTransaction item) {
+  bool _matches(FinancialTransaction item, {TransactionFilter? filter}) {
+    if (!(filter ?? _filter).matches(item, ref.read(clockProvider)())) {
+      return false;
+    }
     final query = _query.trim().toLowerCase();
     if (query.isEmpty) return true;
     return item.merchant.toLowerCase().contains(query) ||
@@ -51,6 +56,22 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
     );
   }
 
+  Future<void> _openFilters(
+    List<FinancialTransaction> items,
+    List<FinancialAccount> accounts,
+  ) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (context) => _FilterSheet(
+      initial: _filter,
+      accounts: accounts,
+      countFor: (filter) =>
+          items.where((item) => _matches(item, filter: filter)).length,
+      onChanged: (filter) => setState(() => _filter = filter),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final transactions = ref.watch(transactionsProvider(null));
@@ -65,10 +86,10 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
           final wide = constraints.maxWidth >= finoraWideContentWidth;
+          final accounts =
+              ref.watch(accountsProvider).value ?? const <FinancialAccount>[];
           final accountNames = {
-            for (final account
-                in ref.watch(accountsProvider).value ?? const <FinancialAccount>[])
-              account.id: account.name,
+            for (final account in accounts) account.id: account.name,
           };
           return FinoraPage(
           maxWidth: wide ? 1100 : 720,
@@ -99,6 +120,42 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
                     hintText: l10n.searchHint,
                     onChanged: (value) => setState(() => _query = value),
                   ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          () {
+                            final totals = ActivityTotals.of(filtered);
+                            return l10n.activityTotals(
+                              filtered.length,
+                              formatMoneyWhole(totals.moneyIn),
+                              formatMoneyWhole(totals.moneyOut),
+                            );
+                          }(),
+                          style: const TextStyle(
+                            color: finoraMutedInk,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (_filter.isEmpty)
+                        OutlinedButton.icon(
+                          onPressed: () => _openFilters(items, accounts),
+                          icon: const Icon(Icons.tune, size: 18),
+                          label: Text(l10n.filterButton),
+                        )
+                      else
+                        FilledButton.tonalIcon(
+                          onPressed: () => _openFilters(items, accounts),
+                          icon: const Icon(Icons.tune, size: 18),
+                          label: Text(
+                            l10n.filterButtonCount(_filter.activeCount),
+                          ),
+                        ),
+                    ],
+                  ),
                   if (filtered.isEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 32),
@@ -106,6 +163,8 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
                         child: Text(
                           items.isEmpty
                               ? l10n.noTransactionsYet
+                              : _query.trim().isEmpty
+                              ? l10n.filterNoMatch
                               : l10n.noTransactionsMatch(_query),
                           style: const TextStyle(color: finoraMutedInk),
                         ),
@@ -270,3 +329,148 @@ class _TransactionRow extends StatelessWidget {
 String _csvField(String value) => value.contains(RegExp('[",\n]'))
     ? '"${value.replaceAll('"', '""')}"'
     : value;
+
+/// Period, direction, categories and account for the activity list. Each
+/// change applies at once.
+class _FilterSheet extends StatefulWidget {
+  const _FilterSheet({
+    required this.initial,
+    required this.accounts,
+    required this.countFor,
+    required this.onChanged,
+  });
+
+  final TransactionFilter initial;
+  final List<FinancialAccount> accounts;
+  final int Function(TransactionFilter) countFor;
+  final ValueChanged<TransactionFilter> onChanged;
+
+  @override
+  State<_FilterSheet> createState() => _FilterSheetState();
+}
+
+class _FilterSheetState extends State<_FilterSheet> {
+  late TransactionFilter _filter = widget.initial;
+
+  void _set(TransactionFilter filter) {
+    setState(() => _filter = filter);
+    widget.onChanged(filter);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    Widget heading(String text) => Padding(
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
+    );
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * .85,
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          children: [
+            Text(
+              l10n.filterButton,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            heading(l10n.filterPeriod),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final (period, label) in [
+                  (ActivityPeriod.all, l10n.filterPeriodAll),
+                  (ActivityPeriod.thisMonth, l10n.filterPeriodThisMonth),
+                  (ActivityPeriod.threeMonths, l10n.filterPeriodThreeMonths),
+                  (ActivityPeriod.twelveMonths, l10n.filterPeriodTwelveMonths),
+                ])
+                  ChoiceChip(
+                    label: Text(label),
+                    selected: _filter.period == period,
+                    onSelected: (_) => _set(_filter.copyWith(period: period)),
+                  ),
+              ],
+            ),
+            heading(l10n.filterDirection),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final (direction, label) in [
+                  (ActivityDirection.both, l10n.filterDirectionBoth),
+                  (ActivityDirection.moneyIn, l10n.filterDirectionIn),
+                  (ActivityDirection.moneyOut, l10n.filterDirectionOut),
+                ])
+                  ChoiceChip(
+                    label: Text(label),
+                    selected: _filter.direction == direction,
+                    onSelected: (_) =>
+                        _set(_filter.copyWith(direction: direction)),
+                  ),
+              ],
+            ),
+            heading(l10n.filterCategories),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final category in TransactionCategory.values)
+                  FilterChip(
+                    label: Text(l10n.transactionCategory(category)),
+                    selected: _filter.categories.contains(category),
+                    onSelected: (selected) => _set(
+                      _filter.copyWith(
+                        categories: selected
+                            ? {..._filter.categories, category}
+                            : {
+                                for (final item in _filter.categories)
+                                  if (item != category) item,
+                              },
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            if (widget.accounts.length > 1) ...[
+              heading(l10n.filterAccount),
+              DropdownButtonFormField<String?>(
+                initialValue: _filter.accountId,
+                isExpanded: true,
+                items: [
+                  DropdownMenuItem(child: Text(l10n.filterAllAccounts)),
+                  for (final account in widget.accounts)
+                    DropdownMenuItem(
+                      value: account.id,
+                      child: Text(account.name),
+                    ),
+                ],
+                onChanged: (value) =>
+                    _set(_filter.copyWith(accountId: () => value)),
+              ),
+            ],
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: _filter.isEmpty
+                      ? null
+                      : () => _set(const TransactionFilter()),
+                  child: Text(l10n.filterClear),
+                ),
+                const Spacer(),
+                FilledButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(l10n.filterShow(widget.countFor(_filter))),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

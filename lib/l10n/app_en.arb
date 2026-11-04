@@ -3194,5 +3194,50 @@
     }
   },
   "catchUpDisclaimer": "Estimate. The maximum for years after 2026 is assumed unchanged; your provider confirms the gaps.",
-  "catchUpLink": "Pay in for past years"
+  "catchUpLink": "Pay in for past years",
+  "filterButton": "Filters",
+  "filterButtonCount": "Filters ({count})",
+  "@filterButtonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterPeriod": "Period",
+  "filterPeriodAll": "All",
+  "filterPeriodThisMonth": "This month",
+  "filterPeriodThreeMonths": "Last 3 months",
+  "filterPeriodTwelveMonths": "Last 12 months",
+  "filterDirection": "In or out",
+  "filterDirectionBoth": "Both",
+  "filterDirectionIn": "Money in",
+  "filterDirectionOut": "Money out",
+  "filterCategories": "Categories",
+  "filterAccount": "Account",
+  "filterAllAccounts": "All accounts",
+  "filterClear": "Clear filters",
+  "filterShow": "Show {count} bookings",
+  "@filterShow": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activityTotals": "{count} bookings · in {moneyIn} · out {moneyOut}",
+  "@activityTotals": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "moneyIn": {
+        "type": "String"
+      },
+      "moneyOut": {
+        "type": "String"
+      }
+    }
+  },
+  "filterNoMatch": "No bookings match these filters."
 }

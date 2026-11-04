@@ -375,9 +375,13 @@ class _FilterSheetState extends State<_FilterSheet> {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.sizeOf(context).height * .85,
         ),
-        child: ListView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: ListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
           children: [
             Text(
               l10n.filterButton,
@@ -458,8 +462,12 @@ class _FilterSheetState extends State<_FilterSheet> {
                     _set(_filter.copyWith(accountId: () => value)),
               ),
             ],
-            const SizedBox(height: 20),
-            Row(
+          ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              child: Row(
               children: [
                 TextButton(
                   onPressed: _filter.isEmpty
@@ -475,6 +483,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                   ),
                 ),
               ],
+              ),
             ),
           ],
         ),
